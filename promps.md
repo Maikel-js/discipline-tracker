@@ -1347,3 +1347,232 @@ Tests
 No explicar teoría.
 
 Implementar directamente todo sobre el sistema existente.
+
+________________________________________________________________
+
+Actúa como ingeniero de software multiplataforma y release engineer senior.
+
+Toma mi proyecto actual y haz que pueda descargarse e instalarse tanto en PC como en celular.
+
+No crear un proyecto nuevo. Convertir el existente en aplicación distribuible multiplataforma.
+
+Objetivo
+
+Permitir que los usuarios puedan descargar e instalar la aplicación en:
+
+Celular
+Android
+iPhone (si aplica)
+PC
+Windows
+(Opcional: macOS y Linux si es viable)
+1. Versión para celular
+
+Generar versión instalable móvil usando la mejor opción compatible:
+
+Capacitor (preferido), o
+React Native si corresponde.
+
+Generar builds instalables para móvil.
+
+Android:
+
+Generar:
+
+APK para pruebas
+AAB para distribución
+2. Versión para PC (Desktop app)
+
+Convertir el proyecto en aplicación de escritorio usando:
+
+Electron (preferido), o
+Tauri si es mejor opción
+
+Generar instaladores descargables para Windows:
+
+.exe installer
+o .msi
+
+Si es viable, agregar:
+
+macOS package
+Linux package
+3. Mantener integración con sistema actual
+
+La versión de escritorio y móvil debe conservar:
+
+Login
+Hábitos
+Tareas
+Notificaciones
+Alarmas
+Base de datos
+Sincronización
+
+No romper funcionalidades existentes.
+
+4. Soporte offline + sincronización
+
+Agregar:
+
+Funcionar offline
+Sincronizar cuando vuelva internet
+Manejo de conflictos si hay cambios en múltiples dispositivos
+5. Auto-updates (si aplica)
+
+Agregar sistema de actualizaciones para desktop y móvil si es viable.
+
+6. Distribución / Descargas
+
+Preparar el proyecto para que los usuarios puedan descargarlo desde:
+
+Página web (botón Descargar para Windows)
+Play Store (Android)
+PWA instalable si aplica
+
+Agregar flujo de distribución.
+
+7. Entregar
+
+Generar:
+
+Código necesario
+Configuración multiplataforma
+Builds instalables
+Instalador para PC
+APK/AAB para Android
+Todo listo para descargar e instalar
+
+No explicar teoría.
+
+Implementar directamente sobre el proyecto actual.
+
+_____________________________________________________________________
+
+Actúa como software architect senior y refactoriza mi proyecto actual para eliminar código espagueti y reorganizarlo usando principios de Clean Code y arquitectura limpia.
+
+No crear un proyecto nuevo.
+
+Modificar y refactorizar el código existente.
+
+Objetivo
+
+Desenredar el código, reducir acoplamiento, mejorar mantenibilidad y dejar la base lista para escalar.
+
+1. Detectar problemas actuales
+
+Auditar el código y localizar:
+
+Código espagueti
+Lógica duplicada
+Funciones gigantes
+Dependencias acopladas
+Archivos sobrecargados
+Código muerto
+Violaciones de separación de responsabilidades
+2. Refactorizar usando Clean Code
+
+Aplicar principios:
+
+Single Responsibility Principle
+DRY
+KISS
+Separation of Concerns
+Dependency Injection donde corresponda
+3. Reorganizar con Clean Architecture
+
+Separar por capas:
+
+Domain
+Entities
+Business Rules
+Use Cases
+Application
+Services
+Interfaces
+Orchestration
+Infrastructure
+Database
+APIs
+Email
+Notifications
+External integrations
+Presentation
+UI
+Components
+Controllers / handlers
+4. Desacoplar módulos
+
+Separar correctamente módulos como:
+
+Autenticación
+Hábitos
+Tareas
+Notificaciones
+Alarmas
+IA
+Reglas
+Integraciones
+
+Reducir dependencias cruzadas.
+
+5. Mejorar estructura de carpetas
+
+Reorganizar el proyecto con estructura coherente y escalable.
+
+6. Refactorizar nombres
+
+Mejorar:
+
+Variables
+Funciones
+Clases
+Interfaces
+
+Usar nombres claros y consistentes.
+
+7. Extraer lógica mezclada
+
+Mover lógica de negocio fuera de:
+
+Componentes UI
+Controladores
+Endpoints
+
+Llevarla a servicios/use cases.
+
+8. Manejo de errores
+
+Implementar manejo de errores consistente.
+
+9. Mantener funcionalidad existente
+
+Muy importante:
+
+No romper funcionalidades actuales.
+
+Todo debe seguir funcionando:
+
+Login
+Hábitos
+Tareas
+Alarmas
+Base de datos
+Integraciones
+10. Tests
+
+Actualizar o crear tests para asegurar que el refactor no rompe nada.
+
+11. Entregar
+
+Generar:
+
+Refactor completo
+Nueva estructura del proyecto
+Código reorganizado
+Mejoras aplicadas
+Tests actualizados
+
+No explicar teoría.
+
+Refactorizar directamente el proyecto existente y convertirlo en una base limpia y mantenible.
