@@ -258,3 +258,58 @@ export interface AntiCheatAlert {
   timestamp: string;
   resolved: boolean;
 }
+
+export interface TimeBlock {
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  type: 'habit' | 'task' | 'work' | 'break';
+  color: string;
+  completed: boolean;
+}
+
+export interface DailyPlan {
+  id: string;
+  date: string;
+  blocks: TimeBlock[];
+  totalBlocks: number;
+  completedBlocks: number;
+}
+
+export interface ConsistencyScore {
+  score: number;
+  level: number;
+  trend: 'up' | 'down' | 'stable';
+  weeklyAverage: number;
+  lastUpdated: string;
+}
+
+export interface Theme {
+  mode: 'dark' | 'light';
+  accentColor: string;
+}
+
+export interface HistoryEntry {
+  id: string;
+  action: string;
+  details: string;
+  timestamp: string;
+  previousValue?: string;
+  newValue?: string;
+}
+
+export interface Backup {
+  id: string;
+  date: string;
+  data: string;
+  size: number;
+}
+
+export interface AnalyticsData {
+  productivityTrend: number[];
+  procrastinationIndex: number;
+  effectiveHours: number;
+  weeklyProductivity: number;
+  consistencyScore: number;
+}

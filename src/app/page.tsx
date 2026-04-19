@@ -15,7 +15,8 @@ import UserProfile from '@/components/UserProfile';
 import AICoach from '@/components/AICoach';
 import VoiceCommands from '@/components/VoiceCommands';
 import RewardsPanel from '@/components/RewardsSystem';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy } from 'lucide-react';
+import AutoScheduler from '@/components/AutoScheduler';
+import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar } from 'lucide-react';
 
 function MainApp() {
   const { isAuthenticated } = useAuth();
@@ -161,6 +162,12 @@ function MainApp() {
         {activeTab === 'stats' && (
           <div className="space-y-6">
             <Dashboard />
+          </div>
+        )}
+
+        {activeTab === 'schedule' && (
+          <div className="space-y-4">
+            <AutoScheduler />
           </div>
         )}
       </div>
