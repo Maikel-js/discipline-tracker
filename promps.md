@@ -1862,3 +1862,116 @@ Tests
 No explicar teoría.
 
 Implementar directamente todo sobre el proyecto existente.
+
+_________________________________________________________________
+
+Actúa como ingeniero mobile, desktop y release engineer senior.
+
+Haz una revisión y modificación final de mi proyecto actual para que las descargas funcionen de verdad y la aplicación pueda instalarse en todos los dispositivos.
+
+No crear un proyecto nuevo.
+
+Modificar el existente.
+
+Objetivo
+
+Generar paquetes reales de instalación y asegurar que los enlaces de descarga funcionen correctamente.
+
+1. Crear su propio APK real
+
+Generar una build Android real e instalable.
+
+Entregar:
+
+APK para instalación directa.
+AAB para distribución.
+Proyecto Android configurado correctamente.
+Firma de release si corresponde.
+
+Verificar que el APK se pueda instalar y ejecutar.
+
+2. Hacer que las descargas funcionen de verdad
+
+Revisar y corregir todo el sistema de descargas dentro de la página.
+
+Los botones Descargar deben descargar archivos reales, no placeholders.
+
+Verificar funcionamiento real de:
+
+Descargar Android
+Descargar Windows
+Descargar otras plataformas si aplican
+
+Corregir enlaces rotos.
+
+Corregir rutas.
+
+Corregir distribución.
+
+3. Soporte para todos los dispositivos
+
+Asegurar soporte real para:
+
+Móvil
+Android
+iPhone (si aplica vía PWA o paquete compatible)
+PC
+Windows (.exe o .msi)
+macOS si aplica
+Linux si aplica
+
+Generar paquetes reales para cada plataforma compatible.
+
+4. Crear página de descargas funcional
+
+Dentro del proyecto crear sección:
+
+Download Center
+
+Con detección de dispositivo si es posible:
+
+Si entra desde Android:
+mostrar descarga Android.
+Si entra desde Windows:
+mostrar descarga Windows.
+
+Opcional:
+autodetectar plataforma.
+
+5. Validar instalación
+
+Probar que:
+
+APK instala.
+App abre.
+Desktop installer funciona.
+Enlaces descargan correctamente.
+No hay archivos corruptos.
+Las builds son utilizables.
+6. Mantener integración con el sistema actual
+
+Todo debe seguir funcionando:
+
+Base de datos nube
+Login
+Hábitos
+Tareas
+Notificaciones
+Pomodoro
+WhatsApp
+Estadísticas
+7. Entregar
+
+Generar:
+
+APK real
+AAB
+Instalador Windows
+Paquetes para otras plataformas si aplica
+Centro de descargas funcional
+Correcciones de enlaces de descarga
+Todo listo para instalar en cualquier dispositivo
+
+No explicar teoría.
+
+Implementar directamente sobre el proyecto existente.

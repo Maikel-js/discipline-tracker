@@ -1,38 +1,71 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 import { useStore } from '@/store/useStore';
 import { 
   Smartphone, Monitor, Download, Globe, Apple, 
-  ChevronDown, X, Check, Settings, Bell, MessageCircle,
-  Clock, User, Shield, Wifi
+  Check, Settings, Bell, MessageCircle,
+  Clock, User, Shield, Wifi, Terminal, Box
 } from 'lucide-react';
+
+type Platform = 'android' | 'ios' | 'windows' | 'macos' | 'linux' | 'unknown';
 
 export default function DownloadPortal() {
   const { user } = useAuth();
   const { settings, updateSettings, addDisciplineScore } = useStore();
   const [activeSection, setActiveSection] = useState<'download' | 'settings' | 'whatsapp'>('download');
-  const [showSettings, setShowSettings] = useState(false);
+  const [platform, setPlatform] = useState<Platform>('unknown');
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('');
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
+  const githubUrl = 'https://github.com/Maikel-js/discipline-tracker';
+
+  useEffect(() => {
+    const detectPlatform = (): Platform => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      
+      if (userAgent.includes('android')) return 'android';
+      if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'ios';
+      if (userAgent.includes('win')) return 'windows';
+      if (userAgent.includes('mac')) return 'macos';
+      if (userAgent.includes('linux')) return 'linux';
+      
+      return 'unknown';
+    };
+    
+    setPlatform(detectPlatform());
+  }, []);
 
   const savePreference = (key: string, value: any) => {
     addDisciplineScore(2, `Preferencia actualizada: ${key}`);
   };
 
+  const getRecommendedDownload = () => {
+    switch (platform) {
+      case 'android':
+        return { icon: '📱', title: 'Android', action: 'Instalar App' };
+      case 'ios':
+        return { icon: '🍎', title: 'iPhone', action: 'Instalar App' };
+      case 'windows':
+        return { icon: '🪟', title: 'Windows', action: 'Descargar' };
+      case 'macos':
+        return { icon: '🍎', title: 'macOS', action: 'Descargar' };
+      default:
+        return { icon: '🌐', title: 'Web', action: 'Abrir App' };
+    }
+  };
+
+  const recommended = getRecommendedDownload();
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Centro de Descargas y Ajustes</h2>
-        <button 
-          onClick={() => setShowSettings(!showSettings)}
-          className="p-2 bg-gray-700 rounded-lg"
-        >
-          <Settings className="w-5 h-5" />
-        </button>
+        <h2 className="text-xl font-bold">Centro de Descargas</h2>
+        <div className="text-xs text-gray-500">
+          Detectado: {platform === 'unknown' ? 'Web' : platform}
+        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
@@ -61,18 +94,38 @@ export default function DownloadPortal() {
 
       {activeSection === 'download' && (
         <div className="space-y-4">
+          {platform !== 'unknown' && (
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">{recommended.icon}</div>
+                <div className="flex-1">
+                  <div className="font-bold text-white">Te recomendamos:</div>
+                  <div className="text-sm text-gray-300">{recommended.title} - {recommended.action}</div>
+                </div>
+                <button
+                  onClick={() => window.open(appUrl, '_blank')}
+                  className="px-4 py-2 bg-blue-600 rounded-lg font-medium"
+                >
+                  {recommended.action}
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="bg-gray-800/50 rounded-xl p-4">
             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
               <Smartphone className="w-5 h-5" />
-              📱 Instalar en Celular
+              📱 Celular
             </h3>
             
-            <div className="space-y-3">
+            <div className="grid md:grid-cols-2 gap-3">
               <div className="p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Android (APK)</div>
-                    <div className="text-xs text-gray-400">Instala directamente desde Chrome</div>
+                    <div className="font-medium flex items-center gap-2">
+                      🤖 Android
+                    </div>
+                    <div className="text-xs text-gray-400">Instala desde Chrome</div>
                   </div>
                   <button
                     onClick={() => window.open(appUrl, '_blank')}
@@ -86,8 +139,10 @@ export default function DownloadPortal() {
               <div className="p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">iPhone (iOS)</div>
-                    <div className="text-xs text-gray-400">Desde Safari - Agregar a pantalla</div>
+                    <div className="font-medium flex items-center gap-2">
+                      🍎 iPhone
+                    </div>
+                    <div className="text-xs text-gray-400">Desde Safari</div>
                   </div>
                   <button
                     onClick={() => window.open(appUrl, '_blank')}
@@ -97,20 +152,21 @@ export default function DownloadPortal() {
                   </button>
                 </div>
               </div>
+            </div>
 
-              <div className="p-3 bg-purple-900/20 border border-purple-500/30 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">PWA Web</div>
-                    <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
-                  </div>
-                  <button
-                    onClick={() => window.open(appUrl, '_blank')}
-                    className="px-3 py-1 bg-purple-600 rounded-lg text-sm"
-                  >
-                    Abrir
-                  </button>
+            <div className="mt-3 p-2 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">🌐 PWA Web</div>
+                  <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
                 </div>
+                <a
+                  href={appUrl}
+                  target="_blank"
+                  className="px-3 py-1 bg-purple-600 rounded-lg text-sm"
+                >
+                  Abrir
+                </a>
               </div>
             </div>
           </div>
@@ -118,52 +174,102 @@ export default function DownloadPortal() {
           <div className="bg-gray-800/50 rounded-xl p-4">
             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
               <Monitor className="w-5 h-5" />
-              💻 PC / Escritorio
+              💻 PC / Desktop
             </h3>
             
             <div className="space-y-3">
-              <div className="p-3 bg-gray-700/50 rounded-lg opacity-50">
+              <div className="p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Windows</div>
-                    <div className="text-xs text-gray-400">Próximamente...</div>
+                    <div className="font-medium flex items-center gap-2">
+                      🪟 Windows
+                    </div>
+                    <div className="text-xs text-gray-400">Usa la versión web o instala PWA</div>
                   </div>
-                  <span className="px-3 py-1 bg-gray-600 rounded-lg text-xs">Pronto</span>
+                  <a
+                    href={appUrl}
+                    target="_blank"
+                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
+                  >
+                    Abrir Web
+                  </a>
                 </div>
               </div>
 
-              <div className="p-3 bg-gray-700/50 rounded-lg opacity-50">
+              <div className="p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">macOS</div>
-                    <div className="text-xs text-gray-400">Próximamente...</div>
+                    <div className="font-medium flex items-center gap-2">
+                      🍎 macOS
+                    </div>
+                    <div className="text-xs text-gray-400">Usa Safari para instalar PWA</div>
                   </div>
-                  <span className="px-3 py-1 bg-gray-600 rounded-lg text-xs">Pronto</span>
+                  <a
+                    href={appUrl}
+                    target="_blank"
+                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
+                  >
+                    Abrir Web
+                  </a>
                 </div>
               </div>
 
-              <div className="p-3 bg-gray-700/50 rounded-lg opacity-50">
+              <div className="p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Linux</div>
-                    <div className="text-xs text-gray-400">Próximamente...</div>
+                    <div className="font-medium flex items-center gap-2">
+                      🐧 Linux
+                    </div>
+                    <div className="text-xs text-gray-400">Usa la versión web</div>
                   </div>
-                  <span className="px-3 py-1 bg-gray-600 rounded-lg text-xs">Pronto</span>
+                  <a
+                    href={appUrl}
+                    target="_blank"
+                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
+                  >
+                    Abrir Web
+                  </a>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="mt-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
-              <div className="text-sm text-blue-300">
-                💡 <strong>Consejo:</strong> Usa la versión web en tu PC. 
-                Guarda en favoritos o crea acceso directo para experiencia similar a app.
-              </div>
+          <div className="bg-gray-800/50 rounded-xl p-4">
+            <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+              <Box className="w-5 h-5" />
+              📦 Código Fuente
+            </h3>
+            
+            <div className="space-y-2">
+              <a
+                href={githubUrl}
+                target="_blank"
+                className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700"
+              >
+                <div>
+                  <div className="font-medium">Ver en GitHub</div>
+                  <div className="text-xs text-gray-400">Código fuente completo</div>
+                </div>
+<Box className="w-5 h-5" />
+              </a>
+              
+              <a
+                href={`${githubUrl}/releases`}
+                target="_blank"
+                className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700"
+              >
+                <div>
+                  <div className="font-medium">Releases</div>
+                  <div className="text-xs text-gray-400">APK y paquetes oficiales</div>
+                </div>
+                <Download className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
           <div className="text-center text-gray-500 text-sm">
             <Globe className="w-4 h-4 inline mr-1" />
-            Versión web: {appUrl}
+            <strong>Versión Web:</strong> {appUrl}
           </div>
         </div>
       )}
@@ -173,19 +279,16 @@ export default function DownloadPortal() {
           <div className="bg-gray-800/50 rounded-xl p-4">
             <h3 className="font-bold mb-3 flex items-center gap-2">
               <Clock className="w-5 h-5" />
-              ⏱️ Pomodoro Configurable
+              ⏱️ Pomodoro
             </h3>
             
             <div className="space-y-3">
               <div>
-                <label className="text-sm text-gray-400">Bloque de enfoque (minutos)</label>
+                <label className="text-sm text-gray-400">Enfoque (min)</label>
                 <input
                   type="number"
                   value={settings.pomodoroLength}
-                  onChange={(e) => {
-                    updateSettings({ pomodoroLength: parseInt(e.target.value) || 25 });
-                    savePreference('pomodoro', e.target.value);
-                  }}
+                  onChange={(e) => updateSettings({ pomodoroLength: parseInt(e.target.value) || 25 })}
                   className="w-full mt-1 bg-gray-700 border border-gray-600 rounded-lg p-2"
                   min={5}
                   max={60}
@@ -193,29 +296,14 @@ export default function DownloadPortal() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-400">Descanso corto (minutos)</label>
+                <label className="text-sm text-gray-400">Descanso (min)</label>
                 <input
                   type="number"
                   value={settings.breakLength}
-                  onChange={(e) => {
-                    updateSettings({ breakLength: parseInt(e.target.value) || 5 });
-                    savePreference('break', e.target.value);
-                  }}
+                  onChange={(e) => updateSettings({ breakLength: parseInt(e.target.value) || 5 })}
                   className="w-full mt-1 bg-gray-700 border border-gray-600 rounded-lg p-2"
                   min={1}
                   max={30}
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-400">Bloques antes de largo descanso</label>
-                <input
-                  type="number"
-                  value={4}
-                  onChange={() => {}}
-                  className="w-full mt-1 bg-gray-700 border border-gray-600 rounded-lg p-2"
-                  min={2}
-                  max={8}
                 />
               </div>
             </div>
@@ -228,41 +316,32 @@ export default function DownloadPortal() {
             </h3>
             
             <div className="space-y-2">
-              <label className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/50 cursor-pointer">
-                <span className="text-gray-300">Notificaciones push</span>
+              <label className="flex items-center justify-between p-2 rounded-lg">
+                <span className="text-gray-300">Push</span>
                 <input
                   type="checkbox"
                   checked={settings.notificationsEnabled}
-                  onChange={(e) => {
-                    updateSettings({ notificationsEnabled: e.target.checked });
-                    savePreference('notifications', e.target.checked);
-                  }}
+                  onChange={(e) => updateSettings({ notificationsEnabled: e.target.checked })}
                   className="w-4 h-4 accent-green-500"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/50 cursor-pointer">
+              <label className="flex items-center justify-between p-2 rounded-lg">
                 <span className="text-gray-300">Sonido</span>
                 <input
                   type="checkbox"
                   checked={settings.soundEnabled}
-                  onChange={(e) => {
-                    updateSettings({ soundEnabled: e.target.checked });
-                    savePreference('sound', e.target.checked);
-                  }}
+                  onChange={(e) => updateSettings({ soundEnabled: e.target.checked })}
                   className="w-4 h-4 accent-green-500"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/50 cursor-pointer">
+              <label className="flex items-center justify-between p-2 rounded-lg">
                 <span className="text-gray-300">Vibración</span>
                 <input
                   type="checkbox"
                   checked={settings.vibrationEnabled}
-                  onChange={(e) => {
-                    updateSettings({ vibrationEnabled: e.target.checked });
-                    savePreference('vibration', e.target.checked);
-                  }}
+                  onChange={(e) => updateSettings({ vibrationEnabled: e.target.checked })}
                   className="w-4 h-4 accent-green-500"
                 />
               </label>
@@ -275,77 +354,47 @@ export default function DownloadPortal() {
               🔒 Cuenta
             </h3>
             
-            <div className="space-y-2">
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="text-sm text-gray-400">Email</div>
-                <div className="text-white">{user?.email || 'No registrado'}</div>
-              </div>
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="text-sm text-gray-400">Nombre</div>
-                <div className="text-white">{user?.name || 'No registrado'}</div>
-              </div>
-              <div className="text-xs text-gray-500 mt-2">
-                ✅ Una cuenta por usuario - Verificación por email activa
-              </div>
+            <div className="p-3 bg-gray-700/50 rounded-lg">
+              <div className="text-sm text-gray-400">Email</div>
+              <div className="text-white">{user?.email || 'No registrado'}</div>
             </div>
           </div>
         </div>
       )}
 
       {activeSection === 'whatsapp' && (
-        <div className="space-y-4">
-          <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-4">
-            <h3 className="font-bold mb-3 flex items-center gap-2">
-              <MessageCircle className="w-5 h-5" />
-              📱 Notificaciones WhatsApp
-            </h3>
-            
-            <div className="space-y-3">
-              <label className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/50 cursor-pointer">
-                <span className="text-gray-300">Activar WhatsApp</span>
+        <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-4">
+          <h3 className="font-bold mb-3 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5" />
+            📱 WhatsApp
+          </h3>
+          
+          <div className="space-y-3">
+            <label className="flex items-center justify-between p-2 rounded-lg bg-gray-800">
+              <span className="text-gray-300">Activar</span>
+              <input
+                type="checkbox"
+                checked={whatsappEnabled}
+                onChange={(e) => setWhatsappEnabled(e.target.checked)}
+                className="w-4 h-4 accent-green-500"
+              />
+            </label>
+
+            {whatsappEnabled && (
+              <div>
                 <input
-                  type="checkbox"
-                  checked={whatsappEnabled}
-                  onChange={(e) => setWhatsappEnabled(e.target.checked)}
-                  className="w-4 h-4 accent-green-500"
+                  type="tel"
+                  value={whatsappNumber}
+                  onChange={(e) => setWhatsappNumber(e.target.value)}
+                  placeholder="+1234567890"
+                  className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"
                 />
-              </label>
+              </div>
+            )}
 
-              {whatsappEnabled && (
-                <>
-                  <div>
-                    <label className="text-sm text-gray-400">Número telefónico</label>
-                    <input
-                      type="tel"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
-                      placeholder="+1234567890"
-                      className="w-full mt-1 bg-gray-700 border border-gray-600 rounded-lg p-2"
-                    />
-                  </div>
-
-                  <div className="p-3 bg-gray-700/50 rounded-lg">
-                    <div className="text-sm text-gray-400 mb-2">Recibirás notificaciones por:</div>
-                    <ul className="text-sm space-y-1">
-                      <li>✓ Hábitos pendientes</li>
-                      <li>✓ Tareas vencidas</li>
-                      <li>✓ Alarmas</li>
-                      <li>✓ Recordatorios</li>
-                    </ul>
-                  </div>
-
-                  <button className="w-full py-2 bg-green-600 rounded-lg">
-                    Activar WhatsApp
-                  </button>
-                </>
-              )}
+            <div className="text-xs text-gray-500 text-center">
+              Powered by Twilio API - Próximamente
             </div>
-          </div>
-
-          <div className="text-center text-gray-500 text-sm p-4">
-            <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>Powered by Twilio API</p>
-            <p className="text-xs">Próximamente disponible</p>
           </div>
         </div>
       )}
