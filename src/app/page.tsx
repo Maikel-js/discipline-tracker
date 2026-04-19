@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
+import { AuthProvider, useAuth } from '@/components/AuthProvider';
+import LoginScreen from '@/components/LoginScreen';
 import Dashboard from '@/components/Dashboard';
 import HabitCard from '@/components/HabitCard';
 import HabitFormModal from '@/components/HabitFormModal';
@@ -9,9 +11,11 @@ import TaskFormModal from '@/components/TaskFormModal';
 import TaskColumn from '@/components/TaskCard';
 import NotificationSystem from '@/components/NotificationSystem';
 import TabBar from '@/components/TabBar';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings } from 'lucide-react';
+import UserProfile from '@/components/UserProfile';
+import { Plus, Flame, ListTodo, Bell, Zap, Settings, User } from 'lucide-react';
 
-export default function Home() {
+function MainApp() {
+  const { isAuthenticated } = useAuth();
   const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit } = useStore();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showHabitModal, setShowHabitModal] = useState(false);
@@ -48,6 +52,10 @@ export default function Home() {
   const todoTasks = tasks.filter(t => t.status === 'todo');
   const doingTasks = tasks.filter(t => t.status === 'doing');
   const doneTasks = tasks.filter(t => t.status === 'done');
+
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white pb-20">
@@ -153,10 +161,12 @@ export default function Home() {
       {showSettings && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowSettings(false)} />
-          <div className="relative z-10 bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-sm w-full mx-4">
+          <div className="relative z-10 bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-sm w-full mx-4 overflow-y-auto max-h-[80vh]">
             <h2 className="text-xl font-bold text-white mb-4">Configuración</h2>
             
             <div className="space-y-4">
+              <UserProfile />
+              
               <button
                 onClick={() => useStore.getState().toggleExtremeMode()}
                 className={`w-full p-4 rounded-xl text-left transition-colors ${
@@ -204,5 +214,13 @@ export default function Home() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
   );
 }

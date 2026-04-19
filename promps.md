@@ -356,3 +356,380 @@ Pasos para instalarlo en mi celular
 Todo listo para probar desde mi teléfono
 
 No crear otro proyecto aparte.
+
+_______________________________________________________________________
+Actúa como ingeniero DevOps senior y despliega mi proyecto actual en Vercel.
+
+Objetivo
+
+Publicar la aplicación para que quede accesible desde una URL y pueda usarla desde navegador y celular.
+
+Hacer lo siguiente:
+1. Preparar proyecto para Vercel
+
+Configurar lo necesario para despliegue:
+
+Revisar estructura del proyecto.
+Configurar build correctamente.
+Configurar variables de entorno.
+Corregir cualquier problema que impida deploy.
+
+Si usa Next.js, React o Vite, ajustar configuración necesaria.
+
+2. Desplegar en Vercel
+
+Conectar proyecto a Vercel y hacer deployment.
+
+Si el código está en GitHub:
+
+Conectar repositorio.
+Configurar deployment automático.
+Hacer primer deploy.
+3. Configurar backend y base de datos
+
+Si hay backend o base de datos:
+
+Configurar para producción:
+
+Variables .env
+Conexión a base de datos
+URLs correctas
+Endpoints de producción
+
+Corregir cualquier problema de CORS o rutas.
+
+4. Validar después del deploy
+
+Verificar:
+
+App carga correctamente.
+Login funciona.
+Hábitos funcionan.
+Notificaciones funcionan si aplica.
+Versión móvil funciona.
+PWA sigue instalable.
+5. Entregar
+
+Generar:
+
+Todo lo necesario para desplegar
+Configuración requerida
+Comandos usados
+Ajustes hechos
+Proyecto listo y publicado en Vercel
+
+No crear proyecto nuevo.
+
+_____________________________________________________________________
+
+Actúa como ingeniero Android + release engineer senior y toma mi proyecto actual (ya funcional y desplegado) para prepararlo y publicarlo en Google Play Store.
+
+Objetivo
+
+Convertir mi aplicación actual en una app Android publicable y dejarla lista para subir a Play Store.
+
+Hacer lo siguiente:
+1. Generar versión Android
+
+Si actualmente es PWA:
+
+Convertir o empaquetar usando la mejor opción compatible:
+
+Capacitor (preferido) o
+Trusted Web Activity (TWA), si aplica.
+
+Si ya requiere app nativa, usar React Native/Android según convenga.
+
+Generar proyecto Android funcional.
+
+2. Preparar app para release
+
+Configurar:
+
+Nombre de la app
+Icono
+Splash screen
+Version code
+Version name
+Permisos necesarios (solo los mínimos)
+Notificaciones push
+Alarmas si aplican
+3. Generar build de producción
+
+Crear release firmada:
+
+Generar keystore
+Configurar signing
+Generar Android App Bundle (.aab)
+
+No APK para publicación, usar AAB.
+
+4. Preparar Play Store listing
+
+Generar lo necesario para publicar:
+
+Descripción corta
+Descripción larga
+Categoría
+Política de privacidad (si la app usa cuentas, datos, notificaciones o tracking)
+Screenshots requeridos
+Feature graphic
+App icon
+5. Validar cumplimiento
+
+Revisar:
+
+Requisitos de Google Play
+Políticas de permisos
+Requisitos de notificaciones
+Compatibilidad Android
+Que no haya blockers para publicación
+6. Subir a Play Console
+
+Preparar proceso para:
+
+Subir .aab
+Completar ficha
+Configurar prueba interna (Internal Testing) primero
+Luego dejar listo para producción
+7. Entregar
+
+Generar:
+
+Cambios necesarios
+Configuración Android
+Build .aab
+Pasos para publicar
+Todo listo para subir a Play Store
+
+No crear una app nueva.
+___________________________________________
+Actúa como arquitecto de software senior y mejora mi sistema actual agregando autenticación, gestión de cuentas y haciendo funcionales los modos “extremo” y “castigo”, además de implementar almacenamiento robusto (local y en la nube).
+
+No crear un sistema nuevo. Modificar el existente.
+
+1. Sistema de inicio de sesión y autenticación
+
+Implementar:
+
+Registro de usuarios (email + contraseña)
+Login seguro
+Logout
+Recuperación de contraseña
+Validación de sesión (JWT o similar)
+Protección de rutas (solo usuarios autenticados)
+
+Opcional:
+
+Login con Google
+2. Gestión de cuentas
+
+Crear módulo de usuario:
+
+Perfil de usuario
+Editar datos
+Configuración personal:
+Horarios
+Nivel de disciplina
+Preferencias de notificaciones
+Eliminación de cuenta
+Multi-dispositivo sincronizado
+3. Modo Extremo (hacerlo REAL)
+
+Cuando el usuario lo activa:
+
+Notificaciones mucho más frecuentes
+No permitir ignorar fácilmente hábitos
+Bloquear posponer
+Repetición constante hasta completar
+UI más agresiva (alertas visuales)
+Activación automática de alarmas
+4. Modo Castigo (hacerlo REAL)
+
+Si el usuario incumple hábitos:
+
+Activar automáticamente:
+
+Alarmas insistentes
+Penalizaciones reales:
+Reducir discipline score
+Generar tareas obligatorias
+Incrementar dificultad:
+Más recordatorios
+Menos tolerancia a fallos
+5. Base de datos (local + nube)
+
+Implementar sistema híbrido:
+
+Local:
+IndexedDB o almacenamiento local
+Soporte offline
+Nube:
+Base de datos remota (PostgreSQL, MongoDB o Firebase)
+Sincronización:
+Sync automático entre local y nube
+Resolución de conflictos
+Cache local
+6. Seguridad
+
+Agregar:
+
+Hash de contraseñas (bcrypt)
+Tokens seguros
+Protección contra accesos no autorizados
+Validación de inputs
+7. Backend y base de datos
+
+Actualizar:
+
+Tablas:
+
+users
+sessions
+habits
+tasks
+penalties
+notifications
+logs
+
+Relaciones correctas y escalables.
+
+8. Frontend
+
+Agregar:
+
+Pantallas:
+Login
+Registro
+Perfil
+Configuración
+Estado global de usuario
+Manejo de sesión
+9. Tests
+
+Agregar pruebas para:
+
+Autenticación
+Seguridad
+Sincronización
+Modos extremo y castigo
+10. Entregar
+
+Generar:
+
+Código completo
+Cambios aplicados al sistema existente
+Configuración de base de datos
+Lógica de autenticación
+Integración frontend/backend
+Sistema funcional listo para producción
+
+No explicar teoría.
+_____________________________________________-
+Actúa como ingeniero backend + DevOps senior y agrega al sistema actual un módulo de notificaciones por correo electrónico automatizadas para usuarios que no han completado tareas o hábitos.
+
+No crear sistema nuevo. Integrar en el existente.
+
+Objetivo
+
+Enviar correos automáticamente cuando el usuario:
+
+No completa un hábito.
+Tiene tareas pendientes vencidas.
+Ignora notificaciones del sistema.
+1. Sistema de envío de emails
+
+Implementar servicio de correo usando:
+
+Node.js + Nodemailer
+o
+Servicios como SendGrid / Resend / AWS SES
+
+Configurar:
+
+SMTP o API
+Variables de entorno (.env)
+2. Lógica de disparo
+
+Crear motor que detecte:
+
+Casos:
+Hábito no completado a su hora límite
+Tarea vencida
+Múltiples recordatorios ignorados
+3. Tipos de correos
+Recordatorio suave:
+“Tienes hábitos pendientes hoy”
+Recordatorio insistente:
+“Sigues sin completar tus hábitos”
+Alerta crítica:
+“Estás incumpliendo tus objetivos”
+4. Frecuencia
+
+Implementar:
+
+Primer correo → aviso inicial
+Segundo correo → si no responde
+Tercero → más insistente
+
+Evitar spam (control de frecuencia).
+
+5. Personalización
+
+Los correos deben incluir:
+
+Nombre del usuario
+Hábitos pendientes
+Tareas vencidas
+Enlace directo a la app
+6. Scheduler / Jobs
+
+Implementar sistema automático:
+
+Cron jobs o queue system
+
+Ejecutar cada cierto tiempo:
+
+Revisar estado de usuarios
+Disparar correos según reglas
+7. Base de datos
+
+Agregar:
+
+email_logs
+last_notification_sent
+notification_preferences
+8. Preferencias del usuario
+
+Permitir:
+
+Activar/desactivar correos
+Elegir frecuencia
+Tipo de alertas
+9. Seguridad
+No exponer credenciales
+Validar emails
+Manejo de errores SMTP
+10. Tests
+
+Crear tests para:
+
+Envío de correos
+Casos de disparo
+Frecuencia correcta
+Evitar duplicados
+11. Entregar
+
+Generar:
+
+Código backend
+Configuración SMTP/API
+Plantillas de correos
+Lógica de envío automático
+Integración con sistema actual
+
+Todo listo para funcionar en producción.
+
+No explicar teoría.
+
+Implementar directamente.

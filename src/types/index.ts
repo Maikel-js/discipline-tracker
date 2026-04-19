@@ -165,3 +165,27 @@ export interface AutoPenalty {
   extraTask: string;
   appliedAt: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
+  lastLogin?: string;
+  profileImage?: string;
+  disciplineLevel: number;
+  totalScore: number;
+  settings: UserSettings;
+}
+
+export interface AuthSession {
+  userId: string;
+  token: string;
+  expiresAt: string;
+}
+
+export interface CloudSyncStatus {
+  lastSynced: string;
+  pendingChanges: number;
+  isSyncing: boolean;
+}

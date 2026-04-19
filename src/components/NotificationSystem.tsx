@@ -51,42 +51,58 @@ export default function NotificationSystem({ habit }: Props) {
       return;
     }
 
+    const isExtreme = settings.extremeMode;
+    const isPunishment = settings.punishmentMode;
+
     const checkPending = () => {
       const scheduledTime = new Date(habit.scheduledTime);
       const now = new Date();
       const diffMinutes = (now.getTime() - scheduledTime.getTime()) / (1000 * 60);
 
-      if (diffMinutes >= 0 && diffMinutes < 5 && maxLevel < 1) {
+      const thresholds = isExtreme
+        ? [0, 1, 2, 3, 5]
+        : isPunishment
+          ? [0, 3, 5, 10, 15]
+          : [0, 5, 10, 15, 20];
+
+      if (diffMinutes >= thresholds[0] && diffMinutes < thresholds[1] && maxLevel < 1) {
         addNotification(habit.id, 1);
         setCurrentLevel(1);
         if (settings.notificationsEnabled) {
           showBrowserNotification(notificationMessages[1]);
         }
-      } else if (diffMinutes >= 5 && diffMinutes < 10 && maxLevel < 2) {
+      } else if (diffMinutes >= thresholds[1] && diffMinutes < thresholds[2] && maxLevel < 2) {
         addNotification(habit.id, 2);
         setCurrentLevel(2);
         if (settings.notificationsEnabled) {
           showBrowserNotification(notificationMessages[2]);
         }
-      } else if (diffMinutes >= 10 && diffMinutes < 15 && maxLevel < 3) {
+      } else if (diffMinutes >= thresholds[2] && diffMinutes < thresholds[3] && maxLevel < 3) {
         addNotification(habit.id, 3);
         setCurrentLevel(3);
         setShowModal(true);
-      } else if (diffMinutes >= 15 && diffMinutes < 20 && maxLevel < 4) {
+      } else if (diffMinutes >= thresholds[3] && diffMinutes < thresholds[4] && maxLevel < 4) {
         addNotification(habit.id, 4);
         setCurrentLevel(4);
         if (settings.soundEnabled) {
           playAlarm();
         }
+        if (isExtreme || isPunishment) {
+          repeatAlarm(isExtreme ? 3000 : 5000);
+        }
         setShowModal(true);
-      } else if (diffMinutes >= 20 && maxLevel < 5) {
+      } else if (diffMinutes >= thresholds[4] && maxLevel < 5) {
         addNotification(habit.id, 5);
         setCurrentLevel(5);
+        if (isExtreme) {
+          repeatAlarm(1000);
+        }
         setShowModal(true);
       }
     };
 
-    const interval = setInterval(checkPending, 30000);
+    const intervalTime = isExtreme ? 10000 : isPunishment ? 20000 : 30000;
+    const interval = setInterval(checkPending, intervalTime);
     checkPending();
 
     return () => clearInterval(interval);
@@ -120,6 +136,18 @@ new Notification(msg.title, {
         navigator.vibrate([500, 200, 500, 200, 500]);
         vibrationRef.current = 1;
       }
+    }
+  };
+
+  const repeatAlarm = (interval: number) => {
+    if (settings.extremeMode) {
+      const repeat = setInterval(() => {
+        playAlarm();
+        if (settings.vibrationEnabled && 'vibrate' in navigator) {
+          navigator.vibrate([500, 100, 500, 100, 500]);
+        }
+      }, interval);
+      vibrationRef.current = repeat as unknown as number;
     }
   };
 
