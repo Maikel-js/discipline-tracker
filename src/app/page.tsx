@@ -18,6 +18,7 @@ import RewardsPanel from '@/components/RewardsSystem';
 import AutoScheduler from '@/components/AutoScheduler';
 import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
+import AnalyticsHub from '@/components/AnalyticsHub';
 import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar } from 'lucide-react';
 
 function MainApp() {
@@ -182,6 +183,12 @@ function MainApp() {
         {activeTab === 'ai' && (
           <div className="space-y-4">
             <AdvancedAIHub />
+          </div>
+        )}
+
+        {activeTab === 'stats' && (
+          <div className="space-y-4">
+            <AnalyticsHub />
           </div>
         )}
       </div>

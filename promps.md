@@ -1576,3 +1576,140 @@ Tests actualizados
 No explicar teoría.
 
 Refactorizar directamente el proyecto existente y convertirlo en una base limpia y mantenible.
+
+__________________________________________________________________
+
+Actúa como software architect senior + data analytics engineer y rediseña por completo el apartado de estadísticas de mi sistema actual para convertirlo en un módulo profundamente enfocado en analítica.
+
+No crear un sistema nuevo.
+
+Modificar el módulo de estadísticas existente y convertirlo en un módulo avanzado de análisis.
+
+Objetivo
+
+Hacer que el apartado de estadísticas deje de ser básico y se convierta en un verdadero centro analítico del sistema.
+
+Rediseñar completamente el módulo de estadísticas e implementar:
+1. Dashboard analítico principal
+
+Crear panel centrado en métricas reales.
+
+Mostrar:
+
+Tasa de cumplimiento
+Discipline score
+Consistencia
+Índice de procrastinación
+Tendencias
+Rachas
+Productividad
+Horas efectivas
+2. Análisis de hábitos
+
+Agregar estadísticas específicas para hábitos:
+
+Hábitos más cumplidos
+Hábitos más fallados
+Frecuencia de incumplimiento
+Tendencia por hábito
+Evolución en el tiempo
+3. Análisis temporal
+
+Agregar análisis por:
+
+Día
+Semana
+Mes
+Trimestre
+
+Detectar:
+
+Mejores días
+Peores días
+Horarios de mejor desempeño
+Horarios de fallos
+4. Análisis de patrones
+
+Implementar detección de patrones como:
+
+Dónde más procrastino
+Cuándo incumplo más
+Tendencias negativas
+Tendencias positivas
+5. Visualizaciones serias
+
+Agregar gráficos profesionales para análisis:
+
+Series temporales
+Tendencias
+Distribuciones
+Comparativas
+Heatmaps
+Calendario tipo contribuciones
+Cohortes si aplica
+6. Insights automáticos
+
+Generar hallazgos automáticos.
+
+Ejemplo:
+
+“Tu cumplimiento baja los lunes.”
+“Fallas más cuando programas hábitos después de las 8 PM.”
+7. Predicción y proyecciones
+
+Agregar proyecciones:
+
+Proyección de discipline score
+Riesgo de abandono
+Tendencia futura
+8. Filtros avanzados
+
+Permitir filtrar estadísticas por:
+
+Hábito
+Categoría
+Fecha
+Proyecto
+Tipo de tarea
+9. Exportación de reportes
+
+Permitir exportar:
+
+PDF
+CSV
+Reportes analíticos
+10. Optimizar el módulo para que sea puramente analítico
+
+Replantear el apartado completo con enfoque en data/analytics.
+
+Si es necesario:
+
+Rediseñar arquitectura del módulo
+Crear nuevos modelos de datos
+Rehacer consultas
+Optimizar cálculos
+Requisitos técnicos
+
+Actualizar:
+
+Frontend
+Backend
+Base de datos
+Queries
+Cálculos
+Visualizaciones
+Tests
+Entregar
+
+Generar:
+
+Rediseño del módulo
+Código completo
+Nuevo dashboard analítico
+Métricas avanzadas
+Visualizaciones
+Tests
+
+No explicar teoría.
+
+Implementar directamente sobre el proyecto existente.
