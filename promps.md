@@ -733,3 +733,156 @@ Todo listo para funcionar en producción.
 No explicar teoría.
 
 Implementar directamente.
+
+___________________________________________________________________
+
+Actúa como arquitecto de software senior, ingeniero de IA y full-stack principal.
+
+Expande mi sistema actual e implementa todas las siguientes funcionalidades avanzadas sobre el proyecto existente.
+
+No crear sistema nuevo. Modificar el actual.
+
+Implementar todo lo siguiente:
+1. IA Coach Personal
+
+Crear un módulo de inteligencia que analice comportamiento del usuario y genere recomendaciones automáticas.
+
+Debe detectar:
+
+Patrones de incumplimiento.
+Caída de disciplina.
+Horarios malos.
+Recomendaciones automáticas.
+
+Ejemplo:
+
+“Estás fallando estudiar los martes. Muévelo a 6 PM.”
+
+2. Predicción de incumplimiento
+
+Crear motor predictivo para estimar probabilidad de fallar hábitos o tareas.
+
+Debe:
+
+Detectar riesgo.
+Generar alertas preventivas.
+Mostrar probabilidades.
+
+Ejemplo:
+
+“Tienes 78% probabilidad de no cumplir ejercicio hoy.”
+
+Implementar lógica, modelo y reglas necesarias.
+
+3. Reconocimiento por voz
+
+Permitir comandos por voz para:
+
+Crear tareas.
+Completar hábitos.
+Consultar estado.
+Activar modos.
+
+Ejemplo:
+
+“Marcar lectura completada.”
+
+4. Modo Supervisor IA
+
+Crear sistema que supervise:
+
+Procrastinación.
+Conductas de evasión.
+Caídas de rendimiento.
+Posibles falsos cumplimientos.
+
+Debe generar alertas e intervenir.
+
+5. Sistema Anti-trampa
+
+Detectar:
+
+Completar muchos hábitos falsamente en segundos.
+Manipulación de rachas.
+Completados sospechosos.
+Patrones anómalos.
+
+Crear reglas de validación y detección.
+
+6. Evidencia para completar hábitos
+
+No permitir marcar ciertos hábitos como cumplidos sin evidencia.
+
+Implementar soporte para:
+
+Foto
+Check-in GPS
+Integración con sensores
+Tiempo mínimo requerido
+
+Ejemplo:
+
+No marcar ejercicio como completo sin evidencia válida.
+
+7. Ranking y competencia
+
+Crear:
+
+Leaderboards
+Ranking por discipline score
+Comparativas
+Competencia entre usuarios
+8. Sistema de recompensas
+
+Agregar:
+
+Recompensas configurables
+Desbloqueos
+Beneficios por cumplimiento
+Reglas automáticas
+9. Modo mentor / coach humano
+
+Permitir vincular mentor/supervisor para:
+
+Ver progreso
+Recibir alertas
+Supervisar cumplimiento
+
+Agregar permisos y roles.
+
+10. Exportación de reportes
+
+Generar reportes exportables:
+
+PDF
+Dashboard
+Auditorías
+Resúmenes mensuales
+Requisitos técnicos
+
+Actualizar todo lo necesario:
+
+Frontend
+Backend
+Base de datos
+APIs
+Integraciones
+Seguridad
+UI/UX
+Tests
+
+Agregar nuevas tablas si hace falta.
+
+Entregar
+
+Generar:
+
+Diseño técnico
+Código completo
+Integraciones
+Tests
+Implementación sobre el proyecto existente
+
+No explicar teoría.
+
+Implementar directamente todo.

@@ -189,3 +189,72 @@ export interface CloudSyncStatus {
   pendingChanges: number;
   isSyncing: boolean;
 }
+
+export interface EmailLog {
+  id: string;
+  userId: string;
+  type: 'reminder' | 'insistent' | 'critical';
+  subject: string;
+  body: string;
+  sentAt: string;
+  opened: boolean;
+}
+
+export interface EmailPreferences {
+  enabled: boolean;
+  frequency: 'low' | 'medium' | 'high';
+  reminderTypes: ('habit_missed' | 'task_overdue' | 'ignored')[];
+}
+
+export interface AIRecommendation {
+  id: string;
+  type: 'schedule' | 'habit' | 'time' | 'pattern';
+  message: string;
+  confidence: number;
+  action?: string;
+  createdAt: string;
+}
+
+export interface Prediction {
+  id: string;
+  habitId: string;
+  probability: number;
+  factors: string[];
+  lastUpdated: string;
+}
+
+export interface Evidence {
+  id: string;
+  habitId: string;
+  type: 'photo' | 'gps' | 'sensor' | 'time';
+  data: string;
+  verified: boolean;
+  timestamp: string;
+}
+
+export interface Reward {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  requirement: number;
+  type: 'streak' | 'score' | 'completion';
+  unlockedAt?: string;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  userId: string;
+  userName: string;
+  score: number;
+  streak: number;
+}
+
+export interface AntiCheatAlert {
+  id: string;
+  userId: string;
+  type: 'rapid_complete' | 'suspicious_pattern' | 'fake_completion';
+  details: string;
+  timestamp: string;
+  resolved: boolean;
+}

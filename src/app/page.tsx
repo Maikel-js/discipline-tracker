@@ -12,7 +12,10 @@ import TaskColumn from '@/components/TaskCard';
 import NotificationSystem from '@/components/NotificationSystem';
 import TabBar from '@/components/TabBar';
 import UserProfile from '@/components/UserProfile';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings, User } from 'lucide-react';
+import AICoach from '@/components/AICoach';
+import VoiceCommands from '@/components/VoiceCommands';
+import RewardsPanel from '@/components/RewardsSystem';
+import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy } from 'lucide-react';
 
 function MainApp() {
   const { isAuthenticated } = useAuth();
@@ -75,6 +78,12 @@ function MainApp() {
             className="p-2 hover:bg-gray-800 rounded-xl"
           >
             <Settings size={20} className="text-gray-400" />
+          </button>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="p-2 hover:bg-gray-800 rounded-xl"
+          >
+            <Trophy size={20} className="text-yellow-400" />
           </button>
         </header>
 
@@ -154,6 +163,8 @@ function MainApp() {
       </div>
 
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+      <AICoach />
+      <VoiceCommands />
 
       <HabitFormModal isOpen={showHabitModal} onClose={() => setShowHabitModal(false)} />
       <TaskFormModal isOpen={showTaskModal} onClose={() => setShowTaskModal(false)} />
