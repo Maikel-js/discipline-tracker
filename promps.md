@@ -886,3 +886,162 @@ Implementación sobre el proyecto existente
 No explicar teoría.
 
 Implementar directamente todo.
+
+
+___________________________________________________________________
+
+Actúa como arquitecto de software senior y expande mi sistema actual agregando las siguientes capacidades avanzadas sobre el proyecto existente.
+
+No crear un sistema nuevo. Modificar el actual.
+
+Implementar todo lo siguiente:
+1. Planificador automático de día
+
+Crear sistema que construya automáticamente la agenda diaria del usuario usando:
+
+Prioridad de tareas
+Hábitos obligatorios
+Tiempo disponible
+Horarios definidos
+Energía estimada si aplica
+
+Generar planificación automática diaria.
+
+2. Reprogramación inteligente
+
+Si el usuario incumple una tarea o hábito:
+
+Reprogramarla automáticamente.
+Buscar nuevo espacio disponible.
+Evitar que se pierda.
+
+Agregar lógica de reasignación.
+
+3. Time blocking automático
+
+Implementar asignación automática de bloques de tiempo para:
+
+Tareas
+Hábitos
+Sesiones de trabajo
+
+Mostrarlo en calendario visual.
+
+4. Integración con Google Calendar / Outlook
+
+Sincronizar:
+
+Eventos
+Hábitos
+Tareas
+Time blocks
+
+Agregar integración bidireccional si es posible.
+
+5. Integración con WhatsApp o Telegram Bot
+
+Agregar bot que pueda enviar mensajes automáticos como:
+
+Recordatorios
+Alertas de incumplimiento
+Resúmenes diarios
+
+Integrarlo con el sistema actual.
+
+6. Motor de reglas tipo If This Then That
+
+Crear sistema configurable para reglas automáticas.
+
+Ejemplos:
+
+Si fallo estudiar → crear tarea correctiva.
+Si cumplo 7 días seguidos → activar recompensa.
+Si discipline score baja → activar modo castigo.
+
+Crear motor de automatización.
+
+7. Dashboard analítico avanzado
+
+Agregar métricas y paneles para:
+
+Tendencia de disciplina
+Índice de procrastinación
+Productividad semanal
+Horas efectivas
+Consistencia
+
+Crear visualizaciones y reportes.
+
+8. Score de consistencia
+
+Agregar sistema separado del discipline score para medir:
+
+Regularidad
+Estabilidad
+Persistencia
+
+Diseñar motor de cálculo.
+
+9. Backups automáticos
+
+Implementar:
+
+Backup diario
+Restauración
+Exportación de datos
+
+Agregar seguridad para evitar pérdida de información.
+
+10. Historial / versionado
+
+Crear auditoría y versionado para:
+
+Cambios
+Ediciones
+Eventos importantes
+Historial del usuario
+11. Personalización / tema oscuro
+
+Agregar:
+
+Dark mode
+Preferencias visuales
+Configuración personalizable
+12. Multiusuario / equipos
+
+Agregar soporte para:
+
+Equipos
+Familias
+Grupos
+Espacios compartidos
+
+Con roles y permisos.
+
+Requisitos técnicos
+
+Actualizar todo lo necesario:
+
+Frontend
+Backend
+Base de datos
+APIs
+Integraciones
+Seguridad
+Tests
+
+Modificar arquitectura si hace falta.
+
+Entregar
+
+Generar:
+
+Diseño técnico
+Código completo
+Integraciones
+Tests
+Implementación sobre el proyecto existente
+
+No explicar teoría.
+
+Implementar directamente todo.

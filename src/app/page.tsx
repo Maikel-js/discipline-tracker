@@ -61,43 +61,46 @@ function MainApp() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
-      <div className="max-w-4xl mx-auto p-4">
-        <header className="flex items-center justify-between py-4 mb-4">
+    <div className="min-h-screen bg-black text-white pb-24 md:pb-20">
+      <div className="max-w-4xl mx-auto px-3 md:p-4">
+        <header className="flex items-center justify-between py-3 md:py-4 mb-2 md:mb-4">
           <div>
-            <h1 className="text-xl font-bold flex items-center gap-2">
-              <Zap className="text-yellow-400" size={24} />
-              Discipline Tracker
+            <h1 className="text-lg md:text-xl font-bold flex items-center gap-2">
+              <Zap className="text-yellow-400 w-5 h-5 md:w-6 md:h-6" />
+              <span className="hidden sm:inline">Discipline Tracker</span>
+              <span className="sm:hidden">Discipline</span>
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 hidden sm:block">
               {currentTime.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
           </div>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="p-2 hover:bg-gray-800 rounded-xl"
-          >
-            <Settings size={20} className="text-gray-400" />
-          </button>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="p-2 hover:bg-gray-800 rounded-xl"
-          >
-            <Trophy size={20} className="text-yellow-400" />
-          </button>
+          <div className="flex gap-1 md:gap-2">
+            <button
+              onClick={() => setShowSettings(true)}
+              className="p-2 md:p-2 hover:bg-gray-800 rounded-xl touch-active"
+            >
+              <Settings size={18} className="text-gray-400" />
+            </button>
+            <button
+              onClick={() => setShowSettings(true)}
+              className="p-2 md:p-2 hover:bg-gray-800 rounded-xl touch-active"
+            >
+              <Trophy size={18} className="text-yellow-400" />
+            </button>
+          </div>
         </header>
 
         {activeTab === 'dashboard' && <Dashboard />}
 
         {activeTab === 'habits' && (
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">Mis Hábitos</h2>
+              <h2 className="text-lg md:text-xl font-bold">Mis Hábitos</h2>
               <button
                 onClick={() => setShowHabitModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl transition-colors"
+                className="flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl transition-colors touch-active"
               >
-                <Plus size={18} />
+                <Plus size={16} />
                 <span className="text-sm">Nuevo</span>
               </button>
             </div>
