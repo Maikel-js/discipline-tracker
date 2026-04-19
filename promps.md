@@ -1713,3 +1713,152 @@ Tests
 No explicar teoría.
 
 Implementar directamente sobre el proyecto existente.
+
+________________________________________________________________
+
+Actúa como arquitecto de software senior, DevOps engineer y full-stack principal.
+
+Haz las siguientes modificaciones finales sobre mi proyecto existente.
+
+No crear un sistema nuevo.
+
+Modificar el actual e implementar todo lo siguiente:
+
+1. Descarga e instalación desde la propia página
+
+Agregar dentro de la aplicación una sección Descargar App con enlaces para instalar o descargar en todos los dispositivos desde la propia página.
+
+Incluir:
+Móvil
+Botón descargar Android (APK / Play Store)
+Botón instalar PWA
+Botón iPhone si aplica
+PC
+Botón descargar Windows (.exe / .msi)
+Botón macOS si aplica
+Botón Linux si aplica
+2. Enlace único de distribución
+
+Crear un único enlace central dentro de la página que sirva como portal de descargas para todos los dispositivos.
+
+Ejemplo:
+
+misistema.com/download
+
+Desde ahí poder descargar según plataforma.
+
+3. Base de datos en la nube
+
+Mover o asegurar almacenamiento en base de datos cloud.
+
+Implementar usando opción apropiada:
+
+PostgreSQL (Supabase u otra)
+Firebase
+MongoDB Atlas
+
+Requisitos:
+
+Persistencia en nube
+Sincronización entre dispositivos
+Datos centralizados
+Backups
+Manejo seguro de credenciales
+4. Pomodoro configurable
+
+Modificar el módulo Pomodoro para permitir ajustar tiempos.
+
+Permitir configurar:
+
+Duración del bloque de foco
+Descanso corto
+Descanso largo
+Número de ciclos
+
+Ejemplo:
+
+25/5/15 configurable por usuario.
+
+Guardar configuración por cuenta.
+
+5. No permitir más de una cuenta por persona
+
+Implementar restricciones para evitar múltiples cuentas del mismo usuario.
+
+Agregar validación usando combinación apropiada de:
+
+Email único (obligatorio)
+Número telefónico único (obligatorio)
+Verificación por correo
+Verificación por código SMS/OTP
+
+Evitar creación duplicada.
+
+6. Notificaciones por WhatsApp usando número telefónico
+
+Agregar módulo para enviar notificaciones por WhatsApp al número del usuario.
+
+Implementar usando integración apropiada (por ejemplo API compatible tipo WhatsApp Business/Twilio si corresponde).
+
+Enviar mensajes automáticos para:
+
+Hábitos pendientes
+Tareas vencidas
+Alarmas
+Recordatorios insistentes
+Alertas de incumplimiento
+
+Usar el número registrado del usuario.
+
+7. Preferencias del usuario
+
+Permitir configurar:
+
+Activar/desactivar WhatsApp
+Frecuencia de mensajes
+Horarios permitidos para mensajes
+Preferencia de canal:
+Email
+Push
+WhatsApp
+8. Actualizar backend, frontend y base de datos
+
+Modificar todo lo necesario para soportar estas funciones:
+
+UI
+APIs
+Modelos
+Base de datos
+Integraciones
+Seguridad
+Tests
+9. Validar que no se rompa nada
+
+Mantener funcionando todo lo existente:
+
+Login
+Hábitos
+Tareas
+Alarmas
+Modo extremo
+Modo castigo
+Estadísticas
+Móvil
+Desktop
+Descargas
+10. Entregar
+
+Generar:
+
+Código completo
+Integraciones
+Configuración cloud
+Portal de descargas
+WhatsApp notifications
+Restricción de cuentas duplicadas
+Pomodoro configurable
+Tests
+
+No explicar teoría.
+
+Implementar directamente todo sobre el proyecto existente.

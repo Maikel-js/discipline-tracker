@@ -19,6 +19,7 @@ import AutoScheduler from '@/components/AutoScheduler';
 import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
 import AnalyticsHub from '@/components/AnalyticsHub';
+import DownloadPortal from '@/components/DownloadPortal';
 import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar } from 'lucide-react';
 
 function MainApp() {
@@ -189,6 +190,12 @@ function MainApp() {
         {activeTab === 'stats' && (
           <div className="space-y-4">
             <AnalyticsHub />
+          </div>
+        )}
+
+        {activeTab === 'download' && (
+          <div className="space-y-4">
+            <DownloadPortal />
           </div>
         )}
       </div>
