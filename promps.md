@@ -1045,3 +1045,305 @@ Implementación sobre el proyecto existente
 No explicar teoría.
 
 Implementar directamente todo.
+
+______________________________________________________________
+
+Actúa como arquitecto principal de software, ingeniero de IA y diseñador de plataformas.
+
+Expande mi proyecto actual y conviértelo en una plataforma mucho más grande agregando todos los siguientes módulos avanzados sobre el sistema existente.
+
+No crear un sistema nuevo. Modificar el actual.
+
+Implementar todo lo siguiente:
+1. Convertirlo en un Personal OS (Life OS)
+
+Expandir el sistema para convertirlo en un centro operativo personal que integre:
+
+Hábitos
+Tareas
+Calendario
+Metas
+Proyectos
+Finanzas
+Notas
+Decisiones
+
+Diseñar navegación y arquitectura para operar como sistema unificado.
+
+2. Agente autónomo de IA
+
+Crear un agente inteligente que no solo recomiende, sino que pueda ejecutar acciones automáticamente como:
+
+Reprogramar tareas.
+Reordenar agenda.
+Resolver conflictos.
+Ajustar hábitos automáticamente.
+
+Agregar motor de automatización y toma de decisiones.
+
+3. Módulo de metas de largo plazo
+
+Agregar soporte para:
+
+Objetivos trimestrales
+OKRs personales
+Roadmaps
+Seguimiento estratégico
+
+Con vinculación entre metas, hábitos y tareas.
+
+4. Sistema de toma de decisiones
+
+Implementar módulo para decisiones complejas usando:
+
+Matriz Eisenhower
+Weighted scoring
+Decision trees
+Frameworks de priorización
+
+Agregar interfaz y lógica.
+
+5. Finanzas personales integradas
+
+Agregar módulo financiero:
+
+Presupuesto
+Ahorro
+Metas financieras
+Seguimiento de gastos
+Relación entre disciplina y finanzas
+6. Knowledge System / Segundo Cerebro
+
+Agregar:
+
+Notas
+Base de conocimiento
+Ideas conectadas
+Relación entre notas, tareas y proyectos
+
+Diseñar sistema tipo second brain.
+
+7. Marketplace / Plugins
+
+Crear arquitectura extensible para:
+
+Plugins
+Extensiones
+Integraciones de terceros
+
+Diseñar sistema modular.
+
+8. API pública
+
+Diseñar y construir API pública para que otras aplicaciones puedan integrarse con la plataforma.
+
+Agregar:
+
+Endpoints
+Autenticación
+Documentación
+Gestión de acceso
+9. Módulo B2B / empresas
+
+Agregar versión para organizaciones con:
+
+Equipos
+Roles
+Supervisión
+Productividad grupal
+Accountability organizacional
+10. Motor de simulación / escenarios
+
+Crear sistema “What If” para simular escenarios.
+
+Ejemplo:
+
+Si cambio este hábito:
+¿Qué impacto tendría en 90 días?
+
+Implementar lógica de simulación.
+
+Requisitos técnicos
+
+Actualizar todo lo necesario:
+
+Frontend
+Backend
+Base de datos
+APIs
+Arquitectura
+Seguridad
+Integraciones
+Tests
+
+Modificar arquitectura si hace falta.
+
+Entregar
+
+Generar:
+
+Diseño técnico
+Arquitectura de plataforma
+Código completo
+Integraciones
+Tests
+Implementación sobre el proyecto existente
+
+No explicar teoría.
+
+Implementar directamente todo.
+
+_____________________________________________________________________
+
+Actúa como arquitecto de software principal, ingeniero de IA avanzada y diseñador de plataformas complejas.
+
+Expande mi sistema actual y conviértelo en una plataforma de inteligencia personal avanzada agregando todos los siguientes módulos de alto nivel sobre el sistema existente.
+
+No crear un sistema nuevo. Modificar el actual.
+
+Implementar todo lo siguiente:
+1. Life Graph (Memoria Personal)
+
+Diseñar e implementar un grafo de conocimiento que conecte:
+
+Hábitos
+Tareas
+Decisiones
+Proyectos
+Notas
+Personas
+Eventos
+
+Debe permitir:
+
+Relaciones entre entidades
+Navegación tipo grafo
+Consultas complejas
+Persistencia eficiente
+2. Digital Twin (Gemelo Digital)
+
+Crear un modelo del usuario que represente su comportamiento.
+
+Debe:
+
+Aprender patrones
+Simular decisiones
+Predecir acciones
+Evaluar escenarios futuros
+
+Ejemplo:
+
+“Si sigues este patrón, fallarás en X hábito.”
+
+3. Sistema multiagente
+
+Implementar arquitectura con múltiples agentes especializados:
+
+Agente de planificación
+Agente de disciplina
+Agente financiero
+Agente de decisiones
+
+Cada agente debe:
+
+Tener responsabilidades claras
+Comunicarse con otros agentes
+Tomar decisiones autónomas
+4. Laboratorio de experimentos personales
+
+Permitir ejecutar experimentos sobre el usuario:
+
+Definir variables (horarios, hábitos, etc.)
+Comparar resultados
+Medir impacto
+Generar conclusiones
+5. Motor causal
+
+Implementar sistema que detecte relaciones causales:
+
+Identificar causas reales de incumplimiento
+Diferenciar correlación vs causalidad
+Generar insights profundos
+
+Ejemplo:
+
+“Fallas estudiar porque duermes tarde.”
+
+6. Sistema operativo organizacional (B2B avanzado)
+
+Expandir módulo de empresas a un OS completo:
+
+Gestión de equipos
+Productividad organizacional
+Supervisión
+Métricas de rendimiento
+Coordinación
+7. Modelo de identidad / perfil cognitivo
+
+Crear perfil del usuario basado en:
+
+Comportamiento
+Decisiones
+Hábitos
+Patrones mentales
+
+Usarlo para adaptar el sistema automáticamente.
+
+8. Sistema de entrenamiento adaptativo
+
+Crear sistema que ajuste dificultad dinámicamente:
+
+Hábitos más difíciles si mejoras
+Más soporte si fallas
+Progresión personalizada
+9. Knowledge Graph + búsqueda semántica
+
+Implementar:
+
+Búsqueda inteligente
+Consultas complejas
+Relación entre datos
+
+Ejemplo:
+
+“Mostrar todas las veces que fallé por falta de sueño.”
+
+10. Protocolos / Playbooks ejecutables
+
+Permitir crear y ejecutar protocolos:
+
+Rutinas
+Estrategias
+Planes estructurados
+
+Ejemplo:
+
+“Protocolo de estudio intensivo.”
+
+Requisitos técnicos
+
+Actualizar todo lo necesario:
+
+Arquitectura (posiblemente microservicios o modular avanzada)
+Backend
+Frontend
+Base de datos (incluyendo soporte para grafos si es necesario)
+APIs
+Integraciones
+Seguridad
+Escalabilidad
+Tests
+Entregar
+
+Generar:
+
+Diseño de arquitectura completa
+Modelo de datos actualizado
+Código completo
+Implementación de todos los módulos
+Integraciones
+Tests
+
+No explicar teoría.
+
+Implementar directamente todo sobre el sistema existente.

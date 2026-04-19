@@ -313,3 +313,53 @@ export interface AnalyticsData {
   weeklyProductivity: number;
   consistencyScore: number;
 }
+
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  type: 'quarterly' | 'monthly' | 'yearly' | 'okr';
+  progress: number;
+  dueDate: string;
+  linkedHabits: string[];
+  linkedTasks: string[];
+  status: 'active' | 'completed' | 'paused';
+  createdAt: string;
+}
+
+export interface Decision {
+  id: string;
+  title: string;
+  options: DecisionOption[];
+  matrix: 'eisenhower' | 'weighted' | 'simple';
+  selectedOption?: string;
+  decidedAt?: string;
+  status: 'pending' | 'decided';
+}
+
+export interface DecisionOption {
+  id: string;
+  name: string;
+  score: number;
+  pros: string[];
+  cons: string[];
+  weight?: number;
+}
+
+export interface Plugin {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  version: string;
+}
+
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  linkedTasks: string[];
+  linkedHabits: string[];
+  tags: string[];
+  createdAt: string;
+}

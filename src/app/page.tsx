@@ -16,6 +16,7 @@ import AICoach from '@/components/AICoach';
 import VoiceCommands from '@/components/VoiceCommands';
 import RewardsPanel from '@/components/RewardsSystem';
 import AutoScheduler from '@/components/AutoScheduler';
+import LifeOSHub from '@/components/LifeOSHub';
 import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar } from 'lucide-react';
 
 function MainApp() {
@@ -168,6 +169,12 @@ function MainApp() {
         {activeTab === 'schedule' && (
           <div className="space-y-4">
             <AutoScheduler />
+          </div>
+        )}
+
+        {activeTab === 'lifeos' && (
+          <div className="space-y-4">
+            <LifeOSHub />
           </div>
         )}
       </div>
