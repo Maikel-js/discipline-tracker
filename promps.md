@@ -289,4 +289,70 @@ Todo listo para quedar subido en GitHub
 
 git remote add origin https://github.com/Maikel-js/discipline-tracker.git
 git branch -M main
-git push -u origin main_
+git push -u origin main
+
+________________________________________________________
+
+Actúa como ingeniero mobile y full-stack senior.
+
+Toma mi sistema actual y conviértelo para que pueda usarlo en mi celular.
+
+Objetivo:
+
+Hacer que el sistema funcione en Android/iPhone desde mi teléfono.
+
+Implementar:
+Opción preferida: convertirlo en PWA instalable
+
+Haz que el proyecto sea una Progressive Web App (PWA) para que pueda:
+
+Instalarse desde navegador en el celular.
+Aparecer como una app real en la pantalla de inicio.
+Abrirse como aplicación.
+Funcionar en móvil correctamente.
+Tener diseño responsive.
+Mantener sincronización con el sistema actual.
+Agregar:
+Mobile optimization
+
+Adaptar toda la interfaz para celular:
+
+Botones táctiles.
+Diseño responsive.
+Navegación móvil.
+Menús optimizados.
+Panel usable en pantalla pequeña.
+Notificaciones móviles
+
+Hacer funcionar:
+
+Push notifications en celular.
+Alarmas en móvil.
+Recordatorios insistentes en teléfono.
+Vibración si aplica.
+Instalación
+
+Configurar:
+
+manifest.json
+service worker
+modo installable
+
+Para que pueda hacer:
+
+“Agregar a pantalla de inicio”
+
+y usarlo como app.
+
+Si es mejor opción:
+
+Si el proyecto requiere app nativa, migrarlo a React Native o Capacitor y generar versión Android también.
+
+Entregar:
+Código necesario
+Configuración PWA
+Cambios para móvil
+Pasos para instalarlo en mi celular
+Todo listo para probar desde mi teléfono
+
+No crear otro proyecto aparte.
