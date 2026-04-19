@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, Flame, ListTodo, BarChart3, Calendar, Settings, Plus, Bell, Layers } from 'lucide-react';
+import { Home, Flame, ListTodo, BarChart3, Calendar, Settings, Plus, Bell, Layers, Brain } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
 interface Props {
@@ -19,6 +19,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
     { id: 'schedule', icon: Calendar, label: 'Día' },
     { id: 'lifeos', icon: Layers, label: 'Life OS' },
+    { id: 'ai', icon: Brain, label: 'AI' },
     { id: 'stats', icon: BarChart3, label: 'Stats' }
   ];
 

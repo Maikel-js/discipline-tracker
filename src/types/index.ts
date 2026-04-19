@@ -363,3 +363,45 @@ export interface Note {
   tags: string[];
   createdAt: string;
 }
+
+export interface GraphNode {
+  id: string;
+  type: 'habit' | 'task' | 'goal' | 'note' | 'decision';
+  label: string;
+  connections: string[];
+}
+
+export interface DigitalTwin {
+  profile: {
+    chronotype: 'morning' | 'night' | 'afternoon';
+    decisionStyle: 'intuitive' | 'analytical' | 'balanced';
+    riskTolerance: number;
+    motivationType: 'reward' | 'avoidance' | 'social';
+  };
+  predictions: {
+    id: string;
+    habitId: string;
+    probability: number;
+    confidence: number;
+  }[];
+  lastUpdated: string;
+}
+
+export interface Experiment {
+  id: string;
+  name: string;
+  variable: string;
+  startDate: string;
+  endDate?: string;
+  control: number;
+  variant: number;
+  results?: number;
+}
+
+export interface Protocol {
+  id: string;
+  name: string;
+  steps: { time: string; action: string; duration: number }[];
+  timesCompleted: number;
+  effectiveness: number;
+}
