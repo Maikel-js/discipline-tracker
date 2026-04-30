@@ -176,7 +176,7 @@ function MainApp() {
           </div>
         )}
 
-        {activeTab === 'lifeos' && (
+        {activeTab === 'life-os' && (
           <div className="space-y-4">
             <LifeOSHub />
           </div>
@@ -185,12 +185,6 @@ function MainApp() {
         {activeTab === 'ai' && (
           <div className="space-y-4">
             <AdvancedAIHub />
-          </div>
-        )}
-
-        {activeTab === 'stats' && (
-          <div className="space-y-4">
-            <AnalyticsHub />
           </div>
         )}
 
