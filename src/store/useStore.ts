@@ -19,7 +19,13 @@ import type {
   AuditLog,
   AccountabilityPartner,
   SensorData,
-  AutoPenalty
+  AutoPenalty,
+  Goal,
+  Decision,
+  Note,
+  Plugin,
+  Experiment,
+  Protocol
 } from '@/types';
 
 interface StoreState {
@@ -39,6 +45,12 @@ interface StoreState {
   accountabilityPartners: AccountabilityPartner[];
   sensorData: SensorData[];
   autoPenalties: AutoPenalty[];
+  goals: Goal[];
+  decisions: Decision[];
+  notes: Note[];
+  plugins: Plugin[];
+  experiments: Experiment[];
+  protocols: Protocol[];
 
   addHabit: (habit: Omit<Habit, 'id' | 'currentStreak' | 'completionRate' | 'createdAt' | 'missedCount' | 'rescheduleCount' | 'pomodoroSessions'>) => void;
   updateHabit: (id: string, updates: Partial<Habit>) => void;
@@ -79,6 +91,31 @@ interface StoreState {
 
   applyAutoPenalty: (habitId: string) => void;
   togglePunishmentMode: () => void;
+
+  addGoal: (goal: Omit<Goal, 'id' | 'createdAt'>) => void;
+  updateGoal: (id: string, updates: Partial<Goal>) => void;
+  deleteGoal: (id: string) => void;
+
+  addDecision: (decision: Omit<Decision, 'id'>) => void;
+  updateDecision: (id: string, updates: Partial<Decision>) => void;
+  deleteDecision: (id: string) => void;
+
+  addNote: (note: Omit<Note, 'id' | 'createdAt'>) => void;
+  updateNote: (id: string, updates: Partial<Note>) => void;
+  deleteNote: (id: string) => void;
+
+  togglePlugin: (id: string) => void;
+
+  addExperiment: (experiment: Omit<Experiment, 'id' | 'startDate' | 'progress'>) => void;
+  updateExperiment: (id: string, updates: Partial<Experiment>) => void;
+  completeExperiment: (id: string) => void;
+  pauseExperiment: (id: string) => void;
+  resumeExperiment: (id: string) => void;
+  deleteExperiment: (id: string) => void;
+  recalculateExperimentProgress: () => void;
+
+  runProtocol: (protocolId: string) => void;
+  updateProtocol: (id: string, updates: Partial<Protocol>) => void;
 
   updateStats: () => void;
   toggleExtremeMode: () => void;
@@ -156,6 +193,21 @@ export const useStore = create<StoreState>()(
       accountabilityPartners: [],
       sensorData: [],
       autoPenalties: [],
+      goals: [],
+      decisions: [],
+      notes: [],
+      plugins: [
+        { id: 'gcal', name: 'Google Calendar', description: 'Sincroniza con Google Calendar', enabled: false, version: '1.0' },
+        { id: 'whatsapp', name: 'WhatsApp Bot', description: 'Notificaciones por WhatsApp', enabled: false, version: '1.0' },
+        { id: 'fit', name: 'Google Fit', description: 'Conectar con Google Fit', enabled: false, version: '1.0' },
+        { id: 'telegram', name: 'Telegram Bot', description: 'Bot de Telegram', enabled: false, version: '1.0' }
+      ],
+      experiments: [],
+      protocols: [
+        { id: '1', name: 'Rutina Matutina', steps: [{ time: '6:00', action: 'Ejercicio', duration: 30 }, { time: '6:30', action: 'Meditar', duration: 15 }, { time: '6:45', action: 'Estudiar', duration: 60 }], timesCompleted: 0, effectiveness: 0 },
+        { id: '2', name: 'Deep Work', steps: [{ time: '9:00', action: 'Bloque de trabajo profundo', duration: 120 }, { time: '11:00', action: 'Break', duration: 15 }, { time: '11:15', action: 'Continuar trabajo', duration: 120 }], timesCompleted: 0, effectiveness: 0 },
+        { id: '3', name: 'Noche Productiva', steps: [{ time: '19:00', action: 'Revisión diaria', duration: 30 }, { time: '19:30', action: 'Planificación siguiente día', duration: 15 }, { time: '20:00', action: 'Aprendizaje', duration: 60 }], timesCompleted: 0, effectiveness: 0 }
+      ],
 
       addHabit: (habitData) => {
         const id = generateId();
@@ -235,6 +287,7 @@ export const useStore = create<StoreState>()(
           notifications: state.notifications.filter(n => n.habitId !== id || n.acknowledged)
         }));
         get().updateStats();
+        get().recalculateExperimentProgress();
       },
 
       missHabit: (id) => {
@@ -355,6 +408,7 @@ export const useStore = create<StoreState>()(
         set(state => ({
           tasks: state.tasks.map(t => t.id === id ? { ...t, status: newStatus } : t)
         }));
+        get().recalculateExperimentProgress();
       },
 
       checkTaskDependencies: (taskId) => {
@@ -675,6 +729,188 @@ export const useStore = create<StoreState>()(
       togglePunishmentMode: () => {
         set(state => ({
           settings: { ...state.settings, punishmentMode: !state.settings.punishmentMode }
+        }));
+      },
+
+      addGoal: (goalData) => {
+        const newGoal: Goal = {
+          ...goalData,
+          id: generateId(),
+          createdAt: new Date().toISOString()
+        };
+        set(state => ({ goals: [...state.goals, newGoal] }));
+      },
+
+      updateGoal: (id, updates) => {
+        set(state => ({
+          goals: state.goals.map(g => g.id === id ? { ...g, ...updates } : g)
+        }));
+      },
+
+      deleteGoal: (id) => {
+        set(state => ({
+          goals: state.goals.filter(g => g.id !== id)
+        }));
+      },
+
+      addDecision: (decisionData) => {
+        const newDecision: Decision = {
+          ...decisionData,
+          id: generateId()
+        };
+        set(state => ({ decisions: [...state.decisions, newDecision] }));
+      },
+
+      updateDecision: (id, updates) => {
+        set(state => ({
+          decisions: state.decisions.map(d => d.id === id ? { ...d, ...updates } : d)
+        }));
+      },
+
+      deleteDecision: (id) => {
+        set(state => ({
+          decisions: state.decisions.filter(d => d.id !== id)
+        }));
+      },
+
+      addNote: (noteData) => {
+        const newNote: Note = {
+          ...noteData,
+          id: generateId(),
+          createdAt: new Date().toISOString()
+        };
+        set(state => ({ notes: [...state.notes, newNote] }));
+      },
+
+      updateNote: (id, updates) => {
+        set(state => ({
+          notes: state.notes.map(n => n.id === id ? { ...n, ...updates } : n)
+        }));
+      },
+
+      deleteNote: (id) => {
+        set(state => ({
+          notes: state.notes.filter(n => n.id !== id)
+        }));
+      },
+
+      togglePlugin: (id) => {
+        set(state => ({
+          plugins: state.plugins.map(p => p.id === id ? { ...p, enabled: !p.enabled } : p)
+        }));
+      },
+
+      addExperiment: (expData) => {
+        const now = new Date();
+        const endDate = new Date(now.getTime() + expData.periodDays * 24 * 60 * 60 * 1000);
+        const newExperiment: Experiment = {
+          id: generateId(),
+          name: expData.name,
+          description: expData.description,
+          type: expData.type,
+          periodDays: expData.periodDays,
+          linkedHabits: expData.linkedHabits || [],
+          linkedTasks: expData.linkedTasks || [],
+          startDate: now.toISOString(),
+          endDate: endDate.toISOString(),
+          progress: 0,
+          status: 'active'
+        };
+        set(state => ({ experiments: [...state.experiments, newExperiment] }));
+      },
+
+      updateExperiment: (id, updates) => {
+        set(state => ({
+          experiments: state.experiments.map(e => e.id === id ? { ...e, ...updates } : e)
+        }));
+      },
+
+      completeExperiment: (id) => {
+        set(state => ({
+          experiments: state.experiments.map(e =>
+            e.id === id ? { ...e, status: 'completed' as const, endDate: new Date().toISOString() } : e
+          )
+        }));
+      },
+
+      pauseExperiment: (id) => {
+        set(state => ({
+          experiments: state.experiments.map(e =>
+            e.id === id ? { ...e, status: 'paused' as const } : e
+          )
+        }));
+      },
+
+      resumeExperiment: (id) => {
+        set(state => ({
+          experiments: state.experiments.map(e =>
+            e.id === id ? { ...e, status: 'active' as const } : e
+          )
+        }));
+      },
+
+      deleteExperiment: (id) => {
+        set(state => ({
+          experiments: state.experiments.filter(e => e.id !== id)
+        }));
+      },
+
+      recalculateExperimentProgress: () => {
+        set(state => {
+          const updatedExperiments = state.experiments.map(exp => {
+            if (exp.status !== 'active') return exp;
+
+            if (exp.type === 'habits') {
+              const linkedHabitIds = exp.linkedHabits;
+              if (linkedHabitIds.length === 0) return exp;
+
+              const linkedHabits = state.habits.filter(h => linkedHabitIds.includes(h.id));
+              if (linkedHabits.length === 0) return exp;
+
+              const completedCount = linkedHabits.filter(h => {
+                const today = new Date().toISOString().split('T')[0];
+                return h.lastCompleted && h.lastCompleted.startsWith(today);
+              }).length;
+
+              const overallRate = linkedHabits.reduce((acc, h) => acc + h.completionRate, 0) / linkedHabits.length;
+              const newProgress = Math.round(Math.min(100, Math.max(completedCount / linkedHabits.length * 100, overallRate * 0.3)));
+              return { ...exp, progress: newProgress };
+            } else {
+              const linkedTaskIds = exp.linkedTasks;
+              if (linkedTaskIds.length === 0) return exp;
+
+              const linkedTasks = state.tasks.filter(t => linkedTaskIds.includes(t.id));
+              if (linkedTasks.length === 0) return exp;
+
+              const completedCount = linkedTasks.filter(t => t.status === 'done').length;
+              const newProgress = Math.round((completedCount / linkedTasks.length) * 100);
+              return { ...exp, progress: newProgress };
+            }
+          });
+
+          return { experiments: updatedExperiments };
+        });
+      },
+
+      runProtocol: (protocolId) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId) {
+              const newTimesCompleted = p.timesCompleted + 1;
+              return {
+                ...p,
+                timesCompleted: newTimesCompleted,
+                effectiveness: (p.effectiveness * p.timesCompleted + Math.random() * 30 + 70) / newTimesCompleted
+              };
+            }
+            return p;
+          })
+        }));
+      },
+
+      updateProtocol: (id, updates) => {
+        set(state => ({
+          protocols: state.protocols.map(p => p.id === id ? { ...p, ...updates } : p)
         }));
       }
     }),

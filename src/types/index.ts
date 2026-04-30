@@ -390,12 +390,15 @@ export interface DigitalTwin {
 export interface Experiment {
   id: string;
   name: string;
-  variable: string;
+  description?: string;
+  type: 'habits' | 'tasks';
+  periodDays: number;
+  linkedHabits: string[];
+  linkedTasks: string[];
   startDate: string;
   endDate?: string;
-  control: number;
-  variant: number;
-  results?: number;
+  progress: number;
+  status: 'active' | 'completed' | 'paused';
 }
 
 export interface Protocol {
@@ -404,4 +407,12 @@ export interface Protocol {
   steps: { time: string; action: string; duration: number }[];
   timesCompleted: number;
   effectiveness: number;
+}
+
+export interface EmailExperiment {
+  id: string;
+  experimentId: string;
+  experimentName: string;
+  sentAt: string;
+  opened: boolean;
 }
