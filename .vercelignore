@@ -1,0 +1,9 @@
+release/
+android/
+session-*.md
+response.md
+REPORTE-SEMANAL.md
+presentacion.html
+coverage/
+tests/
+electron/
