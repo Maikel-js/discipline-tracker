@@ -21,6 +21,9 @@ export default function DownloadPortal() {
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
   const githubUrl = 'https://github.com/Maikel-js/discipline-tracker';
+  const releasesUrl = `${githubUrl}/releases`;
+  const windowsExeUrl = `${releasesUrl}/latest/download/Discipline-Tracker-Setup.exe`;
+  const androidApkUrl = `${releasesUrl}/latest/download/Discipline-Tracker.apk`;
 
   useEffect(() => {
     const detectPlatform = (): Platform => {
@@ -123,16 +126,18 @@ export default function DownloadPortal() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium flex items-center gap-2">
-                      🤖 Android
+                      🤖 Android (APK)
                     </div>
-                    <div className="text-xs text-gray-400">Instala desde Chrome</div>
+                    <div className="text-xs text-gray-400">Instalable directo</div>
                   </div>
-                  <button
-                    onClick={() => window.open(appUrl, '_blank')}
+                  <a
+                    href={androidApkUrl}
+                    target="_blank"
+                    download
                     className="px-3 py-1 bg-green-600 rounded-lg text-sm"
                   >
-                    Instalar
-                  </button>
+                    Descargar
+                  </a>
                 </div>
               </div>
 
@@ -142,7 +147,7 @@ export default function DownloadPortal() {
                     <div className="font-medium flex items-center gap-2">
                       🍎 iPhone
                     </div>
-                    <div className="text-xs text-gray-400">Desde Safari</div>
+                    <div className="text-xs text-gray-400">Desde Safari - Instalar PWA</div>
                   </div>
                   <button
                     onClick={() => window.open(appUrl, '_blank')}
@@ -178,6 +183,25 @@ export default function DownloadPortal() {
             </h3>
             
             <div className="space-y-3">
+              <div className="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium flex items-center gap-2">
+                      🪟 Windows App
+                    </div>
+                    <div className="text-xs text-gray-400">Aplicación de escritorio</div>
+                  </div>
+                  <a
+                    href={windowsExeUrl}
+                    target="_blank"
+                    download
+                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm"
+                  >
+                    Descargar
+                  </a>
+                </div>
+              </div>
+
               <div className="p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
@@ -254,13 +278,13 @@ export default function DownloadPortal() {
               </a>
               
               <a
-                href={`${githubUrl}/releases`}
+                href={releasesUrl}
                 target="_blank"
                 className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700"
               >
                 <div>
                   <div className="font-medium">Releases</div>
-                  <div className="text-xs text-gray-400">APK y paquetes oficiales</div>
+                  <div className="text-xs text-gray-400">APK, Windows EXE y paquetes oficiales</div>
                 </div>
                 <Download className="w-5 h-5" />
               </a>
