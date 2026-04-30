@@ -7,54 +7,17 @@ import {
   Target, Brain, FileText, Puzzle, Code, Building2, 
   TrendingUp, CheckCircle, AlertCircle, Plus, X,
   Star, Calendar, DollarSign, BookOpen, ChevronRight,
-  FlaskConical, Clock, Trophy, Lightbulb, Shield
+  FlaskConical, Clock, Trophy, Lightbulb, Shield, Network
 } from 'lucide-react';
+import LifeGraph from './LifeGraph';
 
 export default function LifeOSHub() {
-  const { habits, tasks, logs, stats, addDisciplineScore } = useStore();
-  const [activeModule, setActiveModule] = useState<'goals' | 'decisions' | 'notes' | 'plugins'>('goals');
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [plugins, setPlugins] = useState<Plugin[]>([
-    { id: 'gcal', name: 'Google Calendar', description: 'Sincroniza con Google Calendar', enabled: false, version: '1.0' },
-    { id: 'whatsapp', name: 'WhatsApp Bot', description: 'Notificaciones por WhatsApp', enabled: false, version: '1.0' },
-    { id: 'fit', name: 'Google Fit', description: 'Conectar con Google Fit', enabled: false, version: '1.0' },
-    { id: 'telegram', name: 'Telegram Bot', description: 'Bot de Telegram', enabled: false, version: '1.0' }
-  ]);
-
-  const addGoal = (goal: Omit<Goal, 'id' | 'createdAt'>) => {
-    const newGoal: Goal = {
-      ...goal,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString()
-    };
-    setGoals([...goals, newGoal]);
-  };
-
-  const addDecision = (decision: Omit<Decision, 'id'>) => {
-    const newDecision: Decision = {
-      ...decision,
-      id: Math.random().toString(36).substr(2, 9)
-    };
-    setDecisions([...decisions, newDecision]);
-  };
-
-  const addNote = (note: Omit<Note, 'id' | 'createdAt'>) => {
-    const newNote: Note = {
-      ...note,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString()
-    };
-    setNotes([...notes, newNote]);
-  };
-
-  const togglePlugin = (id: string) => {
-    setPlugins(plugins.map(p => p.id === id ? { ...p, enabled: !p.enabled } : p));
-  };
+  const { habits, tasks, logs, stats, addDisciplineScore, goals, decisions, notes, plugins, addGoal, addDecision, addNote, togglePlugin } = useStore();
+  const [activeModule, setActiveModule] = useState<'goals' | 'lifegraph' | 'decisions' | 'notes' | 'plugins'>('goals');
 
   const modules = [
     { id: 'goals', icon: Target, label: 'Metas', color: 'text-purple-400', desc: 'OKRs y objetivos' },
+    { id: 'lifegraph', icon: Network, label: 'Life Graph', color: 'text-indigo-400', desc: 'Visualización' },
     { id: 'decisions', icon: Brain, label: 'Decisiones', color: 'text-pink-400', desc: 'Matriz y priorización' },
     { id: 'notes', icon: FileText, label: 'Notas', color: 'text-yellow-400', desc: 'Second Brain' },
     { id: 'plugins', icon: Puzzle, label: 'Plugins', color: 'text-cyan-400', desc: 'Extensiones' }
@@ -151,6 +114,8 @@ export default function LifeOSHub() {
           </div>
         </div>
       )}
+
+      {activeModule === 'lifegraph' && <LifeGraph />}
 
       {activeModule === 'decisions' && (
         <div className="space-y-4">
