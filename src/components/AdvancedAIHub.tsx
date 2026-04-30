@@ -4,9 +4,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { useStore } from '@/store/useStore';
 import { emailService } from '@/components/EmailService';
 import { useAuth } from '@/components/AuthProvider';
-import type { GraphNode, DigitalTwin, Experiment } from '@/types';
+import type { DigitalTwin, Experiment } from '@/types';
 import { 
-  Network, Brain, FlaskConical, BookOpen, Play, Pause,
+  Brain, FlaskConical, BookOpen, Play, Pause,
   Target, TrendingUp, TrendingDown, Lightbulb, Zap, ChevronRight,
   Clock, Users, Building, GraduationCap, Activity, RefreshCw,
   CheckCircle, XCircle, ArrowLeft, BarChart3, Calendar, Award, Mail
@@ -29,8 +29,7 @@ interface ExperimentResults {
 export default function AdvancedAIHub() {
   const { habits, tasks, logs, experiments, protocols, addExperiment, runProtocol, completeExperiment, pauseExperiment, resumeExperiment, deleteExperiment } = useStore();
   const { user } = useAuth();
-  const [activeModule, setActiveModule] = useState<'graph' | 'twin' | 'experiments' | 'protocols'>('graph');
-  const [graphNodes, setGraphNodes] = useState<GraphNode[]>([]);
+  const [activeModule, setActiveModule] = useState<'twin' | 'experiments' | 'protocols'>('twin');
   const [digitalTwin, setDigitalTwin] = useState<DigitalTwin | null>(null);
   const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null);
   const [experimentResults, setExperimentResults] = useState<ExperimentResults | null>(null);
@@ -44,41 +43,8 @@ export default function AdvancedAIHub() {
   const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
-    buildGraph();
     analyzeDigitalTwin();
   }, [habits, tasks, logs]);
-
-  const buildGraph = () => {
-    const nodes: GraphNode[] = [];
-
-    habits.forEach(h => {
-      nodes.push({
-        id: h.id,
-        type: 'habit',
-        label: h.name,
-        connections: []
-      });
-    });
-
-    tasks.forEach(t => {
-      nodes.push({
-        id: t.id,
-        type: 'task',
-        label: t.title,
-        connections: t.dependencies || []
-      });
-    });
-
-    habits.forEach((h, idx) => {
-      if (nodes[idx]) {
-        tasks.slice(0, 2).forEach(t => {
-          nodes[idx].connections.push(t.id);
-        });
-      }
-    });
-
-    setGraphNodes(nodes);
-  };
 
   const analyzeDigitalTwin = () => {
     const completedLogs = logs.filter(l => l.status === 'completed');
@@ -263,19 +229,18 @@ export default function AdvancedAIHub() {
   };
 
   const modules = [
-    { id: 'graph', icon: Network, label: 'Life Graph', color: 'text-blue-400', desc: 'Red de conexiones' },
     { id: 'twin', icon: Brain, label: 'Digital Twin', color: 'text-purple-400', desc: 'Tu gemelo digital' },
     { id: 'experiments', icon: FlaskConical, label: 'Experimentos', color: 'text-green-400', desc: 'Laboratorio personal' },
     { id: 'protocols', icon: BookOpen, label: 'Protocolos', color: 'text-orange-400', desc: 'Rutinas ejecutables' }
-  ];
+  ] as const;
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         {modules.map(mod => (
           <button
             key={mod.id}
-            onClick={() => setActiveModule(mod.id as any)}
+            onClick={() => setActiveModule(mod.id)}
             className={`p-3 rounded-xl text-left transition-all ${
               activeModule === mod.id 
                 ? 'bg-gray-700 border border-gray-500' 
@@ -289,50 +254,6 @@ export default function AdvancedAIHub() {
         ))}
       </div>
 
-      {activeModule === 'graph' && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold flex items-center gap-2">
-            <Network className="w-5 h-5 text-blue-400" />
-            Life Graph - Tu Red de Vida
-          </h3>
-
-          <div className="bg-gray-800/50 rounded-xl p-4">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {graphNodes.slice(0, 20).map((node, idx) => (
-                <div
-                  key={node.id}
-                  className={`p-2 rounded-lg text-sm cursor-pointer transition-all hover:scale-110 ${
-                    node.type === 'habit' ? 'bg-green-900/50 border border-green-500' :
-                    node.type === 'task' ? 'bg-blue-900/50 border border-blue-500' :
-                    'bg-purple-900/50 border border-purple-500'
-                  }`}
-                  style={{ 
-                    transform: `translate(${Math.sin(idx) * 20}px, ${Math.cos(idx) * 20}px)` 
-                  }}
-                >
-                  <div className="text-white">{node.label}</div>
-                  <div className="text-xs text-gray-400">{node.connections.length} conexiones</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="bg-gray-800/50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-green-400">{habits.length}</div>
-              <div className="text-xs text-gray-500">Hábitos</div>
-            </div>
-            <div className="bg-gray-800/50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-blue-400">{tasks.length}</div>
-              <div className="text-xs text-gray-500">Tareas</div>
-            </div>
-            <div className="bg-gray-800/50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-purple-400">{graphNodes.reduce((acc, n) => acc + n.connections.length, 0)}</div>
-              <div className="text-xs text-gray-500">Conexiones</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {activeModule === 'twin' && (
         <div className="space-y-4">
