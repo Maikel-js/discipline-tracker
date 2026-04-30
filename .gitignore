@@ -11,4 +11,6 @@ build/
 *.tsbuildinfo
 coverage/
 .vercel
-.vercel
+release/
+session-*.md
+android/app/src/main/assets/public/
