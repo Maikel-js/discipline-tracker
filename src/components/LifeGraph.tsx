@@ -2,20 +2,8 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
-import { Target, Flame, TrendingUp, CheckCircle, AlertCircle, Network } from 'lucide-react';
-
-interface Goal {
-  id: string;
-  title: string;
-  description: string;
-  type: 'quarterly' | 'monthly' | 'yearly' | 'okr';
-  progress: number;
-  dueDate: string;
-  linkedHabits: string[];
-  linkedTasks: string[];
-  status: 'active' | 'completed' | 'paused';
-  createdAt: string;
-}
+import type { Goal } from '@/types';
+import { Target, Flame, Network } from 'lucide-react';
 
 interface NodePosition {
   id: string;
@@ -47,11 +35,14 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function LifeGraph() {
-  const { habits, stats } = useStore();
+  const { habits, goals, addGoal, recalculateGoalProgress } = useStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [goals, setGoals] = useState<Goal[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 800, height: 600 });
+
+  useEffect(() => {
+    recalculateGoalProgress();
+  }, [habits, goals.length, recalculateGoalProgress]);
 
   const filteredHabits = useMemo(() => {
     if (selectedCategory === 'all') return habits;
@@ -93,20 +84,17 @@ export default function LifeGraph() {
     return avgCompletion;
   };
 
-  const addGoal = (title: string, linkedHabitIds: string[]) => {
-    const newGoal: Goal = {
-      id: Math.random().toString(36).substr(2, 9),
+  const addConnectedGoal = (title: string, linkedHabitIds: string[]) => {
+    addGoal({
       title,
-      description: '',
+      description: `Conectada a ${linkedHabitIds.length} hábito(s) desde Life Graph`,
       type: 'quarterly',
       progress: 0,
       dueDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
       linkedHabits: linkedHabitIds,
       linkedTasks: [],
-      status: 'active',
-      createdAt: new Date().toISOString()
-    };
-    setGoals([...goals, newGoal]);
+      status: 'active'
+    });
   };
 
   const categories = Object.keys(categorizedHabits);
@@ -575,7 +563,7 @@ export default function LifeGraph() {
                   const checkboxes = document.querySelectorAll('.goal-habit-checkbox:checked') as NodeListOf<HTMLInputElement>;
                   const linkedIds = Array.from(checkboxes).map(cb => cb.value);
                   if (input.value && linkedIds.length > 0) {
-                    addGoal(input.value, linkedIds);
+                    addConnectedGoal(input.value, linkedIds);
                     input.value = '';
                     checkboxes.forEach(cb => cb.checked = false);
                   }
