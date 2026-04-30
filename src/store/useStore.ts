@@ -51,6 +51,7 @@ interface StoreState {
   plugins: Plugin[];
   experiments: Experiment[];
   protocols: Protocol[];
+  lastResetDate: string;
 
   addHabit: (habit: Omit<Habit, 'id' | 'currentStreak' | 'completionRate' | 'createdAt' | 'missedCount' | 'rescheduleCount' | 'pomodoroSessions'>) => void;
   updateHabit: (id: string, updates: Partial<Habit>) => void;
@@ -95,6 +96,7 @@ interface StoreState {
   addGoal: (goal: Omit<Goal, 'id' | 'createdAt'>) => void;
   updateGoal: (id: string, updates: Partial<Goal>) => void;
   deleteGoal: (id: string) => void;
+  recalculateGoalProgress: () => void;
 
   addDecision: (decision: Omit<Decision, 'id'>) => void;
   updateDecision: (id: string, updates: Partial<Decision>) => void;
@@ -116,6 +118,13 @@ interface StoreState {
 
   runProtocol: (protocolId: string) => void;
   updateProtocol: (id: string, updates: Partial<Protocol>) => void;
+  recalculateProtocolProgress: () => void;
+  toggleProtocolStep: (protocolId: string, stepIndex: number) => void;
+  linkHabitToProtocol: (protocolId: string, habitId: string) => void;
+  linkTaskToProtocol: (protocolId: string, taskId: string) => void;
+  unlinkHabitFromProtocol: (protocolId: string, habitId: string) => void;
+  unlinkTaskFromProtocol: (protocolId: string, taskId: string) => void;
+  checkAndResetDaily: () => void;
 
   updateStats: () => void;
   toggleExtremeMode: () => void;
@@ -204,10 +213,11 @@ export const useStore = create<StoreState>()(
       ],
       experiments: [],
       protocols: [
-        { id: '1', name: 'Rutina Matutina', steps: [{ time: '6:00', action: 'Ejercicio', duration: 30 }, { time: '6:30', action: 'Meditar', duration: 15 }, { time: '6:45', action: 'Estudiar', duration: 60 }], timesCompleted: 0, effectiveness: 0 },
-        { id: '2', name: 'Deep Work', steps: [{ time: '9:00', action: 'Bloque de trabajo profundo', duration: 120 }, { time: '11:00', action: 'Break', duration: 15 }, { time: '11:15', action: 'Continuar trabajo', duration: 120 }], timesCompleted: 0, effectiveness: 0 },
-        { id: '3', name: 'Noche Productiva', steps: [{ time: '19:00', action: 'Revisión diaria', duration: 30 }, { time: '19:30', action: 'Planificación siguiente día', duration: 15 }, { time: '20:00', action: 'Aprendizaje', duration: 60 }], timesCompleted: 0, effectiveness: 0 }
+        { id: '1', name: 'Rutina Matutina', description: 'Rutina de mañana para empezar el día', steps: [{ time: '6:00', action: 'Ejercicio', duration: 30, completed: false }, { time: '6:30', action: 'Meditar', duration: 15, completed: false }, { time: '6:45', action: 'Estudiar', duration: 60, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' },
+        { id: '2', name: 'Deep Work', description: 'Bloque de trabajo profundo', steps: [{ time: '9:00', action: 'Bloque de trabajo profundo', duration: 120, completed: false }, { time: '11:00', action: 'Break', duration: 15, completed: false }, { time: '11:15', action: 'Continuar trabajo', duration: 120, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' },
+        { id: '3', name: 'Noche Productiva', description: 'Rutina nocturna productiva', steps: [{ time: '19:00', action: 'Revisión diaria', duration: 30, completed: false }, { time: '19:30', action: 'Planificación siguiente día', duration: 15, completed: false }, { time: '20:00', action: 'Aprendizaje', duration: 60, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' }
       ],
+      lastResetDate: new Date().toISOString().split('T')[0],
 
       addHabit: (habitData) => {
         const id = generateId();
@@ -243,6 +253,7 @@ export const useStore = create<StoreState>()(
         set(state => ({
           habits: state.habits.map(h => h.id === id ? { ...h, ...updates } : h)
         }));
+        get().recalculateGoalProgress();
       },
 
       deleteHabit: (id) => {
@@ -252,6 +263,7 @@ export const useStore = create<StoreState>()(
           streaks: state.streaks.filter(s => s.habitId !== id)
         }));
         get().updateStats();
+        get().recalculateGoalProgress();
       },
 
       completeHabit: (id) => {
@@ -287,6 +299,7 @@ export const useStore = create<StoreState>()(
           notifications: state.notifications.filter(n => n.habitId !== id || n.acknowledged)
         }));
         get().updateStats();
+        get().recalculateGoalProgress();
         get().recalculateExperimentProgress();
       },
 
@@ -325,6 +338,7 @@ export const useStore = create<StoreState>()(
         
         get().addDisciplineScore(-10, `Incumplido: ${habit.name}`);
         get().updateStats();
+        get().recalculateGoalProgress();
       },
 
       rescheduleHabit: (id, newTime) => {
@@ -377,16 +391,19 @@ export const useStore = create<StoreState>()(
         set(state => ({
           tasks: state.tasks.map(t => t.id === id ? { ...t, ...updates } : t)
         }));
+        get().recalculateGoalProgress();
       },
 
       deleteTask: (id) => {
         set(state => ({ tasks: state.tasks.filter(t => t.id !== id) }));
+        get().recalculateGoalProgress();
       },
 
       moveTask: (id, status) => {
         set(state => ({
           tasks: state.tasks.map(t => t.id === id ? { ...t, status } : t)
         }));
+        get().recalculateGoalProgress();
       },
 
       advanceTask: (id) => {
@@ -408,6 +425,7 @@ export const useStore = create<StoreState>()(
         set(state => ({
           tasks: state.tasks.map(t => t.id === id ? { ...t, status: newStatus } : t)
         }));
+        get().recalculateGoalProgress();
         get().recalculateExperimentProgress();
       },
 
@@ -739,17 +757,45 @@ export const useStore = create<StoreState>()(
           createdAt: new Date().toISOString()
         };
         set(state => ({ goals: [...state.goals, newGoal] }));
+        get().recalculateGoalProgress();
       },
 
       updateGoal: (id, updates) => {
         set(state => ({
           goals: state.goals.map(g => g.id === id ? { ...g, ...updates } : g)
         }));
+        get().recalculateGoalProgress();
       },
 
       deleteGoal: (id) => {
         set(state => ({
           goals: state.goals.filter(g => g.id !== id)
+        }));
+      },
+
+      recalculateGoalProgress: () => {
+        set(state => ({
+          goals: state.goals.map(goal => {
+            const linkedHabitProgress = (goal.linkedHabits || [])
+              .map(habitId => state.habits.find(h => h.id === habitId)?.completionRate)
+              .filter((progress): progress is number => progress !== undefined);
+
+            const linkedTaskProgress = (goal.linkedTasks || [])
+              .map(taskId => state.tasks.find(t => t.id === taskId)?.status === 'done' ? 100 : 0);
+
+            const progressSources = [...linkedHabitProgress, ...linkedTaskProgress];
+            if (progressSources.length === 0) return goal;
+
+            const progress = Math.round(
+              progressSources.reduce((total, value) => total + value, 0) / progressSources.length
+            );
+
+            return {
+              ...goal,
+              progress,
+              status: goal.status === 'paused' ? 'paused' : progress >= 100 ? 'completed' : 'active'
+            };
+          })
         }));
       },
 
@@ -892,6 +938,21 @@ export const useStore = create<StoreState>()(
         });
       },
 
+      checkAndResetDaily: () => {
+        const today = new Date().toISOString().split('T')[0];
+        const lastReset = get().lastResetDate;
+        
+        if (lastReset !== today) {
+          set(state => ({
+            habits: state.habits.map(h => ({
+              ...h,
+              status: 'pending' as HabitStatus
+            })),
+            lastResetDate: today
+          }));
+        }
+      },
+
       runProtocol: (protocolId) => {
         set(state => ({
           protocols: state.protocols.map(p => {
@@ -906,12 +967,118 @@ export const useStore = create<StoreState>()(
             return p;
           })
         }));
+        get().recalculateProtocolProgress();
       },
 
       updateProtocol: (id, updates) => {
         set(state => ({
           protocols: state.protocols.map(p => p.id === id ? { ...p, ...updates } : p)
         }));
+        get().recalculateProtocolProgress();
+      },
+
+      recalculateProtocolProgress: () => {
+        set(state => ({
+          protocols: state.protocols.map(protocol => {
+            if (protocol.status !== 'active') return protocol;
+
+            const linkedHabits = state.habits.filter(h => protocol.linkedHabits.includes(h.id));
+            const linkedTasks = state.tasks.filter(t => protocol.linkedTasks.includes(t.id));
+
+            const habitProgress = linkedHabits.length > 0
+              ? linkedHabits.reduce((acc, h) => acc + h.completionRate, 0) / linkedHabits.length
+              : 0;
+
+            const taskProgress = linkedTasks.length > 0
+              ? (linkedTasks.filter(t => t.status === 'done').length / linkedTasks.length) * 100
+              : 0;
+
+            const totalItems = protocol.linkedHabits.length + protocol.linkedTasks.length;
+            const progress = totalItems > 0
+              ? Math.round((habitProgress + taskProgress) / totalItems)
+              : 0;
+
+            const stepsCompleted = protocol.steps.filter(s => s.completed).length;
+            const stepsProgress = protocol.steps.length > 0
+              ? Math.round((stepsCompleted / protocol.steps.length) * 100)
+              : 0;
+
+            const finalProgress = Math.round((progress + stepsProgress) / 2);
+
+            return {
+              ...protocol,
+              progress: finalProgress,
+              status: finalProgress >= 100 ? 'completed' as const : 'active' as const
+            };
+          })
+        }));
+      },
+
+      toggleProtocolStep: (protocolId, stepIndex) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId) {
+              const updatedSteps = [...p.steps];
+              if (updatedSteps[stepIndex]) {
+                updatedSteps[stepIndex] = {
+                  ...updatedSteps[stepIndex],
+                  completed: !updatedSteps[stepIndex].completed
+                };
+              }
+              return { ...p, steps: updatedSteps };
+            }
+            return p;
+          })
+        }));
+        get().recalculateProtocolProgress();
+      },
+
+      linkHabitToProtocol: (protocolId, habitId) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId && !p.linkedHabits.includes(habitId)) {
+              return { ...p, linkedHabits: [...p.linkedHabits, habitId] };
+            }
+            return p;
+          })
+        }));
+        get().recalculateProtocolProgress();
+      },
+
+      linkTaskToProtocol: (protocolId, taskId) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId && !p.linkedTasks.includes(taskId)) {
+              return { ...p, linkedTasks: [...p.linkedTasks, taskId] };
+            }
+            return p;
+          })
+        }));
+        get().recalculateProtocolProgress();
+      },
+
+      unlinkHabitFromProtocol: (protocolId, habitId) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId) {
+              return { ...p, linkedHabits: p.linkedHabits.filter(id => id !== habitId) };
+            }
+            return p;
+          })
+        }));
+        get().recalculateProtocolProgress();
+      },
+
+      unlinkTaskFromProtocol: (protocolId, taskId) => {
+        set(state => ({
+          protocols: state.protocols.map(p => {
+            if (p.id === protocolId) {
+              return { ...p, linkedTasks: p.linkedTasks.filter(id => id !== taskId) };
+            }
+            return p;
+          })
+        }));
+        get().recalculateProtocolProgress();
       }
     }),
     {

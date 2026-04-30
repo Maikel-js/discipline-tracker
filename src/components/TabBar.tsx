@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, Flame, ListTodo, BarChart3, Calendar, Settings, Plus, Bell, Layers, Brain, LineChart, Download } from 'lucide-react';
+import { Home, Flame, ListTodo, BarChart3, Calendar, Settings, Plus, Bell, Layers, Brain, LineChart, Download, Target, StickyNote, ClipboardList } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
 interface Props {
@@ -17,10 +17,12 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'dashboard', icon: Home, label: 'Inicio' },
     { id: 'habits', icon: Flame, label: 'Hábitos' },
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
+    { id: 'goals', icon: Target, label: 'Metas' },
+    { id: 'notes', icon: StickyNote, label: 'Notas' },
+    { id: 'protocols', icon: ClipboardList, label: 'Protocolos' },
     { id: 'schedule', icon: Calendar, label: 'Día' },
-    { id: 'lifeos', icon: Layers, label: 'Life OS' },
+    { id: 'life-os', icon: Layers, label: 'Life OS' },
     { id: 'ai', icon: Brain, label: 'AI' },
-    { id: 'download', icon: Download, label: 'App' },
     { id: 'stats', icon: LineChart, label: 'Analytics' }
   ];
 

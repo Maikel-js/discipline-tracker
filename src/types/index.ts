@@ -404,9 +404,14 @@ export interface Experiment {
 export interface Protocol {
   id: string;
   name: string;
-  steps: { time: string; action: string; duration: number }[];
+  description?: string;
+  steps: { time: string; action: string; duration: number; completed?: boolean }[];
+  linkedHabits: string[];
+  linkedTasks: string[];
   timesCompleted: number;
   effectiveness: number;
+  progress: number;
+  status: 'active' | 'completed' | 'paused';
 }
 
 export interface EmailExperiment {

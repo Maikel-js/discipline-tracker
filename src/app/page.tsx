@@ -20,16 +20,23 @@ import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
 import AnalyticsHub from '@/components/AnalyticsHub';
 import DownloadPortal from '@/components/DownloadPortal';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar } from 'lucide-react';
+import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Target, StickyNote, ClipboardList } from 'lucide-react';
+import Goals from '@/components/Goals';
+import Notes from '@/components/Notes';
+import Protocols from '@/components/Protocols';
 
 function MainApp() {
   const { isAuthenticated } = useAuth();
-  const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit } = useStore();
+  const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit, checkAndResetDaily } = useStore();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showHabitModal, setShowHabitModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    checkAndResetDaily();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -190,6 +197,24 @@ function MainApp() {
         {activeTab === 'download' && (
           <div className="space-y-4">
             <DownloadPortal />
+          </div>
+        )}
+
+        {activeTab === 'goals' && (
+          <div className="space-y-4">
+            <Goals />
+          </div>
+        )}
+
+        {activeTab === 'notes' && (
+          <div className="space-y-4">
+            <Notes />
+          </div>
+        )}
+
+        {activeTab === 'protocols' && (
+          <div className="space-y-4">
+            <Protocols />
           </div>
         )}
       </div>
