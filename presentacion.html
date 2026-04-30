@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe de Pasantía – Erwin A. Cruz Muñoz</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Space Grotesk', sans-serif; background: #050a14; color: #e8edf5; height: 100vh; overflow: hidden; user-select: none; }
+  .presentation { width: 100vw; height: 100vh; position: relative; }
+  .slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 48px 64px; opacity: 0; transform: translateX(60px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; overflow: hidden; }
+  .slide::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,200,180,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,180,0.04) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; }
+  .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+  .slide.exit { opacity: 0; transform: translateX(-60px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+  .orb-1 { width: 400px; height: 400px; background: rgba(0,195,170,0.10); top: -100px; right: -80px; }
+  .orb-2 { width: 300px; height: 300px; background: rgba(80,120,255,0.09); bottom: -60px; left: -40px; }
+  .slide-content { position: relative; z-index: 1; width: 100%; max-width: 860px; }
+  .cover-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,195,170,0.12); border: 1px solid rgba(0,195,170,0.3); border-radius: 100px; padding: 6px 16px; font-size: 12px; letter-spacing: 0.12em; color: #00c3aa; text-transform: uppercase; margin-bottom: 32px; }
+  .cover-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #00c3aa; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+  .cover-title { font-family: 'Syne', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 800; line-height: 1.08; color: #f0f4ff; margin-bottom: 16px; letter-spacing: -0.02em; }
+  .cover-title .accent { background: linear-gradient(90deg, #00c3aa, #4f8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .cover-sub { font-size: 16px; color: rgba(200,215,240,0.7); margin-bottom: 40px; line-height: 1.6; }
+  .cover-meta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .meta-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 16px; font-size: 13px; color: rgba(200,215,240,0.85); }
+  .meta-chip span { color: #00c3aa; font-weight: 600; }
+  .section-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #00c3aa; margin-bottom: 12px; font-weight: 600; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(28px, 3.5vw, 46px); font-weight: 800; color: #f0f4ff; margin-bottom: 32px; letter-spacing: -0.02em; line-height: 1.1; }
+  .divider { width: 48px; height: 3px; background: linear-gradient(90deg, #00c3aa, #4f8cff); border-radius: 4px; margin-bottom: 32px; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px 22px; }
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(200,215,240,0.45); margin-bottom: 6px; }
+  .card-value { font-size: 15px; color: #e8edf5; font-weight: 500; line-height: 1.4; }
+  .card-value.teal { color: #00c3aa; }
+  .info-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .info-row:last-child { border-bottom: none; }
+  .info-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(0,195,170,0.12); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; color: #00c3aa; font-weight: 700; }
+  .info-label { font-size: 12px; color: rgba(200,215,240,0.5); margin-bottom: 2px; }
+  .info-val { font-size: 14px; color: #e8edf5; line-height: 1.5; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .tag { background: rgba(0,195,170,0.1); border: 1px solid rgba(0,195,170,0.25); border-radius: 8px; padding: 7px 14px; font-size: 13px; color: #00c3aa; }
+  .skill-row { margin-bottom: 16px; }
+  .skill-name { font-size: 13px; color: rgba(200,215,240,0.8); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .skill-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .skill-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #00c3aa, #4f8cff); }
+  .quote-block { border-left: 3px solid #00c3aa; padding-left: 24px; margin: 8px 0; }
+  .quote-text { font-size: 16px; color: rgba(200,215,240,0.85); line-height: 1.75; font-style: italic; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .col-title { font-size: 13px; font-weight: 600; color: #4f8cff; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .bullet { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: rgba(200,215,240,0.8); line-height: 1.5; }
+  .bullet::before { content: '›'; color: #00c3aa; font-size: 18px; line-height: 1.2; flex-shrink: 0; }
+  .tech-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(79,140,255,0.1); border: 1px solid rgba(79,140,255,0.25); border-radius: 8px; padding: 8px 16px; font-size: 13px; color: #7aacff; margin: 5px; }
+  .nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; }
+  .nav-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #e8edf5; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; }
+  .nav-btn:hover { background: rgba(0,195,170,0.18); border-color: rgba(0,195,170,0.4); }
+  .nav-dots { display: flex; gap: 8px; align-items: center; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: background 0.3s, transform 0.3s; cursor: pointer; }
+  .dot.active { background: #00c3aa; transform: scale(1.3); }
+  .slide-counter { position: fixed; top: 28px; right: 40px; font-size: 12px; color: rgba(200,215,240,0.4); letter-spacing: 0.08em; z-index: 100; }
+  .logo-mark { position: fixed; top: 28px; left: 40px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: rgba(0,195,170,0.7); letter-spacing: 0.06em; z-index: 100; }
+  .highlight-box { background: rgba(0,195,170,0.06); border: 1px solid rgba(0,195,170,0.2); border-radius: 12px; padding: 18px 22px; margin-top: 16px; }
+  .highlight-box p { font-size: 14px; color: rgba(200,215,240,0.8); line-height: 1.7; }
+  .vision-card { background: linear-gradient(135deg, rgba(0,195,170,0.1), rgba(79,140,255,0.08)); border: 1px solid rgba(0,195,170,0.25); border-radius: 16px; padding: 28px; text-align: center; margin-top: 24px; }
+  .vision-icon { font-size: 36px; margin-bottom: 16px; }
+  .vision-text { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #f0f4ff; line-height: 1.3; }
+  .vision-sub { font-size: 14px; color: rgba(200,215,240,0.6); margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="logo-mark">FCT · 2025–2026</div>
+<div class="slide-counter" id="counter">1 / 9</div>
+
+<div class="presentation" id="pres">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active" id="slide-0">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="cover-badge">Formación en Centros de Trabajo</div>
+      <div class="cover-title">Informe de<br><span class="accent">Pasantía 2025–26</span></div>
+      <p class="cover-sub">Instituto Politécnico Ángeles Custodios · Informática y Comunicaciones<br>Desarrollo y Administración de Aplicaciones Informáticas</p>
+      <div class="cover-meta">
+        <div class="meta-chip"><span>Estudiante:</span> Erwin A. Cruz Muñoz</div>
+        <div class="meta-chip"><span>Empresa:</span> Ministerio de Administración Pública</div>
+        <div class="meta-chip"><span>Maestra:</span> Yajahira Guerrero Feliz</div>
+        <div class="meta-chip"><span>Valor:</span> 20 ptos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: DATOS PERSONALES -->
+  <div class="slide" id="slide-1">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Perfil del Pasante</div>
+      <div class="section-title">Datos Personales</div>
+      <div class="divider"></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-label">Nombre</div><div class="card-value teal">Erwin Andres Cruz Muñoz</div></div>
+        <div class="card"><div class="card-label">Centro Educativo</div><div class="card-value">Instituto Politécnico Ángeles Custodio</div></div>
+        <div class="card"><div class="card-label">Empresa de Pasantía</div><div class="card-value">Ministerio de Administración Pública</div></div>
+        <div class="card"><div class="card-label">Área / Departamento</div><div class="card-value teal">Tecnología / Desarrollo</div></div>
+        <div class="card"><div class="card-label">Fecha de Inicio</div><div class="card-value">26 de septiembre de 2025</div></div>
+        <div class="card"><div class="card-label">Fecha de Finalización</div><div class="card-value">01 de mayo de 2026</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: EMPRESA -->
+  <div class="slide" id="slide-2">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Empresa</div>
+      <div class="section-title">Ministerio de Administración Pública</div>
+      <div class="divider"></div>
+      <div class="info-row">
+        <div class="info-icon">M</div>
+        <div><div class="info-label">Misión</div><div class="info-val">Mejorar la calidad de vida de la población mediante la transformación, digitalización y profesionalización de la Administración Pública.</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">V</div>
+        <div><div class="info-label">Visión</div><div class="info-val">Ser un referente nacional e internacional por un modelo de Administración Pública centrada en el bienestar ciudadano, sostenible e innovadora.</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">⚙</div>
+        <div><div class="info-label">Descripción General</div><div class="info-val">Órgano rector del empleo público, fortalecimiento institucional y desarrollo del Gobierno Electrónico en República Dominicana.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ACTIVIDADES -->
+  <div class="slide" id="slide-3">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Desempeño</div>
+      <div class="section-title">Actividades Realizadas</div>
+      <div class="divider"></div>
+      <div class="tag-list" style="margin-bottom: 24px;">
+        <div class="tag">📋 Diseño del directorio telefónico</div>
+        <div class="tag">💻 Desarrollo del directorio</div>
+        <div class="tag">🔍 Rol de QA en proyectos</div>
+      </div>
+      <div class="highlight-box">
+        <p><strong style="color:#00c3aa;">Proyecto destacado:</strong> Remodelación del directorio telefónico institucional utilizando <strong style="color:#7aacff;">Next.js</strong> y <strong style="color:#7aacff;">.NET (C#)</strong> como stack principal, con <strong style="color:#7aacff;">PostgreSQL</strong> como base de datos. Un proyecto desafiante que requirió aprender nuevas tecnologías en tiempo real y culminó con éxito.</p>
+      </div>
+      <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <div class="tech-pill">Next.js</div>
+        <div class="tech-pill">.NET / C#</div>
+        <div class="tech-pill">PostgreSQL</div>
+        <div class="tech-pill">QA Testing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: APRENDIZAJES -->
+  <div class="slide" id="slide-4">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Crecimiento</div>
+      <div class="section-title">Aprendizajes Adquiridos</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="col-title">Técnicos</div>
+          <div class="skill-row"><div class="skill-name"><span>C# & .NET Framework</span><span>Nuevo</span></div><div class="skill-bar"><div class="skill-fill" style="width: 72%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>Next.js</span><span>Nuevo</span></div><div class="skill-bar"><div class="skill-fill" style="width: 68%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>PostgreSQL</span><span>Nuevo</span></div><div class="skill-bar"><div class="skill-fill" style="width: 60%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>QA / Testing</span><span>Practicado</span></div><div class="skill-bar"><div class="skill-fill" style="width: 55%"></div></div></div>
+        </div>
+        <div>
+          <div class="col-title">Personales</div>
+          <div class="bullet">Ser receptivo ante nuevas ideas y procesos</div>
+          <div class="bullet">Mejorar confianza y comunicación interpersonal</div>
+          <div class="bullet">Proponer ideas y plantear soluciones sin tecnicismos</div>
+          <div class="bullet">Manejo eficiente del tiempo laboral</div>
+          <div class="bullet">Aprender a aprender — aplicar el conocimiento al instante</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: REFLEXIÓN -->
+  <div class="slide" id="slide-5">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Reflexión Personal</div>
+      <div class="section-title">La experiencia en pocas palabras</div>
+      <div class="divider"></div>
+      <div class="quote-block">
+        <p class="quote-text">"Lo que realmente importa cuando aprendemos algo no es el conocimiento que se adquiere, sino el que usamos instantáneamente."</p>
+      </div>
+      <div style="margin-top: 24px;">
+        <div class="bullet">Entendí cómo funciona la cultura y dinámica de una empresa real</div>
+        <div class="bullet">Aprendí a manejar la energía para un día productivo</div>
+        <div class="bullet">Descubrí cómo entablar relaciones profesionales genuinas</div>
+        <div class="bullet">Practiqué la paciencia como parte del proceso de desarrollo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: HABILIDADES -->
+  <div class="slide" id="slide-6">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Competencias</div>
+      <div class="section-title">¿Qué habilidades desarrollé?</div>
+      <div class="divider"></div>
+      <div class="card-grid">
+        <div class="card" style="border-color: rgba(0,195,170,0.25);"><div class="info-icon" style="margin-bottom:10px; font-size: 20px;">💬</div><div class="card-label">Comunicación</div><div class="card-value">Expresar ideas técnicas de forma clara y accesible a distintos públicos.</div></div>
+        <div class="card" style="border-color: rgba(79,140,255,0.25);"><div class="info-icon" style="margin-bottom:10px; font-size: 20px; background: rgba(79,140,255,0.12); color: #7aacff;">🎯</div><div class="card-label">Liderazgo</div><div class="card-value">Tomar iniciativa y guiar decisiones técnicas dentro del equipo.</div></div>
+        <div class="card" style="border-color: rgba(0,195,170,0.25);"><div class="info-icon" style="margin-bottom:10px; font-size: 20px;">⏳</div><div class="card-label">Paciencia en el Proceso</div><div class="card-value">Aprender tecnologías desde cero sin rendirse ante la dificultad.</div></div>
+        <div class="card" style="border-color: rgba(79,140,255,0.25);"><div class="info-icon" style="margin-bottom:10px; font-size: 20px; background: rgba(79,140,255,0.12); color: #7aacff;">🔧</div><div class="card-label">A mejorar</div><div class="card-value">Capacidad de concentración sostenida en tareas técnicas extensas.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SUGERENCIAS -->
+  <div class="slide" id="slide-7">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content">
+      <div class="section-label">Recomendación</div>
+      <div class="section-title">Sugerencias para futuras pasantías</div>
+      <div class="divider"></div>
+      <div class="highlight-box" style="margin-bottom: 20px;">
+        <p>El MAP es una <strong style="color:#00c3aa;">gran opción</strong> si alguien se quiere dedicar al desarrollo de software. Tanto técnica como personalmente se aprende muchísimo, y es un ambiente en el que una persona ya sea extrovertida o introvertida puede desenvolverse sin problemas.</p>
+      </div>
+      <div class="bullet">Ambiente inclusivo, tanto para perfiles extrovertidos como introvertidos</div>
+      <div class="bullet">Oportunidades reales de aprender tecnologías actuales en producción</div>
+      <div class="bullet">Cultura organizacional que fomenta la autonomía y el crecimiento personal</div>
+      <div class="bullet">Recomendado especialmente para quienes buscan desarrollo web full-stack</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: VISIÓN -->
+  <div class="slide" id="slide-8">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="slide-content" style="text-align: center; max-width: 700px; margin: 0 auto;">
+      <div class="section-label" style="text-align: center;">Proyección Profesional</div>
+      <div class="section-title" style="text-align: center;">¿Cómo me veo en el ámbito laboral?</div>
+      <div class="divider" style="margin: 0 auto 32px;"></div>
+      <div class="vision-card">
+        <div class="vision-icon">🚀</div>
+        <div class="vision-text">Líder de un equipo en mi propia empresa de desarrollo de software</div>
+        <div class="vision-sub">Una meta nacida de la experiencia, el aprendizaje y la pasión por construir soluciones tecnológicas.</div>
+      </div>
+      <p style="margin-top: 28px; font-size: 14px; color: rgba(200,215,240,0.5);">Instituto Politécnico Ángeles Custodios · FCT 2025–2026 · Erwin A. Cruz Muñoz</p>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button class="nav-btn" onclick="navigate(-1)">‹</button>
+  <div class="nav-dots" id="dots"></div>
+  <button class="nav-btn" onclick="navigate(1)">›</button>
+</nav>
+
+<script>
+  const total = 9;
+  let current = 0;
+  let transitioning = false;
+
+  const dots = document.getElementById('dots');
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dots.appendChild(d);
+  }
+
+  function updateDots() {
+    document.querySelectorAll('.dot').forEach((d, i) => { d.className = 'dot' + (i === current ? ' active' : ''); });
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    if (transitioning || n === current || n < 0 || n >= total) return;
+    transitioning = true;
+    const old = document.getElementById('slide-' + current);
+    old.className = 'slide exit';
+    setTimeout(() => { old.className = 'slide'; }, 400);
+    current = n;
+    const next = document.getElementById('slide-' + current);
+    next.style.transform = 'translateX(60px)';
+    next.className = 'slide active';
+    updateDots();
+    setTimeout(() => { transitioning = false; }, 520);
+  }
+
+  function navigate(dir) { goTo(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+
+  let touchX = 0;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) navigate(dx > 0 ? 1 : -1);
+  });
+</script>
+</body>
+</html>

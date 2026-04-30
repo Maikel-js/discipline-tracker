@@ -1975,3 +1975,664 @@ Todo listo para instalar en cualquier dispositivo
 No explicar teoría.
 
 Implementar directamente sobre el proyecto existente.
+
+
+_______________________________________________________________________
+
+Actúa como senior frontend/full-stack engineer y corrige un bug en mi proyecto actual.
+
+Problema
+
+Cuando hago clic en el botón Descargar, me devuelve al formulario en vez de iniciar la descarga o llevarme al centro de descargas.
+
+Diagnosticar y corregir posibles causas:
+Revisar si el botón está dentro de un form
+
+Si el botón está haciendo submit accidental:
+
+Corregir:
+
+Cambiar type="submit" si corresponde.
+Usar type="button" si es botón de descarga.
+Evitar que dispare envío del formulario.
+Revisar routing / navegación
+
+Verificar si el botón apunta incorrectamente a:
+
+ruta del formulario
+redirect equivocado
+acción incorrecta del router
+
+Corregir para que vaya a:
+
+archivo real de descarga, o
+página /download
+
+No al formulario.
+
+Revisar evento onClick
+
+Si el handler está mal:
+
+Corregir lógica del botón.
+
+Verificar que:
+
+no ejecute navegación errónea
+no recargue la página
+no reinicie flujo del formulario
+Revisar enlaces de descarga
+
+Si debe descargar archivo:
+
+Verificar que apunte a archivos reales:
+
+APK
+EXE
+instaladores
+
+Corregir URLs o paths rotos.
+
+Validar funcionamiento final
+
+Al pulsar Descargar debe hacer una sola de estas:
+
+iniciar descarga real, o
+abrir centro de descargas
+
+Nunca regresar al formulario.
+
+Entregar
+
+Corregir el bug directamente en el proyecto existente.
+
+No explicar teoría.
+
+Diagnosticar y arreglar el problema.
+
+Si fue construido en React/Next, además revisa si el botón está dentro de un <form>: ese suele ser exactamente el síntoma que describes.
+
+
+_____________________________________________________________________
+
+Actúa como senior full-stack engineer y corrige completamente el flujo de descarga de mi proyecto actual.
+
+Problema actual
+
+Cada vez que hago clic en el botón Descargar, me devuelve al formulario.
+
+Eso es incorrecto.
+
+Debes corregir el flujo completo desde el principio hasta el final para que la descarga funcione realmente.
+
+Objetivo final
+
+Cuando el usuario pulse Descargar, el resultado debe ser:
+
+iniciar descarga real del archivo, o
+abrir centro de descargas funcional
+
+Nunca regresar al formulario.
+
+Corregir el flujo completo desde inicio hasta final:
+INICIO DEL FLUJO
+Paso 1
+
+Auditar el botón Descargar.
+
+Revisar:
+
+si está dentro de un <form>
+si tiene type="submit"
+si dispara submit accidental
+si tiene onClick mal configurado
+si el router redirige al formulario
+
+Corregir eso primero.
+
+Si es botón de descarga:
+
+usar comportamiento correcto:
+
+botón de acción de descarga
+o enlace de descarga real
+
+No submit.
+
+Paso 2
+
+Corregir la lógica del botón.
+
+Al hacer clic debe:
+
+Opción A:
+Ir a:
+
+/download
+
+(Centro de descargas)
+
+o
+
+Opción B:
+
+Iniciar descarga directa de archivo.
+
+No redirigir al formulario.
+
+Paso 3
+
+Crear o reparar el centro de descargas.
+
+Debe existir una página funcional con descargas reales.
+
+Ejemplo:
+
+Descargar Android (APK real)
+Descargar Windows (.exe real)
+Descargar otras plataformas si aplica
+
+No placeholders.
+
+No enlaces falsos.
+
+Paso 4
+
+Corregir rutas y archivos.
+
+Verificar que:
+
+rutas apunten a archivos reales
+archivos existan
+botones usen los paths correctos
+no haya redirecciones rotas
+FINAL DEL FLUJO
+
+Al hacer clic en Descargar:
+
+Secuencia correcta:
+
+Botón Descargar
+↓
+Va a /download o descarga directa
+↓
+Usuario ve opciones o descarga inicia
+↓
+Archivo se descarga realmente
+↓
+Usuario puede instalar la app
+
+Ese es el flujo final correcto.
+
+Validar con tests
+
+Probar:
+
+botón no envía formulario
+botón no vuelve al formulario
+descarga funciona
+archivos descargan
+links no están rotos
+Entregar
+
+Corregir directamente el proyecto existente y dejar el flujo completo de descarga funcionando desde inicio hasta final.
+
+No explicar teoría.
+
+Arreglarlo.
+_____________________________________________________________________
+
+Actúa como QA Automation Engineer senior y realiza pruebas completas end-to-end sobre mi aplicación ya desplegada en producción.
+
+No diseñar. No agregar features. Solo probar, detectar fallos y reportar.
+
+Objetivo
+
+Simular el comportamiento real de un usuario y validar que todo el sistema funciona correctamente en producción.
+
+1. Simulación de usuario real (flujo completo)
+
+Ejecutar este flujo completo:
+
+Entrar a la aplicación (URL de producción)
+Registrarse como nuevo usuario
+Iniciar sesión
+Crear hábitos
+Crear tareas
+Esperar o simular notificaciones
+No completar un hábito y verificar alarmas
+Probar pomodoro
+Probar envío de correos
+Probar notificaciones por WhatsApp
+Ir al apartado de descargas
+Presionar botón Descargar
+Descargar APK o instalador
+Validar que el archivo se descarga correctamente
+2. Validar puntos críticos
+
+Verificar:
+
+Login funciona correctamente
+No se pueden crear cuentas duplicadas
+Base de datos guarda correctamente
+Sincronización entre sesiones
+Notificaciones funcionan
+Alarmas se disparan correctamente
+Pomodoro funciona y respeta configuración
+WhatsApp envía mensajes correctamente
+Correos llegan correctamente
+Descargas funcionan (no redirigen al formulario)
+3. Detectar errores
+
+Buscar:
+
+Bugs de navegación
+Botones que no funcionan
+Redirecciones incorrectas
+Fallos en lógica
+Problemas de sincronización
+Errores en consola
+Problemas de backend
+4. Logs
+
+Revisar:
+
+Logs del backend
+Logs de notificaciones
+Logs de errores
+
+Identificar fallos ocultos.
+
+5. Test de estrés básico
+
+Simular:
+
+múltiples hábitos
+múltiples tareas
+múltiples notificaciones
+
+Ver si el sistema se degrada.
+
+6. Validar descarga real
+
+Asegurar:
+
+botón Descargar funciona
+no redirige al formulario
+descarga archivos reales
+archivos no están corruptos
+7. Resultado final
+
+Entregar:
+
+Lista de errores encontrados
+Qué está roto
+Qué funciona correctamente
+Prioridad de cada problema
+Recomendaciones de corrección
+
+No explicar teoría.
+
+Ejecutar pruebas reales, detectar problemas y reportar.
+
+_______________________________________________________________________
+
+Actúa como ingeniero full-stack, mobile y DevOps senior.
+
+Toma mi proyecto actual y haz que la aplicación pueda descargarse e instalarse en todas las plataformas (Android, PC y vía web/PWA), implementando todo el flujo completo de distribución.
+
+No crear un proyecto nuevo. Modificar el existente.
+
+OBJETIVO
+
+Convertir la aplicación en un sistema distribuible multiplataforma con descargas reales y funcionales.
+
+IMPLEMENTAR TODO LO SIGUIENTE:
+1. Convertir la app en PWA
+
+Agregar soporte completo de Progressive Web App:
+
+Crear y configurar manifest.json
+Implementar service worker
+Habilitar instalación desde navegador
+Soporte offline básico
+Asegurar que funcione en:
+Android
+iPhone
+PC (instalable desde navegador)
+2. Generar APK real para Android
+
+Usar Capacitor:
+
+Integrar Capacitor en el proyecto
+Crear proyecto Android
+Generar:
+APK (instalable)
+AAB (distribución)
+Verificar que la app abre correctamente
+3. Generar versión desktop
+
+Usar Electron o equivalente:
+
+Empaquetar app como desktop app
+Generar instalador:
+Windows (.exe o .msi)
+Si es viable:
+macOS
+Linux
+4. Crear centro de descargas funcional
+
+Crear página:
+
+/download
+
+Debe incluir:
+
+Botón Descargar Android (APK real)
+Botón Descargar Windows (.exe real)
+Botón instalar PWA
+Detección automática de dispositivo (opcional)
+5. Corregir flujo de descarga
+
+Asegurar que:
+
+Botón Descargar NO redirige al formulario
+NO está dentro de <form>
+NO hace submit
+Inicia descarga real o abre /download
+6. Hosting de archivos
+
+Subir builds a un sistema de almacenamiento:
+
+Vercel / Supabase / AWS S3 / Firebase
+
+Configurar URLs reales para:
+
+APK
+EXE
+Otros instaladores
+7. Validación completa
+
+Verificar:
+
+APK se descarga
+APK se instala
+EXE se descarga
+EXE se ejecuta
+PWA se instala
+Enlaces funcionan
+No hay redirecciones incorrectas
+8. Mantener sistema actual
+
+No romper:
+
+Login
+Hábitos
+Tareas
+Notificaciones
+WhatsApp
+Pomodoro
+Base de datos
+9. Generar reporte obligatorio
+
+Crear un archivo en el proyecto:
+
+response.md
+
+Debe incluir:
+
+Secciones:
+Qué se implementó
+Qué se corrigió
+Cómo descargar cada versión
+Rutas de descarga
+Problemas encontrados
+Cómo se solucionaron
+Estado final del sistema
+Instrucciones de uso
+10. Entregar
+Código modificado
+Builds generadas
+Centro de descargas funcional
+Archivo response.md completo
+
+No explicar teoría.
+
+Implementar todo y generar el reporte en response.md.
+
+
+______________________________________________________________________
+
+Usa este prompt:
+
+---
+
+**PROMPT:**
+
+Actúa como DevOps Engineer senior, mobile engineer y release engineer.
+
+Toma mi proyecto actual y completa correctamente el sistema de distribución multiplataforma corrigiendo los errores actuales.
+
+No crear un proyecto nuevo. Modificar el existente.
+
+---
+
+## OBJETIVO
+
+Dejar la aplicación completamente distribuible con descargas reales y funcionales para:
+
+* Windows (instalador real)
+* Android (APK real)
+* Web (PWA)
+
+---
+
+## 1. Corregir build de Windows (CRÍTICO)
+
+Problema actual:
+Solo existe `electron.exe` en `win-unpacked` (NO es instalador válido).
+
+### Implementar:
+
+* Configurar correctamente `electron-builder`
+* Generar instalador real:
+
+  * `.exe` (NSIS installer) obligatorio
+  * opcional `.msi`
+
+### Asegurar:
+
+* Instalador ejecutable por usuario final
+* Instalación guiada
+* Acceso directo creado
+
+Actualizar scripts en `package.json` si es necesario.
+
+---
+
+## 2. Completar Android build (CRÍTICO)
+
+Problema:
+No hay APK generado por falta de Java.
+
+### Implementar:
+
+* Detectar si Java está instalado
+* Si no está:
+
+  * Documentar instalación requerida
+* Configurar Capacitor correctamente
+
+### Generar:
+
+* APK instalable
+* AAB para distribución
+
+### Ejecutar:
+
+* `npx cap sync android`
+* `npx cap build android`
+
+Asegurar que la app abre correctamente en Android.
+
+---
+
+## 3. Subir builds a sistema de distribución
+
+Unificar distribución usando:
+
+* GitHub Releases (preferido)
+
+Subir:
+
+* APK
+* Instalador Windows (.exe)
+
+---
+
+## 4. Unificar rutas de descarga (CRÍTICO)
+
+NO usar rutas rotas ni archivos locales.
+
+Crear rutas consistentes:
+
+Ejemplo:
+
+* `/download/app.exe`
+* `/download/app.apk`
+
+Estas rutas deben redirigir a:
+
+* GitHub Releases o storage real
+
+---
+
+## 5. Corregir Download Portal
+
+Actualizar completamente el componente de descargas.
+
+Asegurar:
+
+* Botones NO están dentro de `<form>`
+* NO hacen submit
+* NO redirigen al formulario
+* Usan enlaces directos válidos
+
+Ejemplo correcto:
+
+```tsx
+<a href="/download/app.exe" download>Descargar Windows</a>
+<a href="/download/app.apk" download>Descargar Android</a>
+```
+
+---
+
+## 6. Validación completa
+
+Probar:
+
+* Windows:
+
+  * descarga instalador
+  * instala correctamente
+  * abre la app
+
+* Android:
+
+  * descarga APK
+  * instala
+  * abre la app
+
+* Web:
+
+  * PWA instalable
+
+---
+
+## 7. Mantener sistema intacto
+
+No romper:
+
+* Login
+* Hábitos
+* Tareas
+* Notificaciones
+* WhatsApp
+* Pomodoro
+* Estadísticas
+
+---
+
+## 8. Actualizar reporte
+
+Modificar el archivo:
+
+`response.md`
+
+Agregar:
+
+* Builds generados
+* Links reales de descarga
+* Estado final (todo debe estar completo)
+* Confirmación de que:
+
+  * Windows funciona
+  * Android funciona
+  * Descargas funcionan
+
+---
+
+## 9. Entregar
+
+* Instalador Windows (.exe)
+* APK Android
+* Rutas de descarga funcionales
+* Portal de descargas corregido
+* response.md actualizado
+
+---
+
+No explicar teoría.
+
+Ejecutar todo y dejar el sistema completamente funcional.
+
+Devuelve todo en response.md
+
+__________________________________________________________
+Actúa como DevOps y release engineer senior.
+
+Corrige completamente el sistema de distribución de mi app.
+
+Problemas actuales:
+- Windows usa win-unpacked (incorrecto)
+- No existe APK
+- Descargas usan rutas locales (incorrecto)
+
+Objetivo:
+Dejar la app completamente distribuible.
+
+Implementar:
+
+1. Generar instalador Windows real (.exe NSIS)
+2. Generar APK Android funcional
+3. Subir ambos a GitHub Releases
+4. Reemplazar TODAS las rutas locales por URLs públicas reales
+5. Corregir /download para usar enlaces válidos
+6. Validar que:
+   - descarga funciona
+   - archivos se instalan
+   - app abre correctamente
+
+Actualizar response.md con:
+- links reales de descarga
+- confirmación de instalación en Windows
+- confirmación de instalación en Android
+
+No explicar teoría.
+Ejecutar todo y dejarlo completamente funcional.
+
+_________________________________________________________________________________________________
+
+Tarea: Analiza el proyecto y establece lo siguiente: componenetes, endpoints, cruds, conexciones a servicios externos, funcionalidades que no esten en uso debido a facores que puedes corregir, haz que los datos que los datos se alamacen en la maquina o navegador del usuario, no en el sistema, encargate del apartado de descargar aplcacion y haz que el proyecto se pueda descargar todas las plataformas.
+
+Contexto: este es un sistema de seguiiento de habitos diseñado para hacer un analisis del cumplimiento de las personas y eliminar su procrastinacion, necesita un sisintema integrado de ai para ayudar al usuario, tiene un apartado para las metas, protocolos matutinos y vespertinos y nocturnos, tecnica pomodoro con contador, entre otras cosas
