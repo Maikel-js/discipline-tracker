@@ -2,6 +2,7 @@ import type { EmailLog, EmailPreferences, User, Habit, Task } from '@/types';
 
 const EMAIL_CONFIG = {
   from: 'Discipline Tracker <noreply@discipline-tracker.app>',
+  apiKey: process.env.NEXT_PUBLIC_EMAIL_API_KEY || '',
   templates: {
     reminder: {
       subject: '📋 Recordatorio: Tienes hábitos pendientes',
@@ -40,6 +41,26 @@ const EMAIL_CONFIG = {
           ${pendingHabits.map(h => `<p>✗ ${h}</p>`).join('')}
         </div>
         <p style="margin-top: 20px;">Cada día que pierdes es un paso atrás.</p>
+      `
+    },
+    experimentCreated: {
+      subject: '🧪 Nuevo experimento creado',
+      body: (name: string, data: { experimentName: string; type: string; periodDays: number; items: string[] }) => `
+        <h1>¡Hola ${name}!</h1>
+        <p>Tu nuevo experimento ha sido creado exitosamente:</p>
+        <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; border: 2px solid #22c55e;">
+          <h2 style="color: #16a34a;">🧪 ${data.experimentName}</h2>
+          <p><strong>Tipo:</strong> ${data.type === 'habits' ? 'Hábitos' : 'Tareas'}</p>
+          <p><strong>Período:</strong> ${data.periodDays} días</p>
+          <p><strong>Elementos a medir:</strong></p>
+          <ul>
+            ${data.items.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <p style="margin-top: 20px;">La barra de progreso se llenará a medida que completes los elementos vinculados.</p>
+        <a href="https://discipline-tracker-rho.vercel.app" style="background: #22c55e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; margin-top: 16px;">
+          Ver Experimento
+        </a>
       `
     }
   }
@@ -81,6 +102,61 @@ class EmailService {
     console.log(`[Email] ${type} sent to ${to}:`, template.subject);
     
     return true;
+  }
+
+  async sendExperimentNotification(
+    to: string,
+    user: User,
+    data: { experimentName: string; type: 'habits' | 'tasks'; periodDays: number; items: string[] }
+  ): Promise<boolean> {
+    const template = EMAIL_CONFIG.templates.experimentCreated;
+    
+    const emailLog: EmailLog = {
+      id: Math.random().toString(36).substr(2, 9),
+      userId: user.id,
+      type: 'reminder',
+      subject: template.subject,
+      body: template.body(user.name, data),
+      sentAt: new Date().toISOString(),
+      opened: false
+    };
+
+    this.logs.push(emailLog);
+    this.saveLogs();
+
+    console.log(`[Email] Experiment notification sent to ${to}:`, template.subject);
+    console.log('[Email] Experiment details:', data);
+
+    if (EMAIL_CONFIG.apiKey) {
+      try {
+        await this.sendViaRealService(to, template.subject, template.body(user.name, data));
+      } catch (error) {
+        console.warn('[Email] Real service failed, using local log:', error);
+      }
+    }
+    
+    return true;
+  }
+
+  private async sendViaRealService(to: string, subject: string, htmlBody: string): Promise<void> {
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        template_id: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        user_id: EMAIL_CONFIG.apiKey,
+        template_params: {
+          to_email: to,
+          subject,
+          message: htmlBody
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Email service error: ${response.statusText}`);
+    }
   }
 
   async sendBatchReminders(

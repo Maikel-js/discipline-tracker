@@ -86,12 +86,6 @@ function MainApp() {
             >
               <Settings size={18} className="text-gray-400" />
             </button>
-            <button
-              onClick={() => setShowSettings(true)}
-              className="p-2 md:p-2 hover:bg-gray-800 rounded-xl touch-active"
-            >
-              <Trophy size={18} className="text-yellow-400" />
-            </button>
           </div>
         </header>
 
