@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 import { useStore } from '@/store/useStore';
-import { 
-  Smartphone, Monitor, Download, Globe, Apple, 
-  Check, Settings, Bell, MessageCircle,
-  Clock, User, Shield, Wifi, Terminal, Box
+import {
+  Smartphone, Monitor, Download, Globe,
+  Settings, MessageCircle, Clock, Bell, Shield,
+  Box
 } from 'lucide-react';
 
-type Platform = 'android' | 'ios' | 'windows' | 'macos' | 'linux' | 'unknown';
+type Platform = 'android' | 'windows' | 'linux' | 'unknown';
 
 export default function DownloadPortal() {
   const { user } = useAuth();
@@ -28,13 +28,11 @@ export default function DownloadPortal() {
   useEffect(() => {
     const detectPlatform = (): Platform => {
       const userAgent = navigator.userAgent.toLowerCase();
-      
+
       if (userAgent.includes('android')) return 'android';
-      if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'ios';
       if (userAgent.includes('win')) return 'windows';
-      if (userAgent.includes('mac')) return 'macos';
       if (userAgent.includes('linux')) return 'linux';
-      
+
       return 'unknown';
     };
     
@@ -49,12 +47,8 @@ export default function DownloadPortal() {
     switch (platform) {
       case 'android':
         return { icon: '📱', title: 'Android', action: 'Instalar App' };
-      case 'ios':
-        return { icon: '🍎', title: 'iPhone', action: 'Instalar App' };
       case 'windows':
         return { icon: '🪟', title: 'Windows', action: 'Descargar' };
-      case 'macos':
-        return { icon: '🍎', title: 'macOS', action: 'Descargar' };
       default:
         return { icon: '🌐', title: 'Web', action: 'Abrir App' };
     }
@@ -141,37 +135,22 @@ export default function DownloadPortal() {
                 </div>
               </div>
 
-              <div className="p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+              <div className="p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium flex items-center gap-2">
-                      🍎 iPhone
+                      🌐 PWA Web
                     </div>
-                    <div className="text-xs text-gray-400">Desde Safari - Instalar PWA</div>
+                    <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
                   </div>
-                  <button
-                    onClick={() => window.open(appUrl, '_blank')}
-                    className="px-3 py-1 bg-blue-600 rounded-lg text-sm"
+                  <a
+                    href={appUrl}
+                    target="_blank"
+                    className="px-3 py-1 bg-purple-600 rounded-lg text-sm"
                   >
-                    Instalar
-                  </button>
+                    Abrir
+                  </a>
                 </div>
-              </div>
-            </div>
-
-            <div className="mt-3 p-2 bg-purple-900/20 border border-purple-500/30 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">🌐 PWA Web</div>
-                  <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
-                </div>
-                <a
-                  href={appUrl}
-                  target="_blank"
-                  className="px-3 py-1 bg-purple-600 rounded-lg text-sm"
-                >
-                  Abrir
-                </a>
               </div>
             </div>
           </div>
@@ -209,24 +188,6 @@ export default function DownloadPortal() {
                       🪟 Windows
                     </div>
                     <div className="text-xs text-gray-400">Usa la versión web o instala PWA</div>
-                  </div>
-                  <a
-                    href={appUrl}
-                    target="_blank"
-                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
-                  >
-                    Abrir Web
-                  </a>
-                </div>
-              </div>
-
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🍎 macOS
-                    </div>
-                    <div className="text-xs text-gray-400">Usa Safari para instalar PWA</div>
                   </div>
                   <a
                     href={appUrl}
