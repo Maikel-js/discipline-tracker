@@ -14,7 +14,7 @@
     "test:e2e": "playwright test",
     "test:all": "npm run test && npm run test:e2e",
     "electron": "electron .",
-    "electron:build": "electron-builder --win"
+    "electron:build": "electron-builder --win --linux"
   },
   "build": {
     "appId": "com.discipline.tracker",
@@ -59,6 +59,15 @@
     },
     "portable": {
       "artifactName": "DisciplineTracker-Portable-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon-512.png"
     },
     "publish": null
   },
