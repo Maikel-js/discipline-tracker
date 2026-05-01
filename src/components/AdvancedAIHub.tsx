@@ -264,10 +264,10 @@ export default function AdvancedAIHub() {
 
           {digitalTwin && (
             <>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <div className="text-xs text-gray-500 mb-1">Cronotipo</div>
-                  <div className="text-lg font-bold text-white capitalize">{digitalTwin.profile.chronotype}</div>
+                  <div className="text-base sm:text-lg font-bold text-white capitalize">{digitalTwin.profile.chronotype}</div>
                   <div className="text-xs text-gray-400">
                     {digitalTwin.profile.chronotype === 'morning' ? '🌅 Mejor mañana' : 
                      digitalTwin.profile.chronotype === 'night' ? '🌙 Mejor noche' : '⛅ Mejor tarde'}
@@ -276,13 +276,13 @@ export default function AdvancedAIHub() {
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <div className="text-xs text-gray-500 mb-1">Estilo de Decisión</div>
-                  <div className="text-lg font-bold text-white capitalize">{digitalTwin.profile.decisionStyle}</div>
+                  <div className="text-base sm:text-lg font-bold text-white capitalize">{digitalTwin.profile.decisionStyle}</div>
                   <div className="text-xs text-gray-400">Basado en tus elecciones</div>
                 </div>
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <div className="text-xs text-gray-500 mb-1">Tolerancia al Riesgo</div>
-                  <div className="text-lg font-bold text-white">{digitalTwin.profile.riskTolerance}%</div>
+                  <div className="text-base sm:text-lg font-bold text-white">{digitalTwin.profile.riskTolerance}%</div>
                   <div className="text-xs text-gray-400">
                     {digitalTwin.profile.riskTolerance > 70 ? '🎯 Alto riesgo, alta recompensa' : '🛡️ Conservador'}
                   </div>
@@ -290,7 +290,7 @@ export default function AdvancedAIHub() {
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <div className="text-xs text-gray-500 mb-1">Tipo de Motivación</div>
-                  <div className="text-lg font-bold text-white capitalize">{digitalTwin.profile.motivationType}</div>
+                  <div className="text-base sm:text-lg font-bold text-white capitalize">{digitalTwin.profile.motivationType}</div>
                   <div className="text-xs text-gray-400">
                     {digitalTwin.profile.motivationType === 'reward' ? '🏆 Impulsado por recompensas' : 
                      digitalTwin.profile.motivationType === 'avoidance' ? '⚠️ Impulsado por evitar castigos' : '👥 Impulsado socialmente'}

@@ -74,7 +74,7 @@ export default function Protocols() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 text-sm text-gray-400 mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-400 mb-3">
             <div>
               <span className="font-semibold text-white">{protocol.timesCompleted}</span> ejecuciones
             </div>

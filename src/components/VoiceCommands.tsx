@@ -137,7 +137,7 @@ export default function VoiceCommands() {
       </button>
 
       {transcript && (
-        <div className="absolute left-0 bottom-14 bg-gray-900 border border-gray-700 rounded-lg p-2 w-48">
+        <div className="absolute left-0 sm:left-0 bottom-14 bg-gray-900 border border-gray-700 rounded-lg p-2 w-44 sm:w-48">
           <p className="text-xs text-gray-400">Dijiste:</p>
           <p className="text-white text-sm">{transcript}</p>
         </div>

@@ -56,3 +56,20 @@ Output: `android/app/build/outputs/bundle/release/app-release.aab`
 5. Complete app listing info
 6. Test internal release
 7. Promote to production
+
+## Desktop (Electron) Builds
+
+Electron builds are available for **Windows and Linux only** (no macOS support).
+
+### Windows
+Run:
+```bash
+npm run electron:build
+```
+Output: `release/` with NSIS installer and portable executable.
+
+### Linux
+The same command above also generates a Linux AppImage in `release/`.
+
+### Note
+iOS is not supported. Only Android builds are available for mobile.

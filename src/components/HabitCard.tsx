@@ -77,7 +77,7 @@ export default function HabitCard({ habit }: Props) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-500">Cumplimiento:</span>
-          <div className="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="w-20 sm:w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-green-500 to-emerald-400 transition-all"
               style={{ width: `${habit.completionRate}%` }}

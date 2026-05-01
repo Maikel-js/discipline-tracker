@@ -73,7 +73,7 @@ export default function PomodoroTimer({ taskId, habitId, onComplete }: Props) {
       </div>
 
       <div className="relative mb-4">
-        <div className="text-4xl font-bold text-center text-white">
+        <div className="text-3xl sm:text-4xl font-bold text-center text-white">
           {isNaN(secondsLeft) ? '25:00' : formatTime(secondsLeft)}
         </div>
         <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">

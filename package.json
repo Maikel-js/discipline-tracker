@@ -63,12 +63,13 @@
     "linux": {
       "target": [
         {
-          "target": "AppImage",
+          "target": "tar.gz",
           "arch": ["x64"]
         }
       ],
       "icon": "public/icon-512.png"
     },
+    "mac": false,
     "publish": null
   },
   "dependencies": {

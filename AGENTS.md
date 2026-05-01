@@ -11,7 +11,7 @@ npm run test:watch     # Jest watch mode
 npm run test:coverage  # Jest with coverage
 npm run test:e2e       # Playwright E2E (tests/e2e/)
 npm run electron       # Run Electron app
-npm run electron:build # Windows NSIS installer + portable in release/
+npm run electron:build # Windows + Linux installers in release/ (no macOS)
 ```
 
 **Verification order**: `lint` -> `build` -> `test` -> `test:e2e`
@@ -60,5 +60,5 @@ Single test: `npm test -- -t "test name"` or `npm test -- tests/unit/specific.te
 ## Deploy
 
 - **Web (Vercel)**: `npm run build` -> push (`https://discipline-tracker-rho.vercel.app`)
-- **Android**: `npm run build` first, then `cd android && ./gradlew assembleRelease`. See `BUILD.md`.
-- **Desktop (Electron)**: `npm run electron:build` -> `release/`
+- **Android**: `npm run build` first, then `cd android && ./gradlew assembleRelease`. See `BUILD.md`. No iOS support.
+- **Desktop (Electron)**: `npm run electron:build` -> `release/` (Windows + Linux only, no macOS)

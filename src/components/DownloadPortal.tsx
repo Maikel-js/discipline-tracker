@@ -65,7 +65,7 @@ export default function DownloadPortal() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <button
           onClick={() => setActiveSection('download')}
           className={`p-2 rounded-lg text-sm ${activeSection === 'download' ? 'bg-blue-600' : 'bg-gray-700'}`}

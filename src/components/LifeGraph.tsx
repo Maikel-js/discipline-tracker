@@ -264,7 +264,7 @@ export default function LifeGraph() {
             </div>
           </div>
         ) : (
-          <svg width={svgDimensions.width} height={svgDimensions.height} className="min-w-[600px]">
+          <svg width={svgDimensions.width} height={svgDimensions.height} className="min-w-[300px] sm:min-w-[600px] max-w-full">
             <defs>
               {Object.entries(categoryColors).map(([cat, colors]) => (
                 <marker
