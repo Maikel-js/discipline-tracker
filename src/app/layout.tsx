@@ -17,7 +17,6 @@ export const metadata: Metadata = {
   title: "Discipline Tracker",
   description: "Sistema de seguimiento de hábitos y tareas con notificaciones insistentes",
   manifest: "/manifest.json",
-  themeColor: "#000000",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
