@@ -29,12 +29,12 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40">
-      <div className="flex items-center gap-3 py-2 px-4 overflow-x-auto">
+      <div className="flex items-center gap-3 py-2 px-4 overflow-x-auto flex-nowrap">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${
+            className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors flex-shrink-0 ${
               activeTab === tab.id 
                 ? 'text-blue-400 bg-blue-400/10' 
                 : 'text-gray-500 hover:text-gray-400'
