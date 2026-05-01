@@ -14,7 +14,8 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
   const unacknowledged = notifications.filter(n => !n.acknowledged).length;
   const [showMore, setShowMore] = useState(false);
 
-  const allTabs = [
+  // Mobile tabs (5 main tabs + "More" button)
+  const mobileTabs = [
     { id: 'dashboard', icon: Home, label: 'Inicio' },
     { id: 'habits', icon: Flame, label: 'Hábitos' },
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
@@ -22,7 +23,12 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'more', icon: Settings, label: 'Más' },
   ];
 
-  const moreTabs = [
+  // Desktop sidebar tabs (all tabs in correct order)
+  const desktopTabs = [
+    { id: 'dashboard', icon: Home, label: 'Inicio' },
+    { id: 'habits', icon: Flame, label: 'Hábitos' },
+    { id: 'tasks', icon: ListTodo, label: 'Tareas' },
+    { id: 'download', icon: Download, label: 'Descargar' },
     { id: 'goals', icon: Target, label: 'Metas' },
     { id: 'notes', icon: StickyNote, label: 'Notas' },
     { id: 'protocols', icon: ClipboardList, label: 'Protocolos' },
@@ -32,12 +38,15 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'stats', icon: LineChart, label: 'Analytics' }
   ];
 
+  // More modal tabs (same as desktop but without the first 4)
+  const moreTabs = desktopTabs.slice(4);
+
   return (
     <>
       {/* Mobile bottom tab bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden">
         <div className="flex items-center justify-start gap-1 px-2 overflow-x-auto relative">
-          {allTabs.map(tab => (
+          {mobileTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => {
@@ -105,7 +114,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
           </h2>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto">
-          {[...allTabs.filter(t => t.id !== 'more'), ...moreTabs].map(tab => (
+          {desktopTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
