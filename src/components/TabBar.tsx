@@ -29,7 +29,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40">
-      <div className="flex items-center justify-around py-2 px-4">
+      <div className="flex items-center gap-3 py-2 px-4 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
