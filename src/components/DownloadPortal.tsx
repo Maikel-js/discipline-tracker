@@ -22,8 +22,8 @@ export default function DownloadPortal() {
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
   const githubUrl = 'https://github.com/Maikel-js/discipline-tracker';
   const releasesUrl = `${githubUrl}/releases`;
-  const windowsExeUrl = `${releasesUrl}/latest/download/Discipline-Tracker-Setup.exe`;
-  const androidApkUrl = `${releasesUrl}/latest/download/Discipline-Tracker.apk`;
+  const windowsExeUrl = '/downloads/Discipline-Tracker-Windows.zip';
+  const androidApkUrl = '/downloads/app-release.apk';
 
   useEffect(() => {
     const detectPlatform = (): Platform => {
