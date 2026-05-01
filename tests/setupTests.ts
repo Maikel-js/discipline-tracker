@@ -754,13 +754,13 @@ const createFreshStore = () => {
     const completedToday = logs.filter((l: any) =>
       l.status === 'completed' && l.completedAt.startsWith(today)
     ).length;
-    const overallRate = totalHabits > 0"
+    const overallRate = totalHabits > 0
       ? Math.round(habits.reduce((acc: number, h: any) => acc + (h.completionRate || 0), 0) / totalHabits)
       : 0;
     const maxStreak = Math.max(
       ...streaks.map((s: any) => s.currentStreak || 0),
       ...habits.map((h: any) => h.currentStreak || 0),
-      0"
+      0
     );
     const newScore = completedToday * 10 + maxStreak * 5 + overallRate;
     const newLevel = Math.floor(newScore / 100) + 1;
