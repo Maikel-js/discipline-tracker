@@ -16,6 +16,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
   const tabs = [
     { id: 'dashboard', icon: Home, label: 'Inicio' },
     { id: 'habits', icon: Flame, label: 'Hábitos' },
+    { id: 'download', icon: Download, label: 'Descargar' },
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
     { id: 'goals', icon: Target, label: 'Metas' },
     { id: 'notes', icon: StickyNote, label: 'Notas' },
@@ -23,20 +24,19 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'schedule', icon: Calendar, label: 'Día' },
     { id: 'life-os', icon: Layers, label: 'Life OS' },
     { id: 'ai', icon: Brain, label: 'AI' },
-    { id: 'stats', icon: LineChart, label: 'Analytics' },
-    { id: 'download', icon: Download, label: 'Descargar' }
+    { id: 'stats', icon: LineChart, label: 'Analytics' }
   ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40">
-      <div className="flex items-center gap-3 py-2 px-4 overflow-x-auto flex-nowrap">
+      <div className="flex items-center gap-3 py-2 px-4 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors flex-shrink-0 ${
-              activeTab === tab.id 
-                ? 'text-blue-400 bg-blue-400/10' 
+            className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors flex-shrink-0 min-w-[70px] relative ${
+              activeTab === tab.id
+                ? 'text-blue-400 bg-blue-400/10'
                 : 'text-gray-500 hover:text-gray-400'
             }`}
           >
@@ -49,6 +49,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
             )}
           </button>
         ))}
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-900 to-transparent pointer-events-none md:hidden" />
       </div>
     </div>
   );
