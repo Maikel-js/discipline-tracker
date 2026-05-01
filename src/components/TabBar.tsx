@@ -23,7 +23,8 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'schedule', icon: Calendar, label: 'Día' },
     { id: 'life-os', icon: Layers, label: 'Life OS' },
     { id: 'ai', icon: Brain, label: 'AI' },
-    { id: 'stats', icon: LineChart, label: 'Analytics' }
+    { id: 'stats', icon: LineChart, label: 'Analytics' },
+    { id: 'download', icon: Download, label: 'Descargar' }
   ];
 
   return (
