@@ -41,10 +41,16 @@ export default function AdvancedAIHub() {
   const [selectedHabitIds, setSelectedHabitIds] = useState<string[]>([]);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
   const [emailSent, setEmailSent] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     analyzeDigitalTwin();
   }, [habits, tasks, logs]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   const analyzeDigitalTwin = () => {
     const completedLogs = logs.filter(l => l.status === 'completed');
@@ -703,8 +709,8 @@ export default function AdvancedAIHub() {
                       const task = tasks.find(t => t.id === id);
                       return habit?.name || task?.title;
                     }).filter(Boolean);
-                    const daysRunning = Math.floor((Date.now() - new Date(exp.startDate).getTime()) / (1000 * 60 * 60 * 24));
-                    const daysRemaining = exp.endDate ? Math.max(0, Math.floor((new Date(exp.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
+                    const daysRunning = Math.floor((currentTime.getTime() - new Date(exp.startDate).getTime()) / (1000 * 60 * 60 * 24));
+                    const daysRemaining = exp.endDate ? Math.max(0, Math.floor((new Date(exp.endDate).getTime() - currentTime.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
                     return (
                       <div key={exp.id} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
