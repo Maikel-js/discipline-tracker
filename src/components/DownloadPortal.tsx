@@ -32,6 +32,9 @@ export default function DownloadPortal() {
   };
 
   const getRecommendedDownload = () => {
+    const tag = 'v0.1.0';
+    const baseUrl = `https://github.com/Maikel-js/discipline-tracker/releases/download/${tag}`;
+
     switch (platform) {
       case 'android':
         return { 
@@ -39,15 +42,15 @@ export default function DownloadPortal() {
           title: 'Android', 
           action: 'Instalar APK',
           filename: 'app-release.apk',
-          url: '/downloads/app-release.apk'
+          url: `${baseUrl}/app-release.apk`
         };
       case 'windows':
         return { 
           icon: '🪟', 
           title: 'Windows', 
-          action: 'Descargar ZIP',
-          filename: 'Discipline-Tracker-Windows.zip',
-          url: '/downloads/Discipline-Tracker-Windows.zip'
+          action: 'Descargar EXE',
+          filename: 'Discipline-Tracker-Setup.exe',
+          url: `${baseUrl}/Discipline-Tracker-Setup.exe`
         };
       case 'linux':
         return { 
@@ -55,7 +58,7 @@ export default function DownloadPortal() {
           title: 'Linux', 
           action: 'Descargar AppImage',
           filename: 'Discipline-Tracker.AppImage',
-          url: '/downloads/Discipline-Tracker.AppImage'
+          url: `${baseUrl}/Discipline-Tracker.AppImage`
         };
       default:
         return { 
@@ -154,7 +157,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/app-release.apk', 'app-release.apk', e)}
+                      onClick={(e) => handleDownload('https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0/app-release.apk', 'app-release.apk', e)}
                       className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
@@ -200,7 +203,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker-Windows.zip', 'Discipline-Tracker-Windows.zip', e)}
+                      onClick={(e) => handleDownload('https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0/Discipline-Tracker-Setup.exe', 'Discipline-Tracker-Setup.exe', e)}
                       className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
@@ -218,7 +221,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker.AppImage', 'Discipline-Tracker.AppImage', e)}
+                      onClick={(e) => handleDownload('https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0/Discipline-Tracker.AppImage', 'Discipline-Tracker.AppImage', e)}
                       className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
