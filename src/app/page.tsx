@@ -242,7 +242,24 @@ function MainApp() {
                   <div>
                     <div className="font-medium text-white">Modo Disciplina Extrema</div>
                     <div className="text-xs text-gray-400">
-                      {settings.extremeMode ? 'Penalización aumentada (-15 pts)' : 'Notificaciones más insistentes'}
+                      {settings.extremeMode ? 'Penalización aumentada (-25 pts)' : 'Notificaciones más insistentes'}
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => useStore.getState().togglePunishmentMode()}
+                className={`w-full p-4 rounded-xl text-left transition-colors ${
+                  settings.punishmentMode ? 'bg-orange-900/50 border border-orange-500' : 'bg-gray-800 border border-gray-700'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <AlertCircle className={settings.punishmentMode ? 'text-orange-500' : 'text-gray-400'} />
+                  <div>
+                    <div className="font-medium text-white">Modo Castigo</div>
+                    <div className="text-xs text-gray-400">
+                      {settings.punishmentMode ? 'Sanciones automáticas activadas' : 'Tareas correctivas manuales'}
                     </div>
                   </div>
                 </div>

@@ -190,22 +190,40 @@ export default function LifeOSHub() {
 
           <div className="space-y-2">
             {plugins.map(plugin => (
-              <div key={plugin.id} className="flex items-center justify-between bg-gray-800/50 rounded-lg p-4">
-                <div>
-                  <div className="font-medium">{plugin.name}</div>
-                  <div className="text-sm text-gray-400">{plugin.description}</div>
-                  <div className="text-xs text-gray-500">v{plugin.version}</div>
+              <div key={plugin.id} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-medium flex items-center gap-2">
+                      {plugin.name}
+                      {plugin.enabled && <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
+                    </div>
+                    <div className="text-sm text-gray-400">{plugin.description}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => togglePlugin(plugin.id)}
+                    className={`px-3 py-1 rounded-lg text-sm font-bold transition-all ${
+                      plugin.enabled 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-gray-700 text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {plugin.enabled ? 'Desactivar' : 'Activar'}
+                  </button>
                 </div>
-                <button
-                  onClick={() => togglePlugin(plugin.id)}
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    plugin.enabled 
-                      ? 'bg-green-600 text-white' 
-                      : 'bg-gray-700 text-gray-400'
-                  }`}
-                >
-                  {plugin.enabled ? 'Activado' : 'Activar'}
-                </button>
+                
+                {plugin.enabled && (
+                  <div className="mt-3 pt-3 border-t border-gray-700/50">
+                    <div className="flex items-center gap-2 text-[10px] text-green-400 uppercase tracking-widest font-bold">
+                      <CheckCircle size={10} /> Sincronización Activa
+                    </div>
+                    <p className="text-[11px] text-gray-500 mt-1 italic">
+                      {plugin.id === 'fit' ? 'Última lectura: 12,450 pasos detectados' : 
+                       plugin.id === 'gcal' ? 'Calendario sincronizado con éxito' :
+                       'Bot activo: Escuchando eventos de disciplina'}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

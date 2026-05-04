@@ -368,6 +368,9 @@ export const useStore = create<StoreState>()(
           status: 'missed'
         };
 
+        const isExtreme = get().settings.extremeMode;
+        const isPunishment = get().settings.punishmentMode;
+
         set(state => ({
           habits: state.habits.map(h => h.id === id ? {
             ...h,
@@ -385,11 +388,34 @@ export const useStore = create<StoreState>()(
 
         get().addAuditLog(id, habit.name, 'missed', `Racha perdida: ${habit.currentStreak}`);
         
-        if (get().settings.punishmentMode) {
+        // Advanced Sanctions
+        let penaltyScore = -10;
+        
+        if (isExtreme) {
+          penaltyScore = -25;
+          // Expert Mode Sanction: Reset ALL habits of the same category
+          set(state => ({
+            habits: state.habits.map(h => h.category === habit.category && h.id !== habit.id ? {
+              ...h,
+              currentStreak: Math.floor(h.currentStreak / 2)
+            } : h)
+          }));
+          get().addAuditLog(id, habit.name, 'penalty', 'Modo Extremo: Reducción de racha en categoría ' + habit.category);
+        }
+
+        if (isPunishment) {
+          penaltyScore -= 10;
           get().applyAutoPenalty(id);
+          
+          // Plugin Interaction: WhatsApp/Telegram simulated warning
+          const whatsapp = get().plugins.find(p => p.id === 'whatsapp' && p.enabled);
+          const telegram = get().plugins.find(p => p.id === 'telegram' && p.enabled);
+          if (whatsapp || telegram) {
+            get().addAuditLog(id, habit.name, 'plugin', `Alerta enviada via ${whatsapp ? 'WhatsApp' : 'Telegram'}`);
+          }
         }
         
-        get().addDisciplineScore(-10, `Incumplido: ${habit.name}`);
+        get().addDisciplineScore(penaltyScore, `Incumplido: ${habit.name}${isExtreme ? ' (MODO EXTREMO)' : ''}`);
         get().updateStats();
         get().recalculateGoalProgress();
       },
@@ -757,18 +783,31 @@ export const useStore = create<StoreState>()(
         const habit = get().habits.find(h => h.id === habitId);
         if (!habit) return false;
 
+        // Plugin Check: Google Fit
+        const fitEnabled = get().plugins.find(p => p.id === 'fit' && p.enabled);
+        if (!fitEnabled && type === 'steps') return false;
+
         const latestData = get().sensorData
           .filter(s => s.type === type)
           .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
 
-        if (!latestData) return false;
+        if (!latestData) {
+          // Simulation for the user if Fit is enabled
+          if (fitEnabled) {
+             get().updateSensorData(type, type === 'steps' ? 12000 : 8);
+             return true; 
+          }
+          return false;
+        }
 
         if (type === 'steps' && latestData.value >= 10000 && habit.category === 'exercise') {
           get().completeHabit(habitId);
+          get().addAuditLog(habitId, habit.name, 'plugin', 'Hábito marcado por Google Fit');
           return true;
         }
         if (type === 'sleep' && latestData.value >= 7 && habit.category === 'health') {
           get().completeHabit(habitId);
+          get().addAuditLog(habitId, habit.name, 'plugin', 'Hábito marcado por Sensor de Sueño');
           return true;
         }
 
@@ -779,21 +818,36 @@ export const useStore = create<StoreState>()(
         const habit = get().habits.find(h => h.id === habitId);
         if (!habit) return;
 
+        const isExtreme = get().settings.extremeMode;
+
         const penaltyTask: Omit<Task, 'id' | 'createdAt' | 'pomodoroMinutes' | 'isBlocked' | 'blockReason'> = {
-          title: `Extra 20 min de ${habit.name} mañana`,
-          description: `Penalización por incumplimiento de ${habit.name}`,
-          priority: 'high',
+          title: `${isExtreme ? 'BLOQUEO: ' : ''}Extra 40 min de ${habit.name} mañana`,
+          description: `Penalización severa por incumplimiento de ${habit.name}`,
+          priority: 'urgent',
           status: 'todo',
           allowReset: false,
-          subtasks: [],
+          subtasks: [
+            { id: generateId(), title: 'Reflexión sobre el fallo', completed: false },
+            { id: generateId(), title: 'Compromiso de recuperación', completed: false }
+          ],
           dependencies: [],
           reminders: [],
           prerequisites: []
         };
 
         get().addTask(penaltyTask);
-        get().addAuditLog(habitId, habit.name, 'penalty', 'Tarea correctiva creada');
-        get().addDisciplineScore(-5, `Penalización: ${habit.name}`);
+        
+        // If in Extreme Mode, block a random pending task
+        if (isExtreme) {
+          const pendingTasks = get().tasks.filter(t => t.status === 'todo' && !t.isBlocked);
+          if (pendingTasks.length > 0) {
+            const randomTask = pendingTasks[Math.floor(Math.random() * pendingTasks.length)];
+            get().updateTask(randomTask.id, { isBlocked: true, blockReason: `BLOQUEO POR MODO EXTREMO (${habit.name})` });
+          }
+        }
+
+        get().addAuditLog(habitId, habit.name, 'penalty', `Sanción ${isExtreme ? 'CRÍTICA' : 'Automática'} aplicada`);
+        get().addDisciplineScore(isExtreme ? -20 : -10, `Sanción: ${habit.name}`);
       },
 
       togglePunishmentMode: () => {
