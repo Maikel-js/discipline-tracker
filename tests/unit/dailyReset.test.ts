@@ -73,6 +73,18 @@ describe('Daily Reset Tests', () => {
       expect(store.lastResetDate).toBe('2026-04-19');
     });
 
+    it('should update lastResetDate after reset', () => {
+      const initialDate = store.lastResetDate;
+
+      const nextDay = new Date('2026-04-19T10:00:00');
+      jest.setSystemTime(nextDay);
+
+      store.checkAndResetDaily();
+
+      expect(store.lastResetDate).not.toBe(initialDate);
+      expect(store.lastResetDate).toBe('2026-04-19');
+    });
+
     it('should not affect habits that are already pending', () => {
       store.addHabit({
         name: 'Pending habit',

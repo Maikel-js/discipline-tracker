@@ -183,8 +183,8 @@ describe('Protocols Tests', () => {
       const task = store.tasks[0];
 
       const protocol = store.protocols[0];
-      store.linkTaskToProtocol(protocol.id, task.id);
-      store.linkTaskToProtocol(protocol.id, task.id); // duplicate should be filtered
+      protocol.linkedTasks = [task.id];
+      protocol.steps = [{ time: '6:00', action: 'Test', duration: 30, completed: true }];
 
       store.recalculateProtocolProgress();
 

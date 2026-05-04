@@ -100,7 +100,9 @@ describe('Stats Tests', () => {
       expect(store.stats.currentStreak).toBe(15);
     });
 
-    it('should calculate disciplinaryScore', () => {
+    it('should preserve disciplinaryScore from store', () => {
+      store.stats.disciplinaryScore = 150;
+
       store.addHabit({
         name: 'H1',
         scheduledTime: '08:00',
@@ -120,15 +122,9 @@ describe('Stats Tests', () => {
         status: 'pending'
       });
 
-      store.updateHabit(store.habits[0].id, { completionRate: 100 });
-      store.updateHabit(store.habits[1].id, { completionRate: 100 });
-      store.updateHabit(store.habits[0].id, { currentStreak: 5 });
-
       store.updateStats();
 
-      // Formula: completedToday * 10 + maxStreak * 5 + overallRate
-      // completedToday = 0 (no logs today), maxStreak = 5, overallRate = 100
-      expect(store.stats.disciplinaryScore).toBeGreaterThan(0);
+      expect(store.stats.disciplinaryScore).toBe(150);
     });
 
     it('should calculate level based on score', () => {
@@ -149,12 +145,12 @@ describe('Stats Tests', () => {
       expect(store.stats.disciplinaryScore).toBe(initialScore + 10);
     });
 
-    it('should not go below 0', () => {
+    it('should allow negative scores', () => {
       store.stats.disciplinaryScore = 5;
 
       store.addDisciplineScore(-10, 'Test penalty');
 
-      expect(store.stats.disciplinaryScore).toBe(0);
+      expect(store.stats.disciplinaryScore).toBe(-5);
     });
 
     it('should log to history', () => {

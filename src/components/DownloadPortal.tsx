@@ -22,8 +22,6 @@ export default function DownloadPortal() {
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
   const githubUrl = 'https://github.com/Maikel-js/discipline-tracker';
   const releasesUrl = `${githubUrl}/releases`;
-  const windowsExeUrl = '/downloads/Discipline-Tracker-Windows.zip';
-  const androidApkUrl = '/downloads/app-release.apk';
 
   useEffect(() => {
     const detectPlatform = (): Platform => {
@@ -109,115 +107,121 @@ export default function DownloadPortal() {
             </div>
           )}
 
-          <div className="bg-gray-800/50 rounded-xl p-4">
-            <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-              <Smartphone className="w-5 h-5" />
-              📱 Celular
-            </h3>
-            
-            <div className="grid md:grid-cols-2 gap-3">
-              <div className="p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🤖 Android (APK)
-                    </div>
-                    <div className="text-xs text-gray-400">Instalable directo</div>
-                  </div>
-                  <a
-                    href={androidApkUrl}
-                    target="_blank"
-                    download
-                    className="px-3 py-1 bg-green-600 rounded-lg text-sm"
-                  >
-                    Descargar
-                  </a>
-                </div>
-              </div>
+           <div className="bg-gray-800/50 rounded-xl p-4">
+             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+               <Smartphone className="w-5 h-5" />
+               📱 Celular
+             </h3>
 
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🌐 PWA Web
-                    </div>
-                    <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
-                  </div>
-                  <a
-                    href={appUrl}
-                    target="_blank"
-                    className="px-3 py-1 bg-purple-600 rounded-lg text-sm"
-                  >
-                    Abrir
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+             <div className="grid md:grid-cols-2 gap-3">
+               <div className="p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <div className="font-medium flex items-center gap-2">
+                       🤖 Android (APK)
+                     </div>
+                     <div className="text-xs text-gray-400">Instalable directo</div>
+                   </div>
+                   <a
+                     href={`${releasesUrl}/latest/download/app-release.apk`}
+                     className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm"
+                     onClick={(e) => {
+                       fetch('/downloads/app-release.apk').catch(() => {
+                         window.open(`${releasesUrl}/latest`, '_blank');
+                       });
+                     }}
+                   >
+                     Descargar
+                   </a>
+                 </div>
+               </div>
 
-          <div className="bg-gray-800/50 rounded-xl p-4">
-            <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-              <Monitor className="w-5 h-5" />
-              💻 PC / Desktop
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🪟 Windows App
-                    </div>
-                    <div className="text-xs text-gray-400">Aplicación de escritorio</div>
-                  </div>
-                  <a
-                    href={windowsExeUrl}
-                    target="_blank"
-                    download
-                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm"
-                  >
-                    Descargar
-                  </a>
-                </div>
-              </div>
+               <div className="p-3 bg-gray-700/50 rounded-lg">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <div className="font-medium flex items-center gap-2">
+                       🌐 PWA Web
+                     </div>
+                     <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
+                   </div>
+                   <a
+                     href={appUrl}
+                     target="_blank"
+                     className="px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm"
+                   >
+                     Abrir
+                   </a>
+                 </div>
+               </div>
+             </div>
+           </div>
 
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🪟 Windows
-                    </div>
-                    <div className="text-xs text-gray-400">Usa la versión web o instala PWA</div>
-                  </div>
-                  <a
-                    href={appUrl}
-                    target="_blank"
-                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
-                  >
-                    Abrir Web
-                  </a>
-                </div>
-              </div>
+           <div className="bg-gray-800/50 rounded-xl p-4">
+             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+               <Monitor className="w-5 h-5" />
+               💻 PC / Desktop
+             </h3>
 
-              <div className="p-3 bg-gray-700/50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🐧 Linux
-                    </div>
-                    <div className="text-xs text-gray-400">Usa la versión web</div>
-                  </div>
-                  <a
-                    href={appUrl}
-                    target="_blank"
-                    className="px-3 py-1 bg-gray-600 rounded-lg text-sm"
-                  >
-                    Abrir Web
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+             <div className="space-y-3">
+               <div className="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <div className="font-medium flex items-center gap-2">
+                       🪟 Windows App
+                     </div>
+                     <div className="text-xs text-gray-400">Aplicación de escritorio</div>
+                   </div>
+                   <a
+                     href={`${releasesUrl}/latest/download/Discipline-Tracker-Windows.zip`}
+                     className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm"
+                     onClick={(e) => {
+                       fetch('/downloads/Discipline-Tracker-Windows.zip').catch(() => {
+                         window.open(`${releasesUrl}/latest`, '_blank');
+                       });
+                     }}
+                   >
+                     Descargar
+                   </a>
+                 </div>
+               </div>
+
+               <div className="p-3 bg-gray-700/50 rounded-lg">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <div className="font-medium flex items-center gap-2">
+                       🪟 Windows
+                     </div>
+                     <div className="text-xs text-gray-400">Usa la versión web o instala PWA</div>
+                   </div>
+                   <a
+                     href={appUrl}
+                     target="_blank"
+                     className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm"
+                   >
+                     Abrir Web
+                   </a>
+                 </div>
+               </div>
+
+               <div className="p-3 bg-gray-700/50 rounded-lg">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <div className="font-medium flex items-center gap-2">
+                       🐧 Linux
+                     </div>
+                     <div className="text-xs text-gray-400">Usa la versión web</div>
+                   </div>
+                   <a
+                     href={appUrl}
+                     target="_blank"
+                     className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm"
+                   >
+                     Abrir Web
+                   </a>
+                 </div>
+               </div>
+             </div>
+           </div>
 
           <div className="bg-gray-800/50 rounded-xl p-4">
             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">

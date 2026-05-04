@@ -144,16 +144,23 @@ const createFreshStore = () => {
         completedAt: now,
         status: 'missed'
       });
+
+      if (settings.punishmentMode) {
+        applyAutoPenalty(id);
+      }
+
+      addDisciplineScore(-10, `Incumplido: ${habits[index].name}`);
     }
   };
 
   const rescheduleHabit = (id: string, newTime: string) => {
     const index = habits.findIndex(h => h.id === id);
     if (index !== -1) {
+      const newRescheduleCount = (habits[index].rescheduleCount || 0) + 1;
       habits[index] = {
         ...habits[index],
         scheduledTime: newTime,
-        rescheduleCount: (habits[index].rescheduleCount || 0) + 1
+        rescheduleCount: newRescheduleCount
       };
       // Add audit log
       auditLogs.push({
@@ -164,6 +171,10 @@ const createFreshStore = () => {
         timestamp: new Date().toISOString(),
         details: `Nueva hora: ${newTime}`
       });
+
+      if (newRescheduleCount >= 3) {
+        addDisciplineScore(-5, `Reprogramación excesiva: ${habits[index].name}`);
+      }
     }
   };
 
@@ -317,11 +328,10 @@ const createFreshStore = () => {
   };
 
   const addDisciplineScore = (change: number, reason: string) => {
-    const newScore = Math.max(0, stats.disciplinaryScore + change);
-    stats.disciplinaryScore = newScore;
+    stats.disciplinaryScore = stats.disciplinaryScore + change;
     disciplineHistory.push({
       id: generateId(),
-      score: newScore,
+      score: stats.disciplinaryScore,
       date: new Date().toISOString(),
       reason
     });
@@ -420,7 +430,7 @@ const createFreshStore = () => {
 
     const newTask = {
       id: generateId(),
-      title: `20 min extra de ${habit.name}`,
+      title: `Extra 20 min de ${habit.name}`,
       description: `Penalización por incumplimiento de ${habit.name}`,
       priority: 'high',
       status: 'todo',
@@ -738,14 +748,12 @@ const createFreshStore = () => {
 
   const checkAndResetDaily = () => {
     const today = new Date().toISOString().split('T')[0];
-    if (lastResetDate !== today) {
-      habits.forEach((h: any, index: number) => {
-        habits[index] = { ...h, status: 'pending' };
-      });
-      lastResetDate = today;
-      return true;
-    }
-    return false;
+    if (lastResetDate === today) return;
+
+    habits.forEach((h: any, index: number) => {
+      habits[index] = { ...h, status: 'pending' };
+    });
+    lastResetDate = today;
   };
 
   const updateStats = () => {
@@ -762,14 +770,12 @@ const createFreshStore = () => {
       ...habits.map((h: any) => h.currentStreak || 0),
       0
     );
-    const newScore = completedToday * 10 + maxStreak * 5 + overallRate;
-    const newLevel = Math.floor(newScore / 100) + 1;
+    const newLevel = Math.floor(stats.disciplinaryScore / 100) + 1;
 
     stats.totalHabits = totalHabits;
     stats.completedToday = completedToday;
     stats.completionRate = overallRate;
     stats.currentStreak = maxStreak;
-    stats.disciplinaryScore = newScore;
     stats.level = newLevel;
   };
 

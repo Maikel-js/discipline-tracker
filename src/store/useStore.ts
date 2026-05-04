@@ -92,6 +92,7 @@ interface StoreState {
 
   applyAutoPenalty: (habitId: string) => void;
   togglePunishmentMode: () => void;
+  blockTaskUntilPenalty: (taskId: string) => void;
 
   addGoal: (goal: Omit<Goal, 'id' | 'createdAt'>) => void;
   updateGoal: (id: string, updates: Partial<Goal>) => void;
@@ -493,28 +494,27 @@ export const useStore = create<StoreState>()(
       updateStats: () => {
         const state = get();
         const today = new Date().toISOString().split('T')[0];
-        
-        const completedToday = state.logs.filter(l => 
+
+        const completedToday = state.logs.filter(l =>
           l.completedAt.startsWith(today) && l.status === 'completed'
         ).length;
-        
+
         const totalHabits = state.habits.length;
-        const overallRate = totalHabits > 0 
+        const overallRate = totalHabits > 0
           ? Math.round(state.habits.reduce((acc, h) => acc + h.completionRate, 0) / totalHabits)
-          : 0;
-        
+          :0;
+
         const maxStreak = Math.max(...state.streaks.map(s => s.currentStreak), 0);
-        
-        const disciplinaryScore = completedToday * 10 + maxStreak * 5 + overallRate;
-        const level = Math.floor(disciplinaryScore / 100) + 1;
+
+        const level = Math.floor(state.stats.disciplinaryScore / 100) + 1;
 
         set({
           stats: {
+            ...state.stats,
             totalHabits,
             completedToday,
             completionRate: overallRate,
             currentStreak: maxStreak,
-            disciplinaryScore,
             level
           }
         });
@@ -578,7 +578,7 @@ export const useStore = create<StoreState>()(
 
       addDisciplineScore: (change, reason) => {
         const currentScore = get().stats.disciplinaryScore;
-        const newScore = Math.max(0, currentScore + change);
+        const newScore = currentScore + change;
         const newEntry: DisciplineScoreHistory = {
           id: generateId(),
           score: newScore,
@@ -728,7 +728,7 @@ export const useStore = create<StoreState>()(
         if (!habit) return;
 
         const penaltyTask: Omit<Task, 'id' | 'createdAt' | 'pomodoroMinutes' | 'isBlocked' | 'blockReason'> = {
-          title: `20 min extra de ${habit.name} mañana`,
+          title: `Extra 20 min de ${habit.name} mañana`,
           description: `Penalización por incumplimiento de ${habit.name}`,
           priority: 'high',
           status: 'todo',
@@ -747,6 +747,14 @@ export const useStore = create<StoreState>()(
       togglePunishmentMode: () => {
         set(state => ({
           settings: { ...state.settings, punishmentMode: !state.settings.punishmentMode }
+        }));
+      },
+
+      blockTaskUntilPenalty: (taskId: string) => {
+        set(state => ({
+          tasks: state.tasks.map(t =>
+            t.id === taskId ? { ...t, isBlocked: true, blockReason: 'Modo Castigo activo' } : t
+          )
         }));
       },
 
@@ -941,16 +949,16 @@ export const useStore = create<StoreState>()(
       checkAndResetDaily: () => {
         const today = new Date().toISOString().split('T')[0];
         const lastReset = get().lastResetDate;
-        
-        if (lastReset !== today) {
-          set(state => ({
-            habits: state.habits.map(h => ({
-              ...h,
-              status: 'pending' as HabitStatus
-            })),
-            lastResetDate: today
-          }));
-        }
+
+        if (lastReset === today) return;
+
+        set(state => ({
+          habits: state.habits.map(h => ({
+            ...h,
+            status: 'pending' as HabitStatus
+          })),
+          lastResetDate: today
+        }));
       },
 
       runProtocol: (protocolId) => {

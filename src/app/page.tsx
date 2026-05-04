@@ -22,13 +22,18 @@ import AnalyticsHub from '@/components/AnalyticsHub';
 import DownloadPortal from '@/components/DownloadPortal';
 import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Target, StickyNote, ClipboardList } from 'lucide-react';
 import Goals from '@/components/Goals';
-import Notes from '@/components/Notes';
-import Protocols from '@/components/Protocols';
+import NotesProtocols from '@/components/NotesProtocols';
+import StatsDashboard from '@/components/StatsDashboard';
 
 function MainApp() {
   const { isAuthenticated } = useAuth();
-  const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit, checkAndResetDaily } = useStore();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit, checkAndResetDaily, addDisciplineScore } = useStore();
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('activeTab') || 'dashboard';
+    }
+    return 'dashboard';
+  });
   const [showHabitModal, setShowHabitModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -39,22 +44,25 @@ function MainApp() {
   }, []);
 
   useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    logs.forEach(log => {
-      const habit = habits.find(h => h.id === log.habitId);
-      if (habit && habit.status === 'pending') {
+    habits.forEach(habit => {
+      if (habit.status === 'pending') {
         const scheduledTime = new Date(habit.scheduledTime);
         const now = new Date();
         const diffMinutes = (now.getTime() - scheduledTime.getTime()) / (1000 * 60);
-        
+
         if (diffMinutes >= 10 && diffMinutes < 15) {
           if (!notifications.find(n => n.habitId === habit.id && n.level >= 3)) {
             if (settings.extremeMode) {
-              completeHabit(habit.id);
+              addDisciplineScore(-15, `Modo Extremo: ${habit.name} cerca de vencer`);
             }
           }
         }
@@ -166,7 +174,7 @@ function MainApp() {
 
         {activeTab === 'stats' && (
           <div className="space-y-6">
-            <Dashboard />
+            <StatsDashboard />
           </div>
         )}
 
@@ -202,13 +210,7 @@ function MainApp() {
 
         {activeTab === 'notes' && (
           <div className="space-y-4">
-            <Notes />
-          </div>
-        )}
-
-        {activeTab === 'protocols' && (
-          <div className="space-y-4">
-            <Protocols />
+            <NotesProtocols />
           </div>
         )}
       </div>
@@ -240,7 +242,7 @@ function MainApp() {
                   <div>
                     <div className="font-medium text-white">Modo Disciplina Extrema</div>
                     <div className="text-xs text-gray-400">
-                      Notificaciones más insistentes
+                      {settings.extremeMode ? 'Penalización aumentada (-15 pts)' : 'Notificaciones más insistentes'}
                     </div>
                   </div>
                 </div>
