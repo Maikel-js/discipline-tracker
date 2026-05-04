@@ -83,7 +83,7 @@ interface StoreState {
   generatePatternInsights: () => void;
   detectAbandonedHabits: () => Habit[];
 
-  addAuditLog: (habitId: string, habitName: string, action: 'missed' | 'completed' | 'rescheduled' | 'penalty', details?: string) => void;
+  addAuditLog: (habitId: string, habitName: string, action: 'missed' | 'completed' | 'rescheduled' | 'penalty' | 'plugin', details?: string) => void;
 
   addAccountabilityPartner: (partner: Omit<AccountabilityPartner, 'id' | 'lastNotified'>) => void;
   removeAccountabilityPartner: (id: string) => void;

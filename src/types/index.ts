@@ -136,7 +136,7 @@ export interface AuditLog {
   id: string;
   habitId: string;
   habitName: string;
-  action: 'missed' | 'completed' | 'rescheduled' | 'penalty';
+  action: 'missed' | 'completed' | 'rescheduled' | 'penalty' | 'plugin';
   timestamp: string;
   details?: string;
 }
