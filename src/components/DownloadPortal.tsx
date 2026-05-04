@@ -44,15 +44,43 @@ export default function DownloadPortal() {
   const getRecommendedDownload = () => {
     switch (platform) {
       case 'android':
-        return { icon: '📱', title: 'Android', action: 'Instalar App' };
+        return { 
+          icon: '📱', 
+          title: 'Android', 
+          action: 'Instalar APK',
+          url: `${releasesUrl}/latest/download/app-release.apk`
+        };
       case 'windows':
-        return { icon: '🪟', title: 'Windows', action: 'Descargar' };
+        return { 
+          icon: '🪟', 
+          title: 'Windows', 
+          action: 'Descargar EXE',
+          url: `${releasesUrl}/latest/download/Discipline-Tracker-Setup.exe`
+        };
+      case 'linux':
+        return { 
+          icon: '🐧', 
+          title: 'Linux', 
+          action: 'Descargar AppImage',
+          url: `${releasesUrl}/latest/download/Discipline-Tracker.AppImage`
+        };
       default:
-        return { icon: '🌐', title: 'Web', action: 'Abrir App' };
+        return { 
+          icon: '🌐', 
+          title: 'Web', 
+          action: 'Abrir App',
+          url: appUrl
+        };
     }
   };
 
   const recommended = getRecommendedDownload();
+
+  const handleDownload = (url: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = url;
+  };
 
   return (
     <div className="space-y-4">
@@ -65,22 +93,25 @@ export default function DownloadPortal() {
 
        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <button
+          type="button"
           onClick={() => setActiveSection('download')}
-          className={`p-2 rounded-lg text-sm ${activeSection === 'download' ? 'bg-blue-600' : 'bg-gray-700'}`}
+          className={`p-2 rounded-lg text-sm transition-all ${activeSection === 'download' ? 'bg-blue-600 shadow-lg shadow-blue-500/20' : 'bg-gray-700 hover:bg-gray-600'}`}
         >
           <Download className="w-4 h-4 inline mr-1" />
           Descargar
         </button>
         <button
+          type="button"
           onClick={() => setActiveSection('settings')}
-          className={`p-2 rounded-lg text-sm ${activeSection === 'settings' ? 'bg-blue-600' : 'bg-gray-700'}`}
+          className={`p-2 rounded-lg text-sm transition-all ${activeSection === 'settings' ? 'bg-blue-600 shadow-lg shadow-blue-500/20' : 'bg-gray-700 hover:bg-gray-600'}`}
         >
           <Settings className="w-4 h-4 inline mr-1" />
           Ajustes
         </button>
         <button
+          type="button"
           onClick={() => setActiveSection('whatsapp')}
-          className={`p-2 rounded-lg text-sm ${activeSection === 'whatsapp' ? 'bg-blue-600' : 'bg-gray-700'}`}
+          className={`p-2 rounded-lg text-sm transition-all ${activeSection === 'whatsapp' ? 'bg-blue-600 shadow-lg shadow-blue-500/20' : 'bg-gray-700 hover:bg-gray-600'}`}
         >
           <MessageCircle className="w-4 h-4 inline mr-1" />
           WhatsApp
@@ -90,16 +121,17 @@ export default function DownloadPortal() {
       {activeSection === 'download' && (
         <div className="space-y-4">
           {platform !== 'unknown' && (
-            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/30 rounded-xl p-4">
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/30 rounded-xl p-4 animate-in fade-in slide-in-from-top-4 duration-500">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">{recommended.icon}</div>
                 <div className="flex-1">
-                  <div className="font-bold text-white">Te recomendamos:</div>
-                  <div className="text-sm text-gray-300">{recommended.title} - {recommended.action}</div>
+                  <div className="font-bold text-white">Versión Recomendada</div>
+                  <div className="text-sm text-gray-300">{recommended.title} - Instalación Directa</div>
                 </div>
                 <button
-                  onClick={() => window.open(appUrl, '_blank')}
-                  className="px-4 py-2 bg-blue-600 rounded-lg font-medium"
+                  type="button"
+                  onClick={(e) => handleDownload(recommended.url, e)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm transition-colors"
                 >
                   {recommended.action}
                 </button>
@@ -107,47 +139,44 @@ export default function DownloadPortal() {
             </div>
           )}
 
-           <div className="bg-gray-800/50 rounded-xl p-4">
+           <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
              <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-               <Smartphone className="w-5 h-5" />
+               <Smartphone className="w-5 h-5 text-green-400" />
                📱 Celular
              </h3>
 
              <div className="grid md:grid-cols-2 gap-3">
-               <div className="p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
+               <div className="p-3 bg-green-900/10 border border-green-500/20 rounded-lg group hover:border-green-500/40 transition-all">
                  <div className="flex items-center justify-between">
                    <div>
                      <div className="font-medium flex items-center gap-2">
                        🤖 Android (APK)
                      </div>
-                     <div className="text-xs text-gray-400">Instalable directo</div>
+                     <div className="text-xs text-gray-400">Instalador directo sin Play Store</div>
                    </div>
-                   <a
-                     href={`${releasesUrl}/latest/download/app-release.apk`}
-                     className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm"
-                     onClick={(e) => {
-                       fetch('/downloads/app-release.apk').catch(() => {
-                         window.open(`${releasesUrl}/latest`, '_blank');
-                       });
-                     }}
+                   <button
+                     type="button"
+                     onClick={(e) => handleDownload(`${releasesUrl}/latest/download/app-release.apk`, e)}
+                     className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors"
                    >
                      Descargar
-                   </a>
+                   </button>
                  </div>
                </div>
 
-               <div className="p-3 bg-gray-700/50 rounded-lg">
+               <div className="p-3 bg-gray-700/30 border border-gray-600/30 rounded-lg group hover:border-gray-500/40 transition-all">
                  <div className="flex items-center justify-between">
                    <div>
-                     <div className="font-medium flex items-center gap-2">
+                     <div className="font-medium flex items-center gap-2 text-purple-300">
                        🌐 PWA Web
                      </div>
-                     <div className="text-xs text-gray-400">Funciona en cualquier dispositivo</div>
+                     <div className="text-xs text-gray-400">Instalar desde el navegador</div>
                    </div>
                    <a
                      href={appUrl}
                      target="_blank"
-                     className="px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm"
+                     rel="noopener noreferrer"
+                     className="px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-bold transition-colors"
                    >
                      Abrir
                    </a>
@@ -156,109 +185,89 @@ export default function DownloadPortal() {
              </div>
            </div>
 
-           <div className="bg-gray-800/50 rounded-xl p-4">
+           <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
              <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-               <Monitor className="w-5 h-5" />
+               <Monitor className="w-5 h-5 text-blue-400" />
                💻 PC / Desktop
              </h3>
 
              <div className="space-y-3">
-               <div className="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+               <div className="p-3 bg-blue-900/10 border border-blue-500/20 rounded-lg group hover:border-blue-500/40 transition-all">
                  <div className="flex items-center justify-between">
                    <div>
                      <div className="font-medium flex items-center gap-2">
-                       🪟 Windows App
+                       🪟 Windows (EXE)
                      </div>
-                     <div className="text-xs text-gray-400">Aplicación de escritorio</div>
+                     <div className="text-xs text-gray-400">Instalador oficial para Windows</div>
                    </div>
-                   <a
-                     href={`${releasesUrl}/latest/download/Discipline-Tracker-Windows.zip`}
-                     className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm"
-                     onClick={(e) => {
-                       fetch('/downloads/Discipline-Tracker-Windows.zip').catch(() => {
-                         window.open(`${releasesUrl}/latest`, '_blank');
-                       });
-                     }}
+                   <button
+                     type="button"
+                     onClick={(e) => handleDownload(`${releasesUrl}/latest/download/Discipline-Tracker-Setup.exe`, e)}
+                     className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
                    >
                      Descargar
-                   </a>
+                   </button>
                  </div>
                </div>
 
-               <div className="p-3 bg-gray-700/50 rounded-lg">
+               <div className="p-3 bg-gray-700/30 border border-gray-600/30 rounded-lg group hover:border-gray-500/40 transition-all">
                  <div className="flex items-center justify-between">
                    <div>
-                     <div className="font-medium flex items-center gap-2">
-                       🪟 Windows
+                     <div className="font-medium flex items-center gap-2 text-orange-400">
+                       🐧 Linux (AppImage)
                      </div>
-                     <div className="text-xs text-gray-400">Usa la versión web o instala PWA</div>
+                     <div className="text-xs text-gray-400">Binario ejecutable para Linux</div>
                    </div>
-                   <a
-                     href={appUrl}
-                     target="_blank"
-                     className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm"
+                   <button
+                     type="button"
+                     onClick={(e) => handleDownload(`${releasesUrl}/latest/download/Discipline-Tracker.AppImage`, e)}
+                     className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm font-bold transition-colors"
                    >
-                     Abrir Web
-                   </a>
-                 </div>
-               </div>
-
-               <div className="p-3 bg-gray-700/50 rounded-lg">
-                 <div className="flex items-center justify-between">
-                   <div>
-                     <div className="font-medium flex items-center gap-2">
-                       🐧 Linux
-                     </div>
-                     <div className="text-xs text-gray-400">Usa la versión web</div>
-                   </div>
-                   <a
-                     href={appUrl}
-                     target="_blank"
-                     className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm"
-                   >
-                     Abrir Web
-                   </a>
+                     Descargar
+                   </button>
                  </div>
                </div>
              </div>
            </div>
 
-          <div className="bg-gray-800/50 rounded-xl p-4">
+          <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-              <Box className="w-5 h-5" />
-              📦 Código Fuente
+              <Box className="w-5 h-5 text-gray-400" />
+              📦 Repositorio y Versiones
             </h3>
             
             <div className="space-y-2">
               <a
                 href={githubUrl}
                 target="_blank"
-                className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700 border border-transparent hover:border-gray-500/30 transition-all"
               >
                 <div>
-                  <div className="font-medium">Ver en GitHub</div>
-                  <div className="text-xs text-gray-400">Código fuente completo</div>
+                  <div className="font-medium">Código Fuente</div>
+                  <div className="text-xs text-gray-400">Ver repositorio en GitHub</div>
                 </div>
-<Box className="w-5 h-5" />
+                <Box className="w-5 h-5" />
               </a>
               
               <a
                 href={releasesUrl}
                 target="_blank"
-                className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700 border border-transparent hover:border-gray-500/30 transition-all"
               >
                 <div>
-                  <div className="font-medium">Releases</div>
-                  <div className="text-xs text-gray-400">APK, Windows EXE y paquetes oficiales</div>
+                  <div className="font-medium">Todas las Versiones</div>
+                  <div className="text-xs text-gray-400">Ver historial de lanzamientos</div>
                 </div>
                 <Download className="w-5 h-5" />
               </a>
             </div>
           </div>
 
-          <div className="text-center text-gray-500 text-sm">
+          <div className="text-center text-gray-500 text-sm py-2">
             <Globe className="w-4 h-4 inline mr-1" />
-            <strong>Versión Web:</strong> {appUrl}
+            <strong>Servidor:</strong> {appUrl.replace('https://', '')}
           </div>
         </div>
       )}

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
-import type { Protocol, Priority, Category } from '@/types';
+import type { Protocol, Priority, Category, ProtocolStep } from '@/types';
 import { 
   ClipboardList, Plus, Trash2, Edit2, CheckCircle, 
   Clock, Target, AlertTriangle, Tag, Link as LinkIcon,
-  ChevronDown, ChevronUp, Save, X
+  ChevronDown, ChevronUp, Save, X, BookOpen, Activity,
+  Archive, RotateCcw, Loader2
 } from 'lucide-react';
 
 export default function Protocols() {
@@ -16,24 +17,32 @@ export default function Protocols() {
     unlinkHabitFromProtocol, unlinkTaskFromProtocol, habits, tasks
   } = useStore();
 
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [purpose, setPurpose] = useState('');
   const [objective, setObjective] = useState('');
   const [conditions, setConditions] = useState('');
   const [priority, setPriority] = useState<Priority>('medium');
   const [category, setCategory] = useState<Category>('other');
-  const [status, setStatus] = useState<'active' | 'in_progress' | 'completed'>('active');
+  const [status, setStatus] = useState<Protocol['status']>('active');
   const [tags, setTags] = useState('');
-  const [steps, setSteps] = useState<{ time: string; action: string; duration: number; completed: boolean }[]>([]);
+  const [steps, setSteps] = useState<ProtocolStep[]>([]);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const resetForm = () => {
     setName('');
     setDescription('');
+    setPurpose('');
     setObjective('');
     setConditions('');
     setPriority('medium');
@@ -48,42 +57,51 @@ export default function Protocols() {
   const handleEdit = (protocol: Protocol) => {
     setName(protocol.name);
     setDescription(protocol.description || '');
+    setPurpose(protocol.purpose || '');
     setObjective(protocol.objective || '');
     setConditions(protocol.conditions || '');
     setPriority(protocol.priority);
     setCategory(protocol.category);
     setStatus(protocol.status);
     setTags(protocol.tags.join(', '));
-    setSteps(protocol.steps.map(s => ({ ...s, completed: s.completed || false })));
+    setSteps(protocol.steps);
     setEditingId(protocol.id);
     setIsCreating(true);
   };
 
-  const handleSave = () => {
-    const protocolData = {
-      name,
-      description,
-      objective,
-      conditions,
-      priority,
-      category,
-      status,
-      tags: tags.split(',').map(t => t.trim()).filter(t => t),
-      steps,
-      linkedHabits: editingId ? protocols.find(p => p.id === editingId)?.linkedHabits || [] : [],
-      linkedTasks: editingId ? protocols.find(p => p.id === editingId)?.linkedTasks || [] : [],
-    };
+  const handleSave = async () => {
+    if (!name.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      const protocolData = {
+        name,
+        description,
+        purpose,
+        objective,
+        conditions,
+        priority,
+        category,
+        status,
+        tags: tags.split(',').map(t => t.trim()).filter(t => t),
+        steps: steps.map(s => ({ ...s, id: s.id || Math.random().toString(36).substr(2, 9) })),
+        linkedHabits: editingId ? protocols.find(p => p.id === editingId)?.linkedHabits || [] : [],
+        linkedTasks: editingId ? protocols.find(p => p.id === editingId)?.linkedTasks || [] : [],
+      };
 
-    if (editingId) {
-      updateProtocol(editingId, protocolData);
-    } else {
-      addProtocol(protocolData);
+      if (editingId) {
+        updateProtocol(editingId, protocolData);
+      } else {
+        addProtocol(protocolData);
+      }
+      resetForm();
+    } finally {
+      setIsLoading(false);
     }
-    resetForm();
   };
 
   const addStep = () => {
-    setSteps([...steps, { time: '08:00', action: '', duration: 15, completed: false }]);
+    setSteps([...steps, { id: Math.random().toString(36).substr(2, 9), time: '08:00', action: '', duration: 15, completed: false }]);
   };
 
   const removeStep = (index: number) => {
@@ -94,20 +112,30 @@ export default function Protocols() {
     setSteps(steps.map((s, i) => i === index ? { ...s, ...updates } : s));
   };
 
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+        <p className="text-gray-400 animate-pulse">Sincronizando protocolos...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 pb-20">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <ClipboardList className="text-blue-400" />
-          Sistema de Protocolos
+          <Activity className="text-blue-400" />
+          Módulo de Protocolos
         </h2>
         {!isCreating && (
           <button
+            type="button"
             onClick={() => setIsCreating(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition shadow-lg shadow-blue-500/20 font-bold"
           >
             <Plus size={18} />
-            Nuevo Protocolo
+            Crear Protocolo
           </button>
         )}
       </div>
@@ -145,13 +173,24 @@ export default function Protocols() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-gray-400">Descripción Detallada</label>
+            <label className="text-sm text-gray-400">Propósito (Por qué)</label>
+            <textarea
+              value={purpose}
+              onChange={e => setPurpose(e.target.value)}
+              placeholder="¿Por qué es necesario este protocolo? ¿Qué problema resuelve?"
+              rows={2}
+              className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-blue-500 outline-none resize-none transition-all"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm text-gray-400">Descripción Técnica (Cómo)</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="Detalles adicionales sobre el protocolo..."
+              placeholder="Detalles específicos y consideraciones técnicas..."
               rows={3}
-              className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-blue-500 outline-none resize-none"
+              className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:border-blue-500 outline-none resize-none transition-all"
             />
           </div>
 
@@ -258,11 +297,13 @@ export default function Protocols() {
           </div>
 
           <button
+            type="button"
+            disabled={isLoading}
             onClick={handleSave}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10"
           >
-            <Save size={18} />
-            {editingId ? 'Actualizar Protocolo' : 'Guardar Protocolo'}
+            {isLoading ? <Loader2 className="animate-spin" /> : <Save size={18} />}
+            {editingId ? 'Actualizar Protocolo Maestro' : 'Publicar Nuevo Protocolo'}
           </button>
         </div>
       )}
@@ -324,10 +365,11 @@ export default function Protocols() {
                       <CheckCircle size={14} /> {protocol.progress}% Completado
                     </span>
                     <button
+                      type="button"
                       onClick={() => runProtocol(protocol.id)}
-                      className="text-xs font-bold bg-green-600/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full hover:bg-green-600/40 transition"
+                      className="text-xs font-bold bg-green-600/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full hover:bg-green-600/40 transition flex items-center gap-1"
                     >
-                      Ejecutar Sistema
+                      <RotateCcw size={12} /> Reiniciar Ciclo
                     </button>
                   </div>
                   <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">

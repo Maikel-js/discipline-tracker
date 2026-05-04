@@ -215,18 +215,20 @@ export const useStore = create<StoreState>()(
       protocols: [
         { 
           id: '1', 
-          name: 'Rutina Matutina', 
-          description: 'Rutina de mañana para empezar el día', 
-          objective: 'Optimizar las primeras horas del día',
+          name: 'Rutina Matutina de Alto Rendimiento', 
+          description: 'Optimización biológica y mental para las primeras horas del día.', 
+          purpose: 'Establecer una inercia positiva y maximizar la claridad mental.',
+          objective: 'Completar el 100% de los bloques críticos antes de las 9:00 AM.',
           steps: [
-            { time: '6:00', action: 'Ejercicio', duration: 30, completed: false }, 
-            { time: '6:30', action: 'Meditar', duration: 15, completed: false }, 
-            { time: '6:45', action: 'Estudiar', duration: 60, completed: false }
+            { id: 's1', time: '6:00', action: 'Hidratación y Exposición Lumínica', duration: 10, completed: false }, 
+            { id: 's2', time: '6:15', action: 'Movilidad Articular o Ejercicio Intenso', duration: 30, completed: false }, 
+            { id: 's3', time: '6:45', action: 'Ducha Fría (Protocolo Wim Hof)', duration: 5, completed: false },
+            { id: 's4', time: '7:00', action: 'Bloque de Estudio/Trabajo Profundo', duration: 90, completed: false }
           ], 
-          conditions: 'Al despertar antes de las 7am',
+          conditions: 'Ayuno intermitente, sin dispositivos móviles hasta el paso 4.',
           priority: 'high',
           category: 'health',
-          tags: ['mañana', 'productividad'],
+          tags: ['mañana', 'productividad', 'biohacking'],
           linkedHabits: [], 
           linkedTasks: [], 
           timesCompleted: 0, 
@@ -237,18 +239,20 @@ export const useStore = create<StoreState>()(
         },
         { 
           id: '2', 
-          name: 'Deep Work', 
-          description: 'Bloque de trabajo profundo', 
-          objective: 'Eliminar distracciones y avanzar en tareas complejas',
+          name: 'Deep Work (Protocolo Cal Newport)', 
+          description: 'Aislamiento total para resolución de problemas complejos.', 
+          purpose: 'Eliminar el residuo de atención y alcanzar estado de Flow.',
+          objective: 'Producir trabajo de alta calidad sin distracciones.',
           steps: [
-            { time: '9:00', action: 'Bloque de trabajo profundo', duration: 120, completed: false }, 
-            { time: '11:00', action: 'Break', duration: 15, completed: false }, 
-            { time: '11:15', action: 'Continuar trabajo', duration: 120, completed: false }
+            { id: 's5', time: '09:00', action: 'Aislamiento y Bloqueo de Notificaciones', duration: 5, completed: false }, 
+            { id: 's6', time: '09:05', action: 'Bloque 1: Enfoque Ininterrumpido', duration: 90, completed: false }, 
+            { id: 's7', time: '10:35', action: 'Descanso Activo (Sin Pantallas)', duration: 15, completed: false },
+            { id: 's8', time: '10:50', action: 'Bloque 2: Finalización de Hitos', duration: 90, completed: false }
           ], 
-          conditions: 'Ambiente tranquilo, sin notificaciones',
+          conditions: 'Solo si el entorno permite silencio absoluto.',
           priority: 'urgent',
           category: 'work',
-          tags: ['foco', 'estudio'],
+          tags: ['foco', 'estudio', 'deep-work'],
           linkedHabits: [], 
           linkedTasks: [], 
           timesCompleted: 0, 
@@ -1006,16 +1010,21 @@ export const useStore = create<StoreState>()(
           protocols: state.protocols.map(p => {
             if (p.id === protocolId) {
               const newTimesCompleted = p.timesCompleted + 1;
+              // Reset steps for a new run
+              const resetSteps = p.steps.map(s => ({ ...s, completed: false }));
               return {
                 ...p,
+                steps: resetSteps,
                 timesCompleted: newTimesCompleted,
-                effectiveness: (p.effectiveness * p.timesCompleted + Math.random() * 30 + 70) / newTimesCompleted
+                effectiveness: (p.effectiveness * p.timesCompleted + 100) / newTimesCompleted,
+                status: 'active' as const
               };
             }
             return p;
           })
         }));
         get().recalculateProtocolProgress();
+        get().addDisciplineScore(10, 'Protocolo Maestro Reiniciado');
       },
 
       updateProtocol: (id, updates) => {

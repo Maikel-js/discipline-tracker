@@ -399,8 +399,9 @@ export interface Protocol {
   id: string;
   name: string;
   description?: string;
+  purpose?: string;
   objective?: string;
-  steps: { time: string; action: string; duration: number; completed?: boolean }[];
+  steps: ProtocolStep[];
   conditions?: string;
   priority: Priority;
   category: Category;
@@ -410,8 +411,17 @@ export interface Protocol {
   timesCompleted: number;
   effectiveness: number;
   progress: number;
-  status: 'active' | 'in_progress' | 'completed';
+  status: 'active' | 'in_progress' | 'completed' | 'archived';
   createdAt: string;
+}
+
+export interface ProtocolStep {
+  id: string;
+  time: string;
+  action: string;
+  duration: number;
+  completed: boolean;
+  notes?: string;
 }
 
 export interface EmailExperiment {
