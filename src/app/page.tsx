@@ -20,7 +20,7 @@ import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
 import AnalyticsHub from '@/components/AnalyticsHub';
 import DownloadPortal from '@/components/DownloadPortal';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Target, StickyNote, ClipboardList } from 'lucide-react';
+import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Target, ClipboardList } from 'lucide-react';
 import Goals from '@/components/Goals';
 import NotesProtocols from '@/components/NotesProtocols';
 import StatsDashboard from '@/components/StatsDashboard';

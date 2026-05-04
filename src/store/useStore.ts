@@ -22,10 +22,10 @@ import type {
   AutoPenalty,
   Goal,
   Decision,
-  Note,
   Plugin,
   Experiment,
   Protocol
+
 } from '@/types';
 
 interface StoreState {
