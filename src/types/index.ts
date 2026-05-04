@@ -354,7 +354,15 @@ export interface Plugin {
   version: string;
 }
 
-// Note removed and unified into Protocols
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  category: Category;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 
 export interface GraphNode {

@@ -29,7 +29,7 @@ interface ExperimentResults {
 export default function AdvancedAIHub() {
   const { habits, tasks, logs, experiments, protocols, addExperiment, runProtocol, completeExperiment, pauseExperiment, resumeExperiment, deleteExperiment } = useStore();
   const { user } = useAuth();
-  const [activeModule, setActiveModule] = useState<'twin' | 'experiments' | 'protocols'>('twin');
+  const [activeModule, setActiveModule] = useState<'twin' | 'experiments'>('twin');
   const [digitalTwin, setDigitalTwin] = useState<DigitalTwin | null>(null);
   const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null);
   const [experimentResults, setExperimentResults] = useState<ExperimentResults | null>(null);
@@ -236,8 +236,7 @@ export default function AdvancedAIHub() {
 
   const modules = [
     { id: 'twin', icon: Brain, label: 'Digital Twin', color: 'text-purple-400', desc: 'Tu gemelo digital' },
-    { id: 'experiments', icon: FlaskConical, label: 'Experimentos', color: 'text-green-400', desc: 'Laboratorio personal' },
-    { id: 'protocols', icon: BookOpen, label: 'Protocolos', color: 'text-orange-400', desc: 'Rutinas ejecutables' }
+    { id: 'experiments', icon: FlaskConical, label: 'Experimentos', color: 'text-green-400', desc: 'Laboratorio personal' }
   ] as const;
 
   return (

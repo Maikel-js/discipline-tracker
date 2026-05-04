@@ -50,6 +50,7 @@ interface StoreState {
   plugins: Plugin[];
   experiments: Experiment[];
   protocols: Protocol[];
+  notes: Note[];
   lastResetDate: string;
 
 
@@ -127,6 +128,9 @@ interface StoreState {
   unlinkTaskFromProtocol: (protocolId: string, taskId: string) => void;
   checkAndResetDaily: () => void;
 
+  addNote: (note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateNote: (id: string, updates: Partial<Note>) => void;
+  deleteNote: (id: string) => void;
   updateStats: () => void;
   toggleExtremeMode: () => void;
   updateSettings: (updates: Partial<UserSettings>) => void;
@@ -262,6 +266,7 @@ export const useStore = create<StoreState>()(
           createdAt: new Date().toISOString()
         }
       ],
+      notes: [],
 
 
       lastResetDate: new Date().toISOString().split('T')[0],
@@ -1128,19 +1133,38 @@ export const useStore = create<StoreState>()(
             return p;
           })
         }));
-        get().recalculateProtocolProgress();
-      },
-
       unlinkTaskFromProtocol: (protocolId, taskId) => {
         set(state => ({
-          protocols: state.protocols.map(p => {
+          protocols: (state.protocols || []).map(p => {
             if (p.id === protocolId) {
-              return { ...p, linkedTasks: p.linkedTasks.filter(id => id !== taskId) };
+              return { ...p, linkedTasks: (p.linkedTasks || []).filter(id => id !== taskId) };
             }
             return p;
           })
         }));
         get().recalculateProtocolProgress();
+      },
+
+      addNote: (noteData) => {
+        const newNote: Note = {
+          ...noteData,
+          id: generateId(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        set(state => ({ notes: [...(state.notes || []), newNote] }));
+      },
+
+      updateNote: (id, updates) => {
+        set(state => ({
+          notes: (state.notes || []).map(n => n.id === id ? { ...n, ...updates, updatedAt: new Date().toISOString() } : n)
+        }));
+      },
+
+      deleteNote: (id) => {
+        set(state => ({
+          notes: (state.notes || []).filter(n => n.id !== id)
+        }));
       }
     }),
     {
