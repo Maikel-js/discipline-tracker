@@ -47,9 +47,9 @@ export default function DownloadPortal() {
         return { 
           icon: '🪟', 
           title: 'Windows', 
-          action: 'Descargar EXE',
-          filename: 'Discipline-Tracker-Setup.exe',
-          url: '/downloads/Discipline-Tracker-Setup.exe'
+          action: 'Descargar ZIP',
+          filename: 'Discipline-Tracker-Windows.zip',
+          url: '/downloads/Discipline-Tracker-Windows.zip'
         };
       case 'linux':
         return { 
@@ -202,7 +202,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker-Setup.exe', 'Discipline-Tracker-Setup.exe', e)}
+                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker-Windows.zip', 'Discipline-Tracker-Windows.zip', e)}
                       className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
