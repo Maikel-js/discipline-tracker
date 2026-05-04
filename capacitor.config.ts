@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.discipline.tracker',
   appName: 'Discipline Tracker',
   webDir: 'out',
+  server: {
+    androidScheme: 'https'
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,

@@ -1,75 +1,69 @@
-# Play Store Release Guide
+# Production Build Guide - Discipline Tracker
 
-## Prerequisites
-- Java JDK 17+
-- Android SDK
-- Node.js
+This guide details the steps to generate production-ready binaries for all supported platforms.
 
-## Build Release APK/AAB
+## 0. Global Prerequisites
+- **Node.js 20+**
+- **npm / npx**
+- **Static Export**: Run `npm run build` before any platform-specific build.
 
-```bash
-cd android
-./gradlew assembleRelease
-```
+---
 
-Output: `android/app/build/outputs/apk/release/app-release.apk`
+## 1. ANDROID (.apk / .aab)
+Using **Capacitor** for native bridge.
 
-## Generate Signed AAB (for Play Store)
+### Setup
+1. Sync web assets: `npx cap sync`
+2. Open in Android Studio: `npx cap open android`
 
-The signing is already configured in `android/app/build.gradle`
+### Generating Release APK
+1. In Android Studio: `Build > Build Bundle(s) / APK(s) > Build APK(s)`
+2. Find the output in: `android/app/build/outputs/apk/debug/app-debug.apk`
 
-```bash
-cd android
-./gradlew bundleRelease
-```
+### Generating Release AAB (Play Store)
+1. In Android Studio: `Build > Generate Signed Bundle / APK`
+2. Follow the wizard to sign with your `.keystore` file.
+3. Output: `android/app/release/app-release.aab`
 
-Output: `android/app/build/outputs/bundle/release/app-release.aab`
+**Configuration**: Set your unique `appId` (e.g., `com.discipline.tracker`) in `capacitor.config.ts`.
 
-## App Info
-- **App Name**: Discipline Tracker
-- **Package**: com.discipline.tracker
-- **Version**: 1.0
-- **Min SDK**: 23 (Android 6.0)
-- **Target SDK**: 34 (Android 14)
+---
 
-## Permissions Configured
-- INTERNET
-- VIBRATE
-- RECEIVE_BOOT_COMPLETED
-- SCHEDULE_EXACT_ALARM
-- POST_NOTIFICATIONS
-- ACTIVITY_RECOGNITION
-- BODY_SENSORS
-- HEALTH_READ_STEPS
+## 2. WINDOWS (.exe)
+Using **Tauri** (Recommended) or **Electron**.
 
-## Keystore
-- Alias: discipline-tracker
-- File: release.keystore
-- Password: discipline123
-- **IMPORTANT**: Keep this file safe! You'll need it for updates.
+### Tauri (High Performance)
+1. Install Rust: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+2. Run build: `npm run tauri build`
+3. Output: `src-tauri/target/release/bundle/msi/*.msi` or `.exe`
 
-## Steps to Publish
-1. Build AAB: `./gradlew bundleRelease`
-2. Go to Google Play Console
-3. Create Internal Testing track
-4. Upload .aab file
-5. Complete app listing info
-6. Test internal release
-7. Promote to production
+### Electron (Standard)
+1. Run build: `npm run electron:build`
+2. Configuration in `package.json` under the `build` key.
+3. Output: `release/Discipline-Tracker-Setup.exe`
 
-## Desktop (Electron) Builds
+---
 
-Electron builds are available for **Windows and Linux only** (no macOS support).
+## 3. LINUX (.AppImage / .deb)
+### Via Electron
+1. Run: `npm run electron:build --linux`
+2. Output: `release/Discipline-Tracker.AppImage`
 
-### Windows
-Run:
-```bash
-npm run electron:build
-```
-Output: `release/` with NSIS installer and portable executable.
+### Via Tauri
+1. Run: `npm run tauri build`
+2. Output: `src-tauri/target/release/bundle/appimage/*.AppImage`
 
-### Linux
-The same command above also generates a Linux AppImage in `release/`.
+---
 
-### Note
-iOS is not supported. Only Android builds are available for mobile.
+## 4. COMMON ISSUES & SOLUTIONS
+
+### Form Resets / Unexpected Redirects
+- **Problem**: Action buttons triggering `onSubmit` or page reloads.
+- **Solution**: Explicitly set `type="button"` on all buttons that are not intended to submit a form. Use `event.preventDefault()` in click handlers.
+
+### CORS & Absolute Paths
+- **Rule**: Never use absolute URLs (e.g., `http://localhost:3000/api`).
+- **Solution**: Use relative paths or a unified environment config in `src/lib/config.ts` that detects the platform and sets the base URL accordingly.
+
+### OS Detection
+- Use `navigator.userAgent` to detect the OS and display only the relevant download link in the portal.

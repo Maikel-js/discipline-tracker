@@ -1,77 +1,41 @@
-# Discipline Tracker - Clean Architecture
+# Architecture: Discipline Tracker - Clean Multiplatform
 
-## Estructura del Proyecto
+## 1. Core Principles
+The architecture is based on **Clean Architecture** principles, adapted for a multi-platform environment using a single codebase (Next.js) distributed via Capacitor (Android) and Tauri (Desktop).
 
-```
-src/
-├── app/                    # Next.js app router
-│   ├── page.tsx           # Página principal
-│   ├── layout.tsx          # Layout global
-│   └── globals.css         # Estilos globales
-│
-├── components/             # UI Components (presentación)
-│   ├── HabitCard.tsx      # Tarjetas de hábitos
-│   ├── TaskCard.tsx        # Tarjetas de tareas
-│   ├── Dashboard.tsx       # Panel de estadísticas
-│   ├── LoginScreen.tsx    # Pantalla de login
-│   └── ...
-│
-├── domain/               # Entidades y tipos
-│   └── Entities del negocio
-│
-├── hooks/               # Custom React hooks
-│
-├── lib/                # Utilidades y helpers
-│   ├── helpers.ts       # Funciones utilitarias
-│   └── constants.ts   # Constantes globales
-│
-├── services/            # Lógica de negocio
-│
-├── store/              # Estado global (Zustand)
-│   └── useStore.ts    # Store principal
-│
-└── types/              # TypeScript types
-    └── index.ts      # Interfaces y tipos
-```
+## 2. Directory Structure (`src/`)
 
-## Principios Aplicados
+| Directory | Layer | Responsibility |
+|:---|:---|:---|
+| `app/` | Framework | Next.js App Router (Routing, Layouts, Pages) |
+| `components/` | Presentation | UI Components (Atomic Design, pure UI, no logic) |
+| `domain/` | Enterprise | Business entities and logic (Constants, Core Rules) |
+| `services/` | Application | Business logic and Bridge (API, Data processing) |
+| `platform/` | Infrastructure | Platform-specific implementations (Android, Desktop, Web) |
+| `store/` | Infrastructure | State management (Zustand + Persistence) |
+| `types/` | Cross-cutting | TypeScript interfaces and shared schemas |
+| `lib/` | Cross-cutting | Pure utilities and configuration |
 
-### Single Responsibility
-- Cada componente tiene una responsabilidad clara
-- Hooks especializados para lógica reusable
-- Helpers para utilitarias
+## 3. The `platform/` Layer
+This layer is critical for multi-platform consistency. It abstracts system-level capabilities:
 
-### DRY (Don't Repeat Yourself)
-- Utilidades centralizadas en `/lib`
-- Constantes en un solo lugar
-- Tipos compartidos en `/types`
+- **Web (PWA)**: Uses standard Browser APIs.
+- **Android (Capacitor)**: Uses `@capacitor/core` and plugins for native features (Notifications, Sensors).
+- **Desktop (Tauri)**: Uses Rust-based bridges for deep OS access (Filesystem, System Tray).
 
-### Separation of Concerns
-- **UI**: Componentes visuales
-- **Negocios**: Store y servicios
-- **Datos**: Tipos y entidades
+## 4. Data Flow
+1. **User Action** -> Component in `components/`.
+2. **Component** calls a method in `store/` or a service in `services/`.
+3. **Store/Service** performs logic and, if needed, calls the `platform/` layer for native actions.
+4. **Platform** executes the native command (e.g., triggering a system alarm).
+5. **State** updates and UI re-renders.
 
-### KISS
-- Componentes pequeños
-- Nombres claros
-- Lógica simple
+## 5. Multi-platform Strategy
+- **Single Source of Truth**: All business logic lives in `store/` and `services/`.
+- **Static Export**: The app is built as a static site (`output: 'export'`), allowing it to be bundled into any container (WebView).
+- **Environment Aware**: Global constants determine the current environment (Web vs App) to toggle UI elements like the "Download Portal".
 
-## Convenciones
-
-###命名
-- Componentes: PascalCase (`HabitCard`)
-- Hooks: camelCase con `use` (`useAuth`)
-- Utilidades: camelCase (`generateId`)
-- Constantes: UPPER_SNAKE_CASE
-
-### Organización
-1. Imports externos
-2. Imports internos
-3. Tipos/interfaces
-4. Componente
-5. Funciones exportadas
-
-## Estado
-
-El estado se maneja con Zustand con persistencia local.
-No requiere backend gracias al almacenamiento local.
+## 6. Best Practices
+- **No Hardcoded Paths**: Always use relative paths or Path Aliases (`@/*`).
+- **Form Safety**: Use `type="button"` for all action buttons to prevent accidental form resets in different Webview implementations.
+- **Offline First**: All data is stored in `localStorage` via Zustand middleware, ensuring 100% functionality without internet.
