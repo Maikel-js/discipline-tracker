@@ -1,7 +1,7 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
-import { Flame, Target, TrendingUp, Trophy, Zap, Calendar, Clock, CheckCircle, AlertTriangle, Timer } from 'lucide-react';
+import { Flame, Target, TrendingUp, Trophy, Zap, Calendar, Clock, CheckCircle, AlertTriangle, Timer, Download } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useEffect, useState } from 'react';
 import { format, subDays, startOfWeek, eachDayOfInterval } from 'date-fns';
@@ -10,8 +10,9 @@ import AuditPanel from './AuditPanel';
 import SensorIntegration from './SensorIntegration';
 import AccountabilityPartnerPanel from './AccountabilityPartner';
 
-export default function Dashboard() {
+export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const { stats, habits, logs, tasks, settings, toggleExtremeMode, togglePunishmentMode, generatePatternInsights, patternInsights } = useStore();
+  const [platform, setPlatform] = useState<'android' | 'windows' | 'linux' | 'web'>('web');
   const [chartData, setChartData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [contributionData, setContributionData] = useState<number[][]>([]);
@@ -19,6 +20,11 @@ export default function Dashboard() {
   const [activePanel, setActivePanel] = useState<'audit' | 'sensors' | 'partners' | null>(null);
 
   useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.includes('android')) setPlatform('android');
+    else if (userAgent.includes('win')) setPlatform('windows');
+    else if (userAgent.includes('linux')) setPlatform('linux');
+
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = subDays(new Date(), 6 - i);
       return format(date, 'yyyy-MM-dd');
@@ -98,15 +104,25 @@ export default function Dashboard() {
             {settings.extremeMode ? '🔥 EXTREMO' : 'Modo Disciplina'}
           </button>
           <button
+            onClick={() => onTabChange('download')}
+            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-blue-900/20"
+          >
+            <Download size={16} />
+            {platform === 'windows' ? 'Descargar para Windows' : 
+             platform === 'android' ? 'Instalar App Android' : 
+             platform === 'linux' ? 'Descargar para Linux' : 'Descargar App'}
+          </button>
+          <button
             onClick={() => setShowAdvanced(!showAdvanced)}
             className={`px-3 py-2 rounded-xl text-sm transition-colors ${
               showAdvanced 
-                ? 'bg-blue-600 text-white' 
+                ? 'bg-indigo-600 text-white' 
                 : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
             }`}
           >
             Avanzado
           </button>
+
         </div>
       </div>
 

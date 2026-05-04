@@ -354,19 +354,13 @@ export interface Plugin {
   version: string;
 }
 
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  linkedTasks: string[];
-  linkedHabits: string[];
-  tags: string[];
-  createdAt: string;
-}
+// Note removed and unified into Protocols
+
 
 export interface GraphNode {
   id: string;
-  type: 'habit' | 'task' | 'goal' | 'note' | 'decision';
+  type: 'habit' | 'task' | 'goal' | 'protocol' | 'decision';
+
   label: string;
   connections: string[];
 }
@@ -405,13 +399,19 @@ export interface Protocol {
   id: string;
   name: string;
   description?: string;
+  objective?: string;
   steps: { time: string; action: string; duration: number; completed?: boolean }[];
+  conditions?: string;
+  priority: Priority;
+  category: Category;
+  tags: string[];
   linkedHabits: string[];
   linkedTasks: string[];
   timesCompleted: number;
   effectiveness: number;
   progress: number;
-  status: 'active' | 'completed' | 'paused';
+  status: 'active' | 'in_progress' | 'completed';
+  createdAt: string;
 }
 
 export interface EmailExperiment {

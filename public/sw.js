@@ -1,4 +1,4 @@
-const CACHE_NAME = 'discipline-tracker-v1';
+const CACHE_NAME = 'discipline-tracker-v2';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -30,15 +30,36 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
+  // Strategy: Network First for HTML, Stale-While-Revalidate for others
+  const isHtml = event.request.mode === 'navigate' || 
+                 (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'));
+
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, copy);
+          });
           return response;
-        }
-        return fetch(event.request);
-      })
-  );
+        })
+        .catch(() => caches.match(event.request))
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+            });
+            return networkResponse;
+          });
+          return response || fetchPromise;
+        })
+    );
+  }
 });
 
 self.addEventListener('push', (event) => {

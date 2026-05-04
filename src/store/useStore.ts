@@ -47,11 +47,11 @@ interface StoreState {
   autoPenalties: AutoPenalty[];
   goals: Goal[];
   decisions: Decision[];
-  notes: Note[];
   plugins: Plugin[];
   experiments: Experiment[];
   protocols: Protocol[];
   lastResetDate: string;
+
 
   addHabit: (habit: Omit<Habit, 'id' | 'currentStreak' | 'completionRate' | 'createdAt' | 'missedCount' | 'rescheduleCount' | 'pomodoroSessions'>) => void;
   updateHabit: (id: string, updates: Partial<Habit>) => void;
@@ -103,9 +103,9 @@ interface StoreState {
   updateDecision: (id: string, updates: Partial<Decision>) => void;
   deleteDecision: (id: string) => void;
 
-  addNote: (note: Omit<Note, 'id' | 'createdAt'>) => void;
-  updateNote: (id: string, updates: Partial<Note>) => void;
-  deleteNote: (id: string) => void;
+  addProtocol: (protocol: Omit<Protocol, 'id' | 'timesCompleted' | 'effectiveness' | 'progress' | 'createdAt'>) => void;
+  deleteProtocol: (id: string) => void;
+
 
   togglePlugin: (id: string) => void;
 
@@ -205,7 +205,6 @@ export const useStore = create<StoreState>()(
       autoPenalties: [],
       goals: [],
       decisions: [],
-      notes: [],
       plugins: [
         { id: 'gcal', name: 'Google Calendar', description: 'Sincroniza con Google Calendar', enabled: false, version: '1.0' },
         { id: 'whatsapp', name: 'WhatsApp Bot', description: 'Notificaciones por WhatsApp', enabled: false, version: '1.0' },
@@ -214,10 +213,53 @@ export const useStore = create<StoreState>()(
       ],
       experiments: [],
       protocols: [
-        { id: '1', name: 'Rutina Matutina', description: 'Rutina de mañana para empezar el día', steps: [{ time: '6:00', action: 'Ejercicio', duration: 30, completed: false }, { time: '6:30', action: 'Meditar', duration: 15, completed: false }, { time: '6:45', action: 'Estudiar', duration: 60, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' },
-        { id: '2', name: 'Deep Work', description: 'Bloque de trabajo profundo', steps: [{ time: '9:00', action: 'Bloque de trabajo profundo', duration: 120, completed: false }, { time: '11:00', action: 'Break', duration: 15, completed: false }, { time: '11:15', action: 'Continuar trabajo', duration: 120, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' },
-        { id: '3', name: 'Noche Productiva', description: 'Rutina nocturna productiva', steps: [{ time: '19:00', action: 'Revisión diaria', duration: 30, completed: false }, { time: '19:30', action: 'Planificación siguiente día', duration: 15, completed: false }, { time: '20:00', action: 'Aprendizaje', duration: 60, completed: false }], linkedHabits: [], linkedTasks: [], timesCompleted: 0, effectiveness: 0, progress: 0, status: 'active' }
+        { 
+          id: '1', 
+          name: 'Rutina Matutina', 
+          description: 'Rutina de mañana para empezar el día', 
+          objective: 'Optimizar las primeras horas del día',
+          steps: [
+            { time: '6:00', action: 'Ejercicio', duration: 30, completed: false }, 
+            { time: '6:30', action: 'Meditar', duration: 15, completed: false }, 
+            { time: '6:45', action: 'Estudiar', duration: 60, completed: false }
+          ], 
+          conditions: 'Al despertar antes de las 7am',
+          priority: 'high',
+          category: 'health',
+          tags: ['mañana', 'productividad'],
+          linkedHabits: [], 
+          linkedTasks: [], 
+          timesCompleted: 0, 
+          effectiveness: 0, 
+          progress: 0, 
+          status: 'active',
+          createdAt: new Date().toISOString()
+        },
+        { 
+          id: '2', 
+          name: 'Deep Work', 
+          description: 'Bloque de trabajo profundo', 
+          objective: 'Eliminar distracciones y avanzar en tareas complejas',
+          steps: [
+            { time: '9:00', action: 'Bloque de trabajo profundo', duration: 120, completed: false }, 
+            { time: '11:00', action: 'Break', duration: 15, completed: false }, 
+            { time: '11:15', action: 'Continuar trabajo', duration: 120, completed: false }
+          ], 
+          conditions: 'Ambiente tranquilo, sin notificaciones',
+          priority: 'urgent',
+          category: 'work',
+          tags: ['foco', 'estudio'],
+          linkedHabits: [], 
+          linkedTasks: [], 
+          timesCompleted: 0, 
+          effectiveness: 0, 
+          progress: 0, 
+          status: 'active',
+          createdAt: new Date().toISOString()
+        }
       ],
+
+
       lastResetDate: new Date().toISOString().split('T')[0],
 
       addHabit: (habitData) => {
@@ -827,26 +869,24 @@ export const useStore = create<StoreState>()(
         }));
       },
 
-      addNote: (noteData) => {
-        const newNote: Note = {
-          ...noteData,
+      addProtocol: (protocolData) => {
+        const newProtocol: Protocol = {
+          ...protocolData,
           id: generateId(),
+          timesCompleted: 0,
+          effectiveness: 0,
+          progress: 0,
           createdAt: new Date().toISOString()
         };
-        set(state => ({ notes: [...state.notes, newNote] }));
+        set(state => ({ protocols: [...state.protocols, newProtocol] }));
       },
 
-      updateNote: (id, updates) => {
+      deleteProtocol: (id) => {
         set(state => ({
-          notes: state.notes.map(n => n.id === id ? { ...n, ...updates } : n)
+          protocols: state.protocols.filter(p => p.id !== id)
         }));
       },
 
-      deleteNote: (id) => {
-        set(state => ({
-          notes: state.notes.filter(n => n.id !== id)
-        }));
-      },
 
       togglePlugin: (id) => {
         set(state => ({

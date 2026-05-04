@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useStore } from '@/store/useStore';
-import type { Goal, Decision, Note, Plugin } from '@/types';
+import type { Goal, Decision, Protocol, Plugin } from '@/types';
 import { 
   Target, Brain, FileText, Puzzle, Code, Building2, 
   TrendingUp, CheckCircle, AlertCircle, Plus, X,
@@ -12,14 +12,14 @@ import {
 import LifeGraph from './LifeGraph';
 
 export default function LifeOSHub() {
-  const { habits, tasks, logs, stats, addDisciplineScore, goals, decisions, notes, plugins, addGoal, addDecision, addNote, togglePlugin } = useStore();
-  const [activeModule, setActiveModule] = useState<'goals' | 'lifegraph' | 'decisions' | 'notes' | 'plugins'>('goals');
+  const { habits, tasks, logs, stats, addDisciplineScore, goals, decisions, protocols, plugins, addGoal, addDecision, togglePlugin } = useStore();
+  const [activeModule, setActiveModule] = useState<'goals' | 'lifegraph' | 'decisions' | 'protocols' | 'plugins'>('goals');
 
   const modules = [
     { id: 'goals', icon: Target, label: 'Metas', color: 'text-purple-400', desc: 'OKRs y objetivos' },
     { id: 'lifegraph', icon: Network, label: 'Life Graph', color: 'text-indigo-400', desc: 'Visualización' },
     { id: 'decisions', icon: Brain, label: 'Decisiones', color: 'text-pink-400', desc: 'Matriz y priorización' },
-    { id: 'notes', icon: FileText, label: 'Notas', color: 'text-yellow-400', desc: 'Second Brain' },
+    { id: 'protocols', icon: FileText, label: 'Protocolos', color: 'text-yellow-400', desc: 'Sistemas' },
     { id: 'plugins', icon: Puzzle, label: 'Plugins', color: 'text-cyan-400', desc: 'Extensiones' }
   ];
 
@@ -153,45 +153,31 @@ export default function LifeOSHub() {
         </div>
       )}
 
-      {activeModule === 'notes' && (
+      {activeModule === 'protocols' && (
         <div className="space-y-4">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-yellow-400" />
-            Segundo Cerebro
+            Sistemas de Protocolos
           </h3>
-
           <div className="space-y-2">
-            {notes.length === 0 ? (
+            {protocols.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>No hay notas todavía</p>
+                <p>No hay protocolos todavía</p>
               </div>
             ) : (
-              notes.map(note => (
-                <div key={note.id} className="bg-gray-800/50 rounded-lg p-3">
-                  <div className="font-medium">{note.title}</div>
-                  <p className="text-sm text-gray-400">{note.content}</p>
+              protocols.map(protocol => (
+                <div key={protocol.id} className="bg-gray-800/50 rounded-lg p-3">
+                  <div className="font-medium text-white">{protocol.name}</div>
+                  <p className="text-sm text-gray-400">{protocol.description}</p>
+                  <div className="mt-2 h-1 bg-gray-700 rounded-full">
+                    <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${protocol.progress}%` }} />
+                  </div>
                 </div>
               ))
             )}
           </div>
-
-          <input
-            placeholder="Nueva nota rápida..."
-            className="w-full bg-gray-800 border border-gray-600 rounded-lg p-3 text-white"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.currentTarget.value) {
-                addNote({
-                  title: e.currentTarget.value.slice(0, 30),
-                  content: e.currentTarget.value,
-                  linkedTasks: [],
-                  linkedHabits: [],
-                  tags: []
-                });
-                e.currentTarget.value = '';
-              }
-            }}
-          />
+          <p className="text-xs text-gray-500">Gestiona tus protocolos completos en la pestaña dedicada.</p>
         </div>
       )}
 

@@ -1,0 +1,21 @@
+﻿
+> discipline-tracker@0.1.0 electron:build
+> electron-builder --win --linux
+
+  ÔÇó electron-builder  version=26.8.1 os=10.0.19045
+  ÔÇó loaded configuration  file=package.json ("build" field)
+  ÔÇó executing @electron/rebuild  electronVersion=41.2.2 arch=x64 buildFromSource=false workspaceRoot=C:\Users\Edwin\OneDrive\Escritorio\Code\Erwin Andres Cruz Munoz\discipline-tracker projectDir=./ appDir=./
+  ÔÇó installing native dependencies  arch=x64
+  ÔÇó completed installing native dependencies
+  ÔÇó packaging       platform=linux arch=x64 electron=41.2.2 appOutDir=release\linux-unpacked
+  ÔÇó searching for node modules  pm=npm searchDir=C:\Users\Edwin\OneDrive\Escritorio\Code\Erwin Andres Cruz Munoz\discipline-tracker
+node.exe : (node:1120) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead 
+to security vulnerabilities, as the arguments are not escaped, only concatenated.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:1120) [DE...y concatenated.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ÔÇó duplicate dependency references  dependencies=["@dnd-kit/utilities@3.2.2","react-dom@19.2.4","@dnd-kit/core@6.3.1","@dnd-kit/utilities@3.2.2","@emnapi/wasi-threads@1.2.1","@emnapi/core@1.10.0","@emnapi/runtime@1.10.0","@tybys/wasm-util@0.10.1","jspdf@4.2.1","utrie@1.0.2","react-dom@19.2.4","react-redux@9.2.0","react-dom@19.2.4","@types/react@19.2.14","d3-array@3.2.4","d3-interpolate@3.0.1","d3-time@3.1.0","d3-time@3.1.0","d3-array@3.2.4"]

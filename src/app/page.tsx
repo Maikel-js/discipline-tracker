@@ -104,7 +104,7 @@ function MainApp() {
           </div>
         </header>
 
-        {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'dashboard' && <Dashboard onTabChange={setActiveTab} />}
 
         {activeTab === 'habits' && (
           <div className="space-y-3 md:space-y-4">
