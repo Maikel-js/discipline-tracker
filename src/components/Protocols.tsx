@@ -11,11 +11,19 @@ import {
 } from 'lucide-react';
 
 export default function Protocols() {
-  const {
-    protocols, runProtocol, updateProtocol, addProtocol, deleteProtocol,
-    toggleProtocolStep, linkHabitToProtocol, linkTaskToProtocol,
-    unlinkHabitFromProtocol, unlinkTaskFromProtocol, habits, tasks
-  } = useStore();
+  const store = useStore();
+  const protocols = store.protocols || [];
+  const runProtocol = store.runProtocol;
+  const updateProtocol = store.updateProtocol;
+  const addProtocol = store.addProtocol;
+  const deleteProtocol = store.deleteProtocol;
+  const toggleProtocolStep = store.toggleProtocolStep;
+  const linkHabitToProtocol = store.linkHabitToProtocol;
+  const linkTaskToProtocol = store.linkTaskToProtocol;
+  const unlinkHabitFromProtocol = store.unlinkHabitFromProtocol;
+  const unlinkTaskFromProtocol = store.unlinkTaskFromProtocol;
+  const habits = store.habits || [];
+  const tasks = store.tasks || [];
 
   const [isHydrated, setIsHydrated] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -62,9 +70,9 @@ export default function Protocols() {
     setConditions(protocol.conditions || '');
     setPriority(protocol.priority);
     setCategory(protocol.category);
-    setStatus(protocol.status);
-    setTags(protocol.tags.join(', '));
-    setSteps(protocol.steps);
+    setStatus(protocol.status || 'active');
+    setTags((protocol.tags || []).join(', '));
+    setSteps(protocol.steps || []);
     setEditingId(protocol.id);
     setIsCreating(true);
   };
@@ -146,7 +154,7 @@ export default function Protocols() {
             <h3 className="text-lg font-semibold text-white">
               {editingId ? 'Editar Protocolo' : 'Crear Nuevo Protocolo'}
             </h3>
-            <button onClick={resetForm} className="text-gray-400 hover:text-white">
+            <button type="button" onClick={resetForm} className="text-gray-400 hover:text-white">
               <X size={20} />
             </button>
           </div>
@@ -260,6 +268,7 @@ export default function Protocols() {
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400 font-semibold">Pasos del Protocolo</label>
               <button
+                type="button"
                 onClick={addStep}
                 className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1"
               >
@@ -288,7 +297,7 @@ export default function Protocols() {
                     className="bg-transparent text-white text-sm outline-none w-16"
                   />
                   <span className="text-gray-500 text-xs">min</span>
-                  <button onClick={() => removeStep(index)} className="text-red-400 hover:text-red-300">
+                  <button type="button" onClick={() => removeStep(index)} className="text-red-400 hover:text-red-300">
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -341,12 +350,14 @@ export default function Protocols() {
                   </div>
                   <div className="flex gap-2">
                     <button
+                      type="button"
                       onClick={() => handleEdit(protocol)}
                       className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
+                      type="button"
                       onClick={() => deleteProtocol(protocol.id)}
                       className="p-2 bg-red-900/30 hover:bg-red-900/50 text-red-400 rounded-lg transition"
                     >
@@ -381,7 +392,7 @@ export default function Protocols() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {protocol.tags.map(tag => (
+                  {(protocol.tags || []).map(tag => (
                     <span key={tag} className="text-[10px] bg-gray-900 text-gray-500 px-2 py-1 rounded-md flex items-center gap-1">
                       <Tag size={10} /> {tag}
                     </span>
@@ -389,6 +400,7 @@ export default function Protocols() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setExpandedId(expandedId === protocol.id ? null : protocol.id)}
                   className="w-full mt-4 py-2 flex items-center justify-center gap-1 text-xs text-gray-500 hover:text-white transition border-t border-gray-700/50 pt-4"
                 >
@@ -414,7 +426,7 @@ export default function Protocols() {
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Pasos de Acción</h4>
                     <div className="space-y-2">
-                      {protocol.steps.map((step, idx) => (
+                      {(protocol.steps || []).map((step, idx) => (
                         <div 
                           key={idx}
                           onClick={() => toggleProtocolStep(protocol.id, idx)}
@@ -448,15 +460,16 @@ export default function Protocols() {
                         <LinkIcon size={12} /> Hábitos Vinculados
                       </h4>
                       <div className="flex flex-wrap gap-1">
-                        {habits.map(h => (
+                        {(habits || []).map(h => (
                           <button
+                            type="button"
                             key={h.id}
                             onClick={() => {
-                              if (protocol.linkedHabits.includes(h.id)) unlinkHabitFromProtocol(protocol.id, h.id);
+                              if ((protocol.linkedHabits || []).includes(h.id)) unlinkHabitFromProtocol(protocol.id, h.id);
                               else linkHabitToProtocol(protocol.id, h.id);
                             }}
                             className={`text-[10px] px-2 py-1 rounded-md transition ${
-                              protocol.linkedHabits.includes(h.id)
+                              (protocol.linkedHabits || []).includes(h.id)
                                 ? 'bg-purple-600 text-white'
                                 : 'bg-gray-800 text-gray-500 hover:bg-gray-700'
                             }`}
@@ -471,15 +484,16 @@ export default function Protocols() {
                         <LinkIcon size={12} /> Tareas Vinculadas
                       </h4>
                       <div className="flex flex-wrap gap-1">
-                        {tasks.map(t => (
+                        {(tasks || []).map(t => (
                           <button
+                            type="button"
                             key={t.id}
                             onClick={() => {
-                              if (protocol.linkedTasks.includes(t.id)) unlinkTaskFromProtocol(protocol.id, t.id);
+                              if ((protocol.linkedTasks || []).includes(t.id)) unlinkTaskFromProtocol(protocol.id, t.id);
                               else linkTaskToProtocol(protocol.id, t.id);
                             }}
                             className={`text-[10px] px-2 py-1 rounded-md transition ${
-                              protocol.linkedTasks.includes(t.id)
+                              (protocol.linkedTasks || []).includes(t.id)
                                 ? 'bg-orange-600 text-white'
                                 : 'bg-gray-800 text-gray-500 hover:bg-gray-700'
                             }`}

@@ -1036,34 +1036,39 @@ export const useStore = create<StoreState>()(
 
       recalculateProtocolProgress: () => {
         set(state => ({
-          protocols: state.protocols.map(protocol => {
+          protocols: (state.protocols || []).map(protocol => {
             if (protocol.status !== 'active') return protocol;
 
-            const linkedHabits = state.habits.filter(h => protocol.linkedHabits.includes(h.id));
-            const linkedTasks = state.tasks.filter(t => protocol.linkedTasks.includes(t.id));
+            const linkedHabits = state.habits.filter(h => (protocol.linkedHabits || []).includes(h.id));
+            const linkedTasks = state.tasks.filter(t => (protocol.linkedTasks || []).includes(t.id));
 
             const habitProgress = linkedHabits.length > 0
-              ? linkedHabits.reduce((acc, h) => acc + h.completionRate, 0) / linkedHabits.length
+              ? linkedHabits.reduce((acc, h) => acc + (h.completionRate || 0), 0) / linkedHabits.length
               : 0;
 
             const taskProgress = linkedTasks.length > 0
               ? (linkedTasks.filter(t => t.status === 'done').length / linkedTasks.length) * 100
               : 0;
 
-            const totalItems = protocol.linkedHabits.length + protocol.linkedTasks.length;
+            const totalItems = (protocol.linkedHabits || []).length + (protocol.linkedTasks || []).length;
             const progress = totalItems > 0
               ? Math.round((habitProgress + taskProgress) / totalItems)
               : 0;
 
-            const stepsCompleted = protocol.steps.filter(s => s.completed).length;
-            const stepsProgress = protocol.steps.length > 0
-              ? Math.round((stepsCompleted / protocol.steps.length) * 100)
+            const steps = protocol.steps || [];
+            const stepsCompleted = steps.filter(s => s.completed).length;
+            const stepsProgress = steps.length > 0
+              ? Math.round((stepsCompleted / steps.length) * 100)
               : 0;
 
             const finalProgress = Math.round((progress + stepsProgress) / 2);
 
             return {
               ...protocol,
+              tags: protocol.tags || [],
+              linkedHabits: protocol.linkedHabits || [],
+              linkedTasks: protocol.linkedTasks || [],
+              steps: protocol.steps || [],
               progress: finalProgress,
               status: finalProgress >= 100 ? 'completed' as const : 'active' as const
             };
@@ -1139,7 +1144,28 @@ export const useStore = create<StoreState>()(
       }
     }),
     {
-      name: 'discipline-tracker-storage'
+      name: 'discipline-tracker-storage',
+      version: 2,
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) {
+          // Migration for protocols
+          if (persistedState.protocols) {
+            persistedState.protocols = persistedState.protocols.map((p: any) => ({
+              ...p,
+              tags: p.tags || [],
+              linkedHabits: p.linkedHabits || [],
+              linkedTasks: p.linkedTasks || [],
+              steps: (p.steps || []).map((s: any) => ({
+                ...s,
+                id: s.id || Math.random().toString(36).substr(2, 9),
+                completed: !!s.completed
+              })),
+              status: p.status || 'active'
+            }));
+          }
+        }
+        return persistedState;
+      }
     }
   )
 );
