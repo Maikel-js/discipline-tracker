@@ -824,46 +824,6 @@ export default function AdvancedAIHub() {
         </div>
       )}
 
-      {activeModule === 'protocols' && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-orange-400" />
-            Protocolos Ejecutables
-          </h3>
-
-          <div className="space-y-3">
-            {protocols.map(protocol => (
-              <div key={protocol.id} className="bg-gray-800/50 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <div className="font-medium">{protocol.name}</div>
-                    <div className="text-xs text-gray-500">{protocol.steps.length} pasos • {protocol.steps.reduce((a, s) => a + s.duration, 0)} min</div>
-                  </div>
-                  <button
-                    onClick={() => runProtocol(protocol.id)}
-                    className="px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded-lg text-sm"
-                  >
-                    <Play className="w-4 h-4 inline" /> Iniciar
-                  </button>
-                </div>
-                <div className="space-y-1 mt-3">
-                  {protocol.steps.map((step, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <span className="text-gray-500 w-12">{step.time}</span>
-                      <span className="text-white flex-1">{step.action}</span>
-                      <span className="text-gray-500">{step.duration}min</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500">
-                  <span>Completado: {protocol.timesCompleted} veces</span>
-                  <span>Efectividad: {Math.round(protocol.effectiveness)}%</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

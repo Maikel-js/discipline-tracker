@@ -222,7 +222,7 @@ export default function Notes() {
 
               <div className="pt-4 border-t border-gray-700 mt-auto flex flex-wrap gap-2 items-center justify-between">
                 <div className="flex flex-wrap gap-1">
-                  {(note.tags || []).map(tag => (
+                  {(note.tags || []).map((tag: string) => (
                     <span key={tag} className="text-[10px] bg-gray-900 text-gray-500 px-2 py-0.5 rounded-md flex items-center gap-1">
                       <Tag size={8} /> {tag}
                     </span>

@@ -24,7 +24,8 @@ import type {
   Decision,
   Plugin,
   Experiment,
-  Protocol
+  Protocol,
+  Note
 
 } from '@/types';
 
@@ -1133,6 +1134,9 @@ export const useStore = create<StoreState>()(
             return p;
           })
         }));
+        get().recalculateProtocolProgress();
+      },
+
       unlinkTaskFromProtocol: (protocolId, taskId) => {
         set(state => ({
           protocols: (state.protocols || []).map(p => {
