@@ -22,8 +22,6 @@ export default function DownloadPortal() {
   const [whatsappNumber, setWhatsappNumber] = useState('');
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
-  const githubUrl = 'https://github.com/Maikel-js/discipline-tracker';
-  const releasesUrl = `${githubUrl}/releases`;
 
   useEffect(() => {
     setPlatform(getOS());
@@ -230,42 +228,7 @@ export default function DownloadPortal() {
              </div>
            </div>
 
-          <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
-            <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-              <Box className="w-5 h-5 text-gray-400" />
-              📦 Repositorio y Versiones
-            </h3>
-            
-            <div className="space-y-2">
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700 border border-transparent hover:border-gray-500/30 transition-all"
-              >
-                <div>
-                  <div className="font-medium">Código Fuente</div>
-                  <div className="text-xs text-gray-400">Ver repositorio en GitHub</div>
-                </div>
-                <Box className="w-5 h-5" />
-              </a>
-              
-              <a
-                href={releasesUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700 border border-transparent hover:border-gray-500/30 transition-all"
-              >
-                <div>
-                  <div className="font-medium">Todas las Versiones</div>
-                  <div className="text-xs text-gray-400">Ver historial de lanzamientos</div>
-                </div>
-                <Download className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          <div className="text-center text-gray-500 text-sm py-2">
+          <div className="text-center text-gray-500 text-sm py-4 border-t border-gray-800">
             <Globe className="w-4 h-4 inline mr-1" />
             <strong>Servidor:</strong> {appUrl.replace('https://', '')}
           </div>
