@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "test:all": "npm run test && npm run test:e2e",
     "electron": "electron .",
-    "electron:build": "electron-builder --win --linux"
+    "electron:build": "electron-builder --win --linux",
+    "postelectron:build": "node scripts/copy-build.mjs"
   },
   "build": {
     "appId": "com.discipline.tracker",
@@ -48,14 +49,11 @@
     },
     "nsis": {
       "oneClick": false,
-      "perMachine": true,
+      "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Discipline Tracker",
-      "installerIcon": "public/icon.ico",
-      "uninstallerIcon": "public/icon.ico",
-      "installerHeaderIcon": "public/icon.ico"
+      "shortcutName": "Discipline Tracker"
     },
     "portable": {
       "artifactName": "DisciplineTracker-Portable-${version}.${ext}"
