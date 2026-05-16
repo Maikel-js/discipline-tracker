@@ -16,18 +16,54 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const STORAGE_INDEX = 'discipline_users_index';
+
 function generateId() {
-  return Math.random().toString(36).substr(2, 9);
+  return crypto.randomUUID();
 }
 
-function hashPassword(password: string): string {
-  let hash = 0;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return 'sha256_' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function userStorageKey(id: string): string {
+  return `discipline_user_${id}`;
+}
+
+function loadProfile(userId: string): User | null {
+  try {
+    const raw = localStorage.getItem(userStorageKey(userId));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
   }
-  return 'hashed_' + Math.abs(hash).toString(16);
+}
+
+function saveProfile(user: User): void {
+  localStorage.setItem(userStorageKey(user.id), JSON.stringify(user));
+}
+
+interface IndexEntry {
+  id: string;
+  email: string;
+  passwordHash: string;
+}
+
+function loadIndex(): IndexEntry[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_INDEX);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveIndex(entries: IndexEntry[]): void {
+  localStorage.setItem(STORAGE_INDEX, JSON.stringify(entries));
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -48,13 +84,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (storedSession) {
       try {
         const session: AuthSession = JSON.parse(storedSession);
-        const storedUser = localStorage.getItem('discipline_user');
-        if (storedUser && new Date(session.expiresAt) > new Date()) {
-          setUser(JSON.parse(storedUser));
+        if (new Date(session.expiresAt) > new Date()) {
+          const profile = loadProfile(session.userId);
+          if (profile) {
+            setUser(profile);
+          }
         }
       } catch (e) {
         localStorage.removeItem('discipline_session');
-        localStorage.removeItem('discipline_user');
       }
     }
     setIsLoading(false);
@@ -62,63 +99,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
-    
-    const storedUsers = localStorage.getItem('discipline_users');
-    const users: User[] = storedUsers ? JSON.parse(storedUsers) : [];
-    const existingUser = users.find(u => u.email === email);
-    
-    if (!existingUser) {
+
+    const index = loadIndex();
+    const entry = index.find(e => e.email.toLowerCase() === email.toLowerCase());
+
+    if (!entry) {
       setIsLoading(false);
       return false;
     }
-    
-    const token = generateId() + '_' + Date.now();
+
+    const passwordHash = await hashPassword(password);
+    if (passwordHash !== entry.passwordHash) {
+      setIsLoading(false);
+      return false;
+    }
+
+    const profile = loadProfile(entry.id);
+    if (!profile) {
+      setIsLoading(false);
+      return false;
+    }
+
+    profile.lastLogin = new Date().toISOString();
+    saveProfile(profile);
+
+    const token = generateId();
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    
-    const session: AuthSession = { userId: existingUser.id, token, expiresAt };
+
+    const session: AuthSession = { userId: profile.id, token, expiresAt };
     localStorage.setItem('discipline_session', JSON.stringify(session));
-    localStorage.setItem('discipline_user', JSON.stringify(existingUser));
-    
-    existingUser.lastLogin = new Date().toISOString();
-    const updatedUsers = users.map(u => u.id === existingUser.id ? existingUser : u);
-    localStorage.setItem('discipline_users', JSON.stringify(updatedUsers));
-    
-    setUser(existingUser);
+
+    setUser(profile);
     setIsLoading(false);
     return true;
   };
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     setIsLoading(true);
-    
-    const storedUsers = localStorage.getItem('discipline_users');
-    const users: User[] = storedUsers ? JSON.parse(storedUsers) : [];
-    
-    if (users.find(u => u.email === email)) {
+
+    const index = loadIndex();
+    if (index.find(e => e.email.toLowerCase() === email.toLowerCase())) {
       setIsLoading(false);
       return false;
     }
-    
+
+    const passwordHash = await hashPassword(password);
+    const id = generateId();
+
     const newUser: User = {
-      id: generateId(),
+      id,
       email,
+      passwordHash,
       name,
       createdAt: new Date().toISOString(),
       disciplineLevel: 1,
       totalScore: 0,
       settings: { ...settings }
     };
-    
-    users.push(newUser);
-    localStorage.setItem('discipline_users', JSON.stringify(users));
-    
-    const token = generateId() + '_' + Date.now();
+
+    index.push({ id, email, passwordHash });
+    saveIndex(index);
+    saveProfile(newUser);
+
+    const token = generateId();
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    
-    const session: AuthSession = { userId: newUser.id, token, expiresAt };
+
+    const session: AuthSession = { userId: id, token, expiresAt };
     localStorage.setItem('discipline_session', JSON.stringify(session));
-    localStorage.setItem('discipline_user', JSON.stringify(newUser));
-    
+
     setUser(newUser);
     addDisciplineScore(10, 'Registro completado');
     setIsLoading(false);
@@ -127,22 +175,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('discipline_session');
-    localStorage.removeItem('discipline_user');
     setUser(null);
   };
 
   const updateProfile = (updates: Partial<User>) => {
     if (!user) return;
-    
+
     const updatedUser = { ...user, ...updates };
     setUser(updatedUser);
-    localStorage.setItem('discipline_user', JSON.stringify(updatedUser));
-    
-    const storedUsers = localStorage.getItem('discipline_users');
-    if (storedUsers) {
-      const users: User[] = JSON.parse(storedUsers);
-      const updatedUsers = users.map(u => u.id === user.id ? updatedUser : u);
-      localStorage.setItem('discipline_users', JSON.stringify(updatedUsers));
+    saveProfile(updatedUser);
+
+    if (updates.email) {
+      const index = loadIndex();
+      const entry = index.find(e => e.id === user.id);
+      if (entry) {
+        entry.email = updates.email;
+        saveIndex(index);
+      }
     }
   };
 

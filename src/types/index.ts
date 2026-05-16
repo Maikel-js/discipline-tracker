@@ -169,6 +169,7 @@ export interface AutoPenalty {
 export interface User {
   id: string;
   email: string;
+  passwordHash: string;
   name: string;
   createdAt: string;
   lastLogin?: string;
