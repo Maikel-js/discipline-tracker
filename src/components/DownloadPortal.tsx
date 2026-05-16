@@ -10,8 +10,15 @@ import {
 } from 'lucide-react';
 
 import { getOS, triggerSafeDownload } from '@/lib/platform';
+import { R2_WINDOWS_EXE } from '@/lib/r2';
 
 type Platform = 'android' | 'windows' | 'linux' | 'ios' | 'web';
+
+type ApkInfo = {
+  version: string;
+  sizeMB: number;
+  buildDate: string;
+};
 
 export default function DownloadPortal() {
   const { user } = useAuth();
@@ -20,6 +27,14 @@ export default function DownloadPortal() {
   const [platform, setPlatform] = useState<Platform>('web');
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [apkInfo, setApkInfo] = useState<ApkInfo | null>(null);
+
+  useEffect(() => {
+    fetch('/downloads/apk-info.json')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setApkInfo(data))
+      .catch(() => {});
+  }, []);
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
 
@@ -45,9 +60,9 @@ export default function DownloadPortal() {
         return {
           icon: '🪟',
           title: 'Windows',
-          action: 'Descargar ZIP',
-          filename: 'Discipline-Tracker-Windows.zip',
-          url: '/downloads/Discipline-Tracker-Windows.zip'
+          action: 'Descargar EXE',
+          filename: 'Discipline-Tracker-Setup.exe',
+          url: R2_WINDOWS_EXE
         };
       case 'linux':
         return {
@@ -150,7 +165,14 @@ export default function DownloadPortal() {
                       <div className="font-medium flex items-center gap-2">
                         🤖 Android (APK)
                       </div>
-                      <div className="text-xs text-gray-400">Instalador directo sin Play Store</div>
+                      <div className="text-xs text-gray-400">
+                        Instalador directo sin Play Store
+                        {apkInfo && (
+                          <span className="block mt-0.5 text-green-400 font-medium">
+                            APK v{apkInfo.version} — {apkInfo.sizeMB} MB ({apkInfo.buildDate})
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -200,7 +222,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker-Windows.zip', 'Discipline-Tracker-Windows.zip', e)}
+                      onClick={(e) => handleDownload(R2_WINDOWS_EXE, 'Discipline-Tracker-Setup.exe', e)}
                       className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
