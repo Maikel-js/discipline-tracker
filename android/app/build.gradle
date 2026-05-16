@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             storeFile file("release.keystore")
-            storePassword "discipline123"
-            keyAlias "discipline-tracker"
-            keyPassword "discipline123"
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: project.findProperty("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS") ?: project.findProperty("KEY_ALIAS") ?: "discipline-tracker"
+            keyPassword System.getenv("KEY_PASSWORD") ?: project.findProperty("KEY_PASSWORD")
         }
     }
 

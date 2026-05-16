@@ -14,3 +14,7 @@ coverage/
 release/
 session-*.md
 android/app/src/main/assets/public/
+public/downloads/*.apk
+public/downloads/apk-info.json
+android/app/release.keystore
+*.keystore
