@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/store/useStore';
 import { Bell, AlertTriangle, Volume2, Vibrate as Vibration, ShieldAlert, X } from 'lucide-react';
 import type { NotificationLevel, Habit } from '@/types';
+import { scheduleHabitNotifications, cancelHabitNotifications, addNotificationReceivedListener } from '@/services/localNotifications';
 
 interface Props {
   habit: Habit;
@@ -40,6 +41,7 @@ export default function NotificationSystem({ habit }: Props) {
 
   useEffect(() => {
     if (habit.status !== 'pending') {
+      cancelHabitNotifications(habit.id);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -54,16 +56,35 @@ export default function NotificationSystem({ habit }: Props) {
     const isExtreme = settings.extremeMode;
     const isPunishment = settings.punishmentMode;
 
+    const thresholds = isExtreme
+      ? [0, 1, 2, 3, 5]
+      : isPunishment
+        ? [0, 3, 5, 10, 15]
+        : [0, 5, 10, 15, 20];
+
+    cancelHabitNotifications(habit.id);
+    scheduleHabitNotifications(
+      habit.id,
+      habit.name,
+      new Date(habit.scheduledTime),
+      thresholds,
+      settings.notificationsEnabled,
+      settings.soundEnabled
+    );
+
+    const removeListener = addNotificationReceivedListener((n) => {
+      if (n.habitId === habit.id) {
+        setCurrentLevel(n.level as NotificationLevel);
+        if (n.level >= 3) {
+          setShowModal(true);
+        }
+      }
+    });
+
     const checkPending = () => {
       const scheduledTime = new Date(habit.scheduledTime);
       const now = new Date();
       const diffMinutes = (now.getTime() - scheduledTime.getTime()) / (1000 * 60);
-
-      const thresholds = isExtreme
-        ? [0, 1, 2, 3, 5]
-        : isPunishment
-          ? [0, 3, 5, 10, 15]
-          : [0, 5, 10, 15, 20];
 
       if (diffMinutes >= thresholds[0] && diffMinutes < thresholds[1] && maxLevel < 1) {
         addNotification(habit.id, 1);
@@ -105,11 +126,15 @@ export default function NotificationSystem({ habit }: Props) {
     const interval = setInterval(checkPending, intervalTime);
     checkPending();
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      removeListener();
+    };
   }, [habit, maxLevel, settings]);
 
   useEffect(() => {
     if (settings.extremeMode && habit.status === 'missed') {
+      cancelHabitNotifications(habit.id);
       setShowModal(true);
       setCurrentLevel(5);
       if (settings.soundEnabled) {
@@ -152,6 +177,7 @@ new Notification(msg.title, {
   };
 
   const handleComplete = () => {
+    cancelHabitNotifications(habit.id);
     completeHabit(habit.id);
     setShowModal(false);
     if (audioRef.current) {
