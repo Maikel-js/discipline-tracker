@@ -43,7 +43,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
   return (
     <>
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-start gap-1 px-2 overflow-x-auto relative">
           {mobileTabs.map(tab => (
             <button
@@ -79,7 +79,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
       {showMore && (
         <div className="fixed inset-0 z-50 flex items-end md:hidden">
           <div className="absolute inset-0 bg-black/70" onClick={() => setShowMore(false)} />
-          <div className="relative w-full bg-gray-900 rounded-t-2xl p-4 pb-24 max-h-[60vh] overflow-y-auto">
+          <div className="relative w-full bg-gray-900 rounded-t-2xl p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] max-h-[60vh] overflow-y-auto">
             <div className="text-center mb-4 text-gray-400 text-sm">Más opciones</div>
             <div className="grid grid-cols-3 gap-3">
               {moreTabs.map(tab => (

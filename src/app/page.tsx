@@ -13,6 +13,7 @@ import NotificationSystem from '@/components/NotificationSystem';
 import TabBar from '@/components/TabBar';
 import UserProfile from '@/components/UserProfile';
 import AICoach from '@/components/AICoach';
+import { requestPermissions as requestNativePermissions } from '@/services/localNotifications';
 import VoiceCommands from '@/components/VoiceCommands';
 import RewardsPanel from '@/components/RewardsSystem';
 import AutoScheduler from '@/components/AutoScheduler';
@@ -266,10 +267,11 @@ function MainApp() {
               </button>
 
               <button
-                onClick={() => {
+                onClick={async () => {
                   if ('Notification' in window && Notification.permission !== 'granted') {
                     Notification.requestPermission();
                   }
+                  await requestNativePermissions();
                 }}
                 className="w-full p-4 rounded-xl bg-gray-800 border border-gray-700 text-left"
               >
