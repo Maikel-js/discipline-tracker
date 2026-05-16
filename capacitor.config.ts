@@ -13,6 +13,11 @@ const config: CapacitorConfig = {
       launchAutoHide: true,
       backgroundColor: '#000000',
       androidSplashResourceName: 'splash'
+    },
+    LocalNotifications: {
+      smallIcon: 'ic_stat_icon',
+      iconColor: '#000000',
+      sound: 'alarm.wav'
     }
   }
 };
