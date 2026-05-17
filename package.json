@@ -18,7 +18,10 @@
     "upload": "node scripts/upload-exe.mjs",
     "release": "npm run electron:build && npm run upload",
     "deploy": "npm run build && npm run release",
-    "apk": "node scripts/build-apk.mjs"
+    "apk": "node scripts/build-apk.mjs",
+    "docs:vault": "node scripts/docs-to-vault.mjs",
+    "docs:vault:all": "node scripts/docs-to-vault.mjs --all",
+    "docs:install-hooks": "node scripts/install-hooks.mjs"
   },
   "build": {
     "appId": "com.discipline.tracker",
