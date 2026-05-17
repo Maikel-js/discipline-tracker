@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native"
 import { useState } from "react"
+import { SafeAreaView } from "react-native-safe-area-context"
 import GoalsSection from "./GoalsSection"
 import NotesSection from "./NotesSection"
 import ProtocolsSection from "./ProtocolsSection"
@@ -89,26 +90,26 @@ export default function MoreScreen() {
   }
 
   return (
-    <View className="flex-1 bg-gray-900">
-      <View className="p-4 pt-12">
+    <SafeAreaView className="flex-1 bg-gray-900" edges={["top"]}>
+      <View className="p-4 pt-4">
         <Text className="text-2xl font-bold text-white mb-4">Más</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="mb-4"
+          className="h-10 mb-4"
         >
-          <View className="flex-row gap-2">
+          <View className="flex-row gap-2 items-center">
             {sections.map((s) => (
               <TouchableOpacity
                 key={s.key}
                 onPress={() => setActiveSection(s.key)}
-                className={`flex-row items-center px-4 py-2 rounded-full ${
+                className={`flex-row items-center px-3 py-1.5 rounded-full ${
                   activeSection === s.key ? "bg-purple-600" : "bg-gray-800"
                 }`}
               >
-                <Text className="mr-1">{s.icon}</Text>
+                <Text className="mr-1 text-sm">{s.icon}</Text>
                 <Text
-                  className={`text-sm ${
+                  className={`text-xs ${
                     activeSection === s.key
                       ? "text-white"
                       : "text-gray-400"
@@ -121,7 +122,7 @@ export default function MoreScreen() {
           </View>
         </ScrollView>
       </View>
-      <ScrollView className="flex-1 px-4">{renderSection()}</ScrollView>
-    </View>
+      <ScrollView className="flex-1 px-4 pb-24">{renderSection()}</ScrollView>
+    </SafeAreaView>
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react"
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native"
+import { View, Text, TouchableOpacity, TextInput, ScrollView, useWindowDimensions } from "react-native"
 import Svg, { Circle, Line, Rect, Text as SvgText, G, Defs, Marker, Polygon, Filter, FeGaussianBlur, FeMerge, FeMergeNode } from "react-native-svg"
 import { useStore } from "../shared/store"
 import type { Goal } from "../shared/types"
@@ -18,10 +18,14 @@ const categoryLabels: Record<string, string> = {
 }
 
 export default function LifeGraph() {
+  const { width } = useWindowDimensions()
   const { habits, goals, addGoal, recalculateGoalProgress } = useStore()
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [newGoalTitle, setNewGoalTitle] = useState("")
   const [selectedHabitIds, setSelectedHabitIds] = useState<string[]>([])
+
+  const svgW = Math.min(width - 32, 600)
+  const svgH = 350
 
   useEffect(() => { recalculateGoalProgress() }, [habits, goals.length])
 
@@ -120,14 +124,14 @@ export default function LifeGraph() {
         </View>
       </ScrollView>
 
-      <View className="border border-gray-700 rounded-xl overflow-hidden bg-gray-900">
+      <View className="border border-gray-700 rounded-xl bg-gray-900 p-2">
         {filteredHabits.length === 0 ? (
-          <View className="h-80 items-center justify-center">
-            <Text className="text-5xl mb-4 opacity-30">🕸️</Text>
-            <Text className="text-gray-500">No hay hábitos todavía</Text>
+          <View className="h-60 items-center justify-center">
+            <Text className="text-4xl mb-4 opacity-30">🕸️</Text>
+            <Text className="text-gray-500 text-sm">No hay hábitos todavía</Text>
           </View>
         ) : (
-          <Svg width="100%" height={svgH} viewBox={`0 0 ${svgW} ${svgH}`}>
+          <Svg width={svgW} height={svgH} viewBox={`0 0 ${svgW} ${svgH}`}>
             <Defs>
               {Object.entries(categoryColors).map(([cat, c]) => (
                 <Marker key={cat} id={`arrow-${cat}`} markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
@@ -157,10 +161,10 @@ export default function LifeGraph() {
               return (
                 <G key={gn.id}>
                   <Rect x={gn.x - 60} y={gn.y - 18} width={120} height={36} rx={8} fill="#1f2937" stroke="#a855f7" strokeWidth={1.5} />
-                  <SvgText x={gn.x} y={gn.y - 2} textAnchor="middle" fill="white" fontSize={10} fontWeight="bold">
+                  <SvgText x={gn.x} y={gn.y - 2} textAnchor="middle" fill="white" fontSize={12} fontWeight="bold">
                     {gn.label.length > 12 ? gn.label.slice(0, 12) + "..." : gn.label}
                   </SvgText>
-                  <SvgText x={gn.x} y={gn.y + 10} textAnchor="middle" fill="#9ca3af" fontSize={8}>
+                  <SvgText x={gn.x} y={gn.y + 12} textAnchor="middle" fill="#9ca3af" fontSize={10}>
                     {progress}% · {goal.linkedHabits.length} hábitos
                   </SvgText>
                 </G>
@@ -172,10 +176,10 @@ export default function LifeGraph() {
               return (
                 <G key={cn.id}>
                   <Circle cx={cn.x} cy={cn.y} r={24} fill="#111827" stroke={c.line} strokeWidth={1.5} />
-                  <SvgText x={cn.x} y={cn.y - 2} textAnchor="middle" fill={c.line} fontSize={9} fontWeight="bold">
+                  <SvgText x={cn.x} y={cn.y - 2} textAnchor="middle" fill={c.line} fontSize={11} fontWeight="bold">
                     {cn.label}
                   </SvgText>
-                  <SvgText x={cn.x} y={cn.y + 10} textAnchor="middle" fill="#6b7280" fontSize={8}>
+                  <SvgText x={cn.x} y={cn.y + 12} textAnchor="middle" fill="#6b7280" fontSize={10}>
                     {count}
                   </SvgText>
                 </G>
@@ -187,10 +191,10 @@ export default function LifeGraph() {
                 <G key={hn.id}>
                   <Circle cx={hn.x} cy={hn.y} r={20} fill="#111827" stroke={c.line} strokeWidth={2} />
                   <Circle cx={hn.x} cy={hn.y} r={20 * (hn.rate || 0) / 100} fill={`${c.line}20`} />
-                  <SvgText x={hn.x} y={hn.y - 3} textAnchor="middle" fill="white" fontSize={7} fontWeight="bold">
+                  <SvgText x={hn.x} y={hn.y - 3} textAnchor="middle" fill="white" fontSize={10} fontWeight="bold">
                     {hn.label.length > 8 ? hn.label.slice(0, 8) + "..." : hn.label}
                   </SvgText>
-                  <SvgText x={hn.x} y={hn.y + 8} textAnchor="middle" fill={c.line} fontSize={6}>{hn.rate}%</SvgText>
+                  <SvgText x={hn.x} y={hn.y + 10} textAnchor="middle" fill={c.line} fontSize={9}>{hn.rate}%</SvgText>
                   {(hn.streak || 0) > 0 && (
                     <Circle cx={hn.x + 16} cy={hn.y - 15} r={5} fill="#f97316" />
                   )}

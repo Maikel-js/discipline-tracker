@@ -82,7 +82,7 @@ function MainApp() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-24 md:pb-8 md:pl-60">
+    <div className="min-h-screen bg-black text-white pb-24 pt-[env(safe-area-inset-top)] md:pb-8 md:pl-60 md:pt-0">
       <div className="max-w-4xl mx-auto px-3 md:p-4">
         <header className="flex items-center justify-between py-3 md:py-4 mb-2 md:mb-4">
           <div>

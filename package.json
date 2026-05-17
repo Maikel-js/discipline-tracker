@@ -15,6 +15,8 @@
     "test:all": "npm run test && npm run test:e2e",
     "electron": "electron .",
     "electron:build": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --win --publish never",
+    "electron:build:win": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --win --publish never",
+    "electron:build:linux": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux AppImage --publish never",
     "upload": "node scripts/upload-exe.mjs",
     "release": "npm run electron:build && npm run upload",
     "deploy": "npm run build && npm run release",
@@ -51,6 +53,14 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "tar.gz"
+      ],
+      "category": "Utility",
+      "artifactName": "Discipline-Tracker-${version}-Linux.${ext}"
     },
     "portable": {
       "artifactName": "Discipline-Tracker-Setup.exe"

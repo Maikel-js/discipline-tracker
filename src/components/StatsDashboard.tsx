@@ -199,9 +199,9 @@ export default function StatsDashboard() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-gray-800 p-4 rounded-xl">
+        <div className="bg-gray-800 p-4 rounded-xl overflow-x-auto">
           <h3 className="text-white font-bold mb-4">Distribución de Hábitos</h3>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" minWidth={200} height={250}>
             <PieChart>
               <Pie
                 data={completionData}
@@ -223,9 +223,9 @@ export default function StatsDashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-gray-800 p-4 rounded-xl">
+        <div className="bg-gray-800 p-4 rounded-xl overflow-x-auto">
           <h3 className="text-white font-bold mb-4">Estado de Tareas</h3>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" minWidth={200} height={250}>
             <PieChart>
               <Pie
                 data={taskStatusData}
@@ -248,9 +248,9 @@ export default function StatsDashboard() {
         </div>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-xl">
+      <div className="bg-gray-800 p-4 rounded-xl overflow-x-auto">
         <h3 className="text-white font-bold mb-4">Progreso Semanal</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" minWidth={300} height={300}>
           <BarChart data={weeklyData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="date" stroke="#9ca3af" />
@@ -264,9 +264,9 @@ export default function StatsDashboard() {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-xl">
+      <div className="bg-gray-800 p-4 rounded-xl overflow-x-auto">
         <h3 className="text-white font-bold mb-4">Tendencia de Puntuación (14 días)</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" minWidth={300} height={300}>
           <LineChart data={scoreTrend}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="date" stroke="#9ca3af" />
@@ -278,9 +278,9 @@ export default function StatsDashboard() {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-xl">
+      <div className="bg-gray-800 p-4 rounded-xl overflow-x-auto">
         <h3 className="text-white font-bold mb-4">Rendimiento por Categoría</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" minWidth={300} height={300}>
           <BarChart data={categoryData} layout="vertical">
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis type="number" stroke="#9ca3af" />

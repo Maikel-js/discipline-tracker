@@ -43,7 +43,7 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
   return (
     <>
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden pb-[env(safe-area-inset-bottom)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]">
         <div className="flex items-center justify-start gap-1 px-2 overflow-x-auto relative">
           {mobileTabs.map(tab => (
             <button

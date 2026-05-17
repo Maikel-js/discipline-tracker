@@ -264,6 +264,7 @@ export default function LifeGraph() {
             </div>
           </div>
         ) : (
+          <div className="flex justify-center min-w-0">
           <svg width={svgDimensions.width} height={svgDimensions.height} className="min-w-[300px] sm:min-w-[600px] max-w-full">
             <defs>
               {Object.entries(categoryColors).map(([cat, colors]) => (
@@ -441,6 +442,7 @@ export default function LifeGraph() {
               })}
             </g>
           </svg>
+          </div>
         )}
       </div>
 
