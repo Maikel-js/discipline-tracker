@@ -36,11 +36,9 @@ export default function LifeOSHub() {
     if (!newDecision.trim()) return
     addDecision({
       title: newDecision.trim(),
-      context: "Manual",
-      impact: "medium",
-      category: "personal",
-      pros: [],
-      cons: [],
+      options: [],
+      matrix: 'simple',
+      status: 'pending',
     })
     setNewDecision("")
   }
