@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: discipline-tracker-api
+    runtime: node
+    repo: https://github.com/Maikel-js/discipline-tracker.git
+    plan: free
+    region: ohio
+    branch: main
+    healthCheckPath: /api/health
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "4000"
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
