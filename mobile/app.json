@@ -24,12 +24,13 @@
       "edgeToEdgeEnabled": true,
       "package": "com.discipline.tracker",
       "permissions": [
-        "CAMERA",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "RECORD_AUDIO",
-        "VIBRATE",
-        "POST_NOTIFICATIONS"
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.VIBRATE",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
       ]
     },
     "web": {
@@ -46,6 +47,13 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "owner": "eacm",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "964f9846-b728-4dba-ab7c-6e9ae4acf11f"
+      }
     }
   }
 }

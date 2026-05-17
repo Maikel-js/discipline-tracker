@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { View, Text, TouchableOpacity, Platform } from "react-native"
 import * as Speech from "expo-speech"
-import Voice from "react-native-voice"
+import Voice from "@react-native-community/voice"
 import { useStore } from "../shared/store"
 
 export default function VoiceCommands() {
