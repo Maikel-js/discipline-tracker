@@ -37,6 +37,7 @@ export default function DownloadPortal() {
   }, []);
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
+  const APK_RELEASE_URL = 'https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0/Discipline-Tracker-v0.1.0.apk';
 
   useEffect(() => {
     setPlatform(getOS());
@@ -53,8 +54,8 @@ export default function DownloadPortal() {
           icon: '📱',
           title: 'Android',
           action: 'Instalar APK',
-          filename: 'app-release.apk',
-          url: '/downloads/app-release.apk'
+          filename: 'Discipline-Tracker-v0.1.0.apk',
+          url: APK_RELEASE_URL
         };
       case 'windows':
         return {
@@ -176,7 +177,7 @@ export default function DownloadPortal() {
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/app-release.apk', 'app-release.apk', e)}
+                      onClick={(e) => handleDownload(APK_RELEASE_URL, 'Discipline-Tracker-v0.1.0.apk', e)}
                       className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
