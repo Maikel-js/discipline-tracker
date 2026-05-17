@@ -18,3 +18,8 @@ public/downloads/*.apk
 public/downloads/apk-info.json
 android/app/release.keystore
 *.keystore
+
+# Release binaries
+public/downloads/*.exe
+public/downloads/*.zip
+public/downloads/*.apk
