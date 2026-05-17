@@ -43,7 +43,8 @@
       "expo-location",
       "expo-notifications",
       "expo-camera",
-      "expo-av"
+      "expo-av",
+      "expo-speech-recognition"
     ],
     "experiments": {
       "typedRoutes": true

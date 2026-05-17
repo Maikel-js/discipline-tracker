@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from "react"
 import { View, Text, TouchableOpacity, Platform } from "react-native"
 import * as Speech from "expo-speech"
-import Voice from "@react-native-community/voice"
+import { ExpoWebSpeechRecognition } from "expo-speech-recognition"
 import { useStore } from "../shared/store"
+
+const recognition = new ExpoWebSpeechRecognition()
+recognition.lang = "es-ES"
+recognition.continuous = false
+recognition.interimResults = false
+recognition.maxAlternatives = 1
 
 export default function VoiceCommands() {
   const { habits, completeHabit, addTask, toggleExtremeMode, togglePunishmentMode } = useStore()
@@ -12,19 +18,26 @@ export default function VoiceCommands() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    Voice.onSpeechStart = () => setIsListening(true)
-    Voice.onSpeechEnd = () => setIsListening(false)
-    Voice.onSpeechResults = (e: any) => {
-      if (e.value && e.value.length > 0) {
-        const text = e.value[0].toLowerCase()
-        setRecognizedText(text)
-        processCommand(text)
+    recognition.onstart = () => setIsListening(true)
+    recognition.onend = () => setIsListening(false)
+    recognition.onerror = () => setIsListening(false)
+    recognition.onresult = (e: any) => {
+      if (e.results && e.results.length > 0) {
+        const result = e.results[0]
+        if (result.length > 0) {
+          const text = result[0].transcript.toLowerCase()
+          setRecognizedText(text)
+          processCommand(text)
+        }
       }
     }
-    Voice.onSpeechError = () => setIsListening(false)
 
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners)
+      recognition.abort()
+      recognition.onstart = null
+      recognition.onend = null
+      recognition.onerror = null
+      recognition.onresult = null
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
   }, [])
@@ -100,16 +113,16 @@ export default function VoiceCommands() {
 
   const toggleListening = async () => {
     if (isListening) {
-      await Voice.stop()
+      recognition.stop()
       setIsListening(false)
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     } else {
       setRecognizedText("")
       setLastCommand(null)
       try {
-        await Voice.start("es-ES")
-        timeoutRef.current = setTimeout(async () => {
-          await Voice.stop()
+        recognition.start()
+        timeoutRef.current = setTimeout(() => {
+          recognition.stop()
         }, 10000)
       } catch {
         speak("Reconocimiento de voz no disponible en este dispositivo")
