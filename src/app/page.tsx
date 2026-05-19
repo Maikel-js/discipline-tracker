@@ -49,10 +49,10 @@ function MainApp() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center" suppressHydrationWarning>
         <div className="text-center">
           <Zap className="w-12 h-12 text-yellow-400 mx-auto animate-pulse" />
-          <p className="text-gray-500 mt-4">Cargando...</p>
+          <p className="text-gray-500 mt-4">Cargando aplicacion...</p>
         </div>
       </div>
     );
