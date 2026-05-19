@@ -30,6 +30,7 @@ import PhysicalCalendar from '@/components/PhysicalCalendar';
 function MainApp() {
   const { isAuthenticated } = useAuth();
   const { habits, tasks, settings, stats, logs, notifications, completeHabit, missHabit, checkAndResetDaily, addDisciplineScore } = useStore();
+  const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('activeTab') || 'dashboard';
@@ -42,8 +43,20 @@ function MainApp() {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
+    setMounted(true);
     checkAndResetDaily();
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <Zap className="w-12 h-12 text-yellow-400 mx-auto animate-pulse" />
+          <p className="text-gray-500 mt-4">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
