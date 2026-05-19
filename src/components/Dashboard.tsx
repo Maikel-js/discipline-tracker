@@ -3,13 +3,13 @@
 import { useStore } from '@/store/useStore';
 import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useEffect, useState, useMemo } from 'react';
-import { format, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useEffect, useState } from 'react';
+import { format, subDays } from 'date-fns';
 import PomodoroTimer from './PomodoroTimer';
 import AuditPanel from './AuditPanel';
 import SensorIntegration from './SensorIntegration';
 import AccountabilityPartnerPanel from './AccountabilityPartner';
+import DashboardCalendar from './DashboardCalendar';
 
 export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const { stats, habits, logs, tasks, settings, toggleExtremeMode, togglePunishmentMode, generatePatternInsights, patternInsights } = useStore();
@@ -17,7 +17,6 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
   const [chartData, setChartData] = useState<any[]>([]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activePanel, setActivePanel] = useState<'audit' | 'sensors' | 'partners' | null>(null);
-  const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -47,35 +46,6 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
 
     generatePatternInsights();
   }, [logs, habits]);
-
-  const calendarDays = useMemo(() => {
-    const monthStart = startOfMonth(calendarMonth);
-    const monthEnd = endOfMonth(calendarMonth);
-    const calStart = startOfWeek(monthStart, { locale: es });
-    const calEnd = endOfWeek(monthEnd, { locale: es });
-    return eachDayOfInterval({ start: calStart, end: calEnd });
-  }, [calendarMonth]);
-
-  const getDayStatus = (date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const dayLogs = logs.filter(l => l.completedAt.startsWith(dateStr));
-    const completed = dayLogs.filter(l => l.status === 'completed').length;
-    const missed = dayLogs.filter(l => l.status === 'missed').length;
-    if (completed > 0 && missed === 0) return 'completed';
-    if (completed > 0 && missed > 0) return 'partial';
-    if (missed > 0) return 'missed';
-    return 'none';
-  };
-
-  const completedCount = (date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd');
-    return logs.filter(l => l.completedAt.startsWith(dateStr) && l.status === 'completed').length;
-  };
-
-  const prevMonth = () => setCalendarMonth(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
-  const nextMonth = () => setCalendarMonth(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
-
-  const weekDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   const pendingTasks = tasks.filter(t => t.status === 'todo').length;
   const doingTasks = tasks.filter(t => t.status === 'doing').length;
@@ -291,60 +261,7 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
         </div>
       </div>
 
-      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-white">Calendario</h3>
-          <div className="flex items-center gap-1">
-            <button onClick={prevMonth} className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white text-sm">&lt;</button>
-            <span className="text-sm text-gray-300 font-medium capitalize min-w-[120px] text-center">
-              {format(calendarMonth, 'MMMM yyyy', { locale: es })}
-            </span>
-            <button onClick={nextMonth} className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white text-sm">&gt;</button>
-          </div>
-        </div>
-        <div className="grid grid-cols-7 gap-0.5">
-          {weekDays.map(d => (
-            <div key={d} className="text-center text-[10px] text-gray-500 font-bold py-1">{d}</div>
-          ))}
-          {calendarDays.map((day, i) => {
-            const status = getDayStatus(day);
-            const count = completedCount(day);
-            const isCurrentMonth = isSameMonth(day, calendarMonth);
-            const isTodayDate = isToday(day);
-            return (
-              <div
-                key={i}
-                className={`text-center py-1 rounded text-xs relative ${
-                  !isCurrentMonth ? 'opacity-20' : ''
-                } ${
-                  isTodayDate ? 'ring-1 ring-blue-500 bg-blue-900/20' : ''
-                }`}
-              >
-                <span className={`font-medium ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {format(day, 'd')}
-                </span>
-                {status !== 'none' && isCurrentMonth && (
-                  <div className="flex justify-center gap-0.5 mt-0.5">
-                    <div className={`w-1.5 h-1.5 rounded-full ${
-                      status === 'completed' ? 'bg-green-500' :
-                      status === 'partial' ? 'bg-yellow-500' :
-                      'bg-red-500'
-                    }`} />
-                  </div>
-                )}
-                {count > 0 && isCurrentMonth && (
-                  <div className="text-[8px] text-green-400 leading-none">{count}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className="flex items-center justify-end gap-2 mt-2 text-[10px] text-gray-500">
-          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500" /> Hecho</div>
-          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-yellow-500" /> Parcial</div>
-          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500" /> Fallado</div>
-        </div>
-      </div>
+      <DashboardCalendar />
     </div>
   );
 }
