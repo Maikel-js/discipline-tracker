@@ -354,6 +354,10 @@ export const useStore = create<StoreState>()(
         get().updateStats();
         get().recalculateGoalProgress();
         get().recalculateExperimentProgress();
+
+        const baseScore = habit.priority === 'low' ? 3 : habit.priority === 'medium' ? 5 : habit.priority === 'high' ? 8 : 10;
+        const streakBonus = Math.min(Math.floor(streak / 7) * 2, 10);
+        get().addDisciplineScore(baseScore + streakBonus, `Completado: ${habit.name}${streakBonus > 0 ? ` (bono racha +${streakBonus})` : ''}`);
       },
 
       missHabit: (id) => {

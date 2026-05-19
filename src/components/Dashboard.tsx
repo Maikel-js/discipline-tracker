@@ -1,10 +1,11 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
-import { Flame, Target, TrendingUp, Trophy, Zap, Calendar, Clock, CheckCircle, AlertTriangle, Timer, Download } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { useEffect, useState } from 'react';
-import { format, subDays, startOfWeek, eachDayOfInterval } from 'date-fns';
+import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle, Download } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useEffect, useState, useMemo } from 'react';
+import { format, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday } from 'date-fns';
+import { es } from 'date-fns/locale';
 import PomodoroTimer from './PomodoroTimer';
 import AuditPanel from './AuditPanel';
 import SensorIntegration from './SensorIntegration';
@@ -14,10 +15,9 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
   const { stats, habits, logs, tasks, settings, toggleExtremeMode, togglePunishmentMode, generatePatternInsights, patternInsights } = useStore();
   const [platform, setPlatform] = useState<'android' | 'windows' | 'linux' | 'web'>('web');
   const [chartData, setChartData] = useState<any[]>([]);
-  const [categoryData, setCategoryData] = useState<any[]>([]);
-  const [contributionData, setContributionData] = useState<number[][]>([]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activePanel, setActivePanel] = useState<'audit' | 'sensors' | 'partners' | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -45,33 +45,37 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
     });
     setChartData(data);
 
-    const categories = ['health', 'study', 'exercise', 'work', 'personal', 'other'];
-    const catData = categories.map(cat => {
-      const catHabits = habits.filter(h => h.category === cat);
-      const avgRate = catHabits.length > 0
-        ? Math.round(catHabits.reduce((acc, h) => acc + h.completionRate, 0) / catHabits.length)
-        : 0;
-      return { name: cat, rate: avgRate };
-    }).filter(d => d.rate > 0);
-    setCategoryData(catData);
-
-    const weeks: number[][] = [];
-    for (let w = 0; w < 12; w++) {
-      const week: number[] = [];
-      for (let d = 0; d < 7; d++) {
-        const date = subDays(new Date(), (11 - w) * 7 + (6 - d));
-        const dateStr = format(date, 'yyyy-MM-dd');
-        const count = logs.filter(l => 
-          l.completedAt.startsWith(dateStr) && l.status === 'completed'
-        ).length;
-        week.push(count);
-      }
-      weeks.push(week);
-    }
-    setContributionData(weeks);
-
     generatePatternInsights();
   }, [logs, habits]);
+
+  const calendarDays = useMemo(() => {
+    const monthStart = startOfMonth(calendarMonth);
+    const monthEnd = endOfMonth(calendarMonth);
+    const calStart = startOfWeek(monthStart, { locale: es });
+    const calEnd = endOfWeek(monthEnd, { locale: es });
+    return eachDayOfInterval({ start: calStart, end: calEnd });
+  }, [calendarMonth]);
+
+  const getDayStatus = (date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const dayLogs = logs.filter(l => l.completedAt.startsWith(dateStr));
+    const completed = dayLogs.filter(l => l.status === 'completed').length;
+    const missed = dayLogs.filter(l => l.status === 'missed').length;
+    if (completed > 0 && missed === 0) return 'completed';
+    if (completed > 0 && missed > 0) return 'partial';
+    if (missed > 0) return 'missed';
+    return 'none';
+  };
+
+  const completedCount = (date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    return logs.filter(l => l.completedAt.startsWith(dateStr) && l.status === 'completed').length;
+  };
+
+  const prevMonth = () => setCalendarMonth(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+  const nextMonth = () => setCalendarMonth(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
+
+  const weekDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   const pendingTasks = tasks.filter(t => t.status === 'todo').length;
   const doingTasks = tasks.filter(t => t.status === 'doing').length;
@@ -288,39 +292,57 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
       </div>
 
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-white">Calendario de Contribución</h3>
-          <span className="text-xs text-gray-500"> ähnlich wie GitHub</span>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-white">Calendario</h3>
+          <div className="flex items-center gap-1">
+            <button onClick={prevMonth} className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white text-sm">&lt;</button>
+            <span className="text-sm text-gray-300 font-medium capitalize min-w-[120px] text-center">
+              {format(calendarMonth, 'MMMM yyyy', { locale: es })}
+            </span>
+            <button onClick={nextMonth} className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white text-sm">&gt;</button>
+          </div>
         </div>
-        <div className="overflow-x-auto">
-          <div className="flex gap-1">
-            {contributionData.map((week, wi) => (
-              <div key={wi} className="flex flex-col gap-1">
-                {week.map((count, di) => (
-                  <div
-                    key={di}
-                    className={`w-3 h-3 rounded-sm ${
-                      count === 0 ? 'bg-gray-800' :
-                      count === 1 ? 'bg-green-900' :
-                      count === 2 ? 'bg-green-700' :
-                      count === 3 ? 'bg-green-500' :
-                      'bg-green-400'
-                    }`}
-                    title={`${count} completado(s)`}
-                  />
-                ))}
+        <div className="grid grid-cols-7 gap-0.5">
+          {weekDays.map(d => (
+            <div key={d} className="text-center text-[10px] text-gray-500 font-bold py-1">{d}</div>
+          ))}
+          {calendarDays.map((day, i) => {
+            const status = getDayStatus(day);
+            const count = completedCount(day);
+            const isCurrentMonth = isSameMonth(day, calendarMonth);
+            const isTodayDate = isToday(day);
+            return (
+              <div
+                key={i}
+                className={`text-center py-1 rounded text-xs relative ${
+                  !isCurrentMonth ? 'opacity-20' : ''
+                } ${
+                  isTodayDate ? 'ring-1 ring-blue-500 bg-blue-900/20' : ''
+                }`}
+              >
+                <span className={`font-medium ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {format(day, 'd')}
+                </span>
+                {status !== 'none' && isCurrentMonth && (
+                  <div className="flex justify-center gap-0.5 mt-0.5">
+                    <div className={`w-1.5 h-1.5 rounded-full ${
+                      status === 'completed' ? 'bg-green-500' :
+                      status === 'partial' ? 'bg-yellow-500' :
+                      'bg-red-500'
+                    }`} />
+                  </div>
+                )}
+                {count > 0 && isCurrentMonth && (
+                  <div className="text-[8px] text-green-400 leading-none">{count}</div>
+                )}
               </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-            <span>Menos</span>
-            <div className="w-3 h-3 bg-gray-800 rounded-sm" />
-            <div className="w-3 h-3 bg-green-900 rounded-sm" />
-            <div className="w-3 h-3 bg-green-700 rounded-sm" />
-            <div className="w-3 h-3 bg-green-500 rounded-sm" />
-            <div className="w-3 h-3 bg-green-400 rounded-sm" />
-            <span>Más</span>
-          </div>
+            );
+          })}
+        </div>
+        <div className="flex items-center justify-end gap-2 mt-2 text-[10px] text-gray-500">
+          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500" /> Hecho</div>
+          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-yellow-500" /> Parcial</div>
+          <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500" /> Fallado</div>
         </div>
       </div>
     </div>
