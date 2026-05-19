@@ -315,10 +315,31 @@ function MainApp() {
   );
 }
 
+function AppWrapper() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center" suppressHydrationWarning>
+        <div className="text-center">
+          <Zap className="w-12 h-12 text-yellow-400 mx-auto animate-pulse" />
+          <p className="text-gray-500 mt-4">Cargando aplicacion...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <MainApp />;
+}
+
 export default function Home() {
   return (
     <AuthProvider>
-      <MainApp />
+      <AppWrapper />
     </AuthProvider>
   );
 }
