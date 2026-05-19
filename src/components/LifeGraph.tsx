@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useStore } from '@/store/useStore';
 import type { Goal } from '@/types';
 import { Target, Flame, Network } from 'lucide-react';
@@ -39,10 +39,24 @@ export default function LifeGraph() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 800, height: 600 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     recalculateGoalProgress();
   }, [habits, goals.length, recalculateGoalProgress]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(entries => {
+      const { width } = entries[0].contentRect;
+      if (width > 0) {
+        setSvgDimensions(prev => ({ ...prev, width: Math.max(width - 4, 300) }));
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const filteredHabits = useMemo(() => {
     if (selectedCategory === 'all') return habits;
@@ -67,10 +81,11 @@ export default function LifeGraph() {
     const goalCount = goalsWithHabits.length;
     const categoryCount = Object.keys(categorizedHabits).length;
     
-    const minWidth = Math.max(800, (categoryCount + habitCount) * 120 + goalCount * 150);
-    const minHeight = Math.max(600, 300 + habitCount * 30);
+    const baseWidth = containerRef.current?.clientWidth || 800;
+    const minWidth = Math.max(baseWidth, (categoryCount + habitCount) * 80 + goalCount * 120);
+    const minHeight = Math.max(400, 250 + habitCount * 20);
     
-    setSvgDimensions({ width: minWidth, height: minHeight });
+    setSvgDimensions(prev => ({ width: Math.max(minWidth, prev.width), height: minHeight }));
   }, [filteredHabits, goalsWithHabits, categorizedHabits]);
 
   const getGoalProgress = (goal: Goal) => {
@@ -248,6 +263,7 @@ export default function LifeGraph() {
       </div>
 
       <div 
+        ref={containerRef}
         className="border border-gray-700 rounded-xl overflow-x-auto transition-all duration-500"
         style={{
           background: backgroundGradient 
@@ -264,8 +280,8 @@ export default function LifeGraph() {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center min-w-0">
-          <svg width={svgDimensions.width} height={svgDimensions.height} className="min-w-[300px] sm:min-w-[600px] max-w-full">
+          <div className="flex justify-center w-full">
+          <svg width={svgDimensions.width} height={svgDimensions.height} className="max-w-full h-auto">
             <defs>
               {Object.entries(categoryColors).map(([cat, colors]) => (
                 <marker

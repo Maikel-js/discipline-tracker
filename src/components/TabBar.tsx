@@ -43,8 +43,8 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
   return (
     <>
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]">
-        <div className="flex items-center justify-start gap-1 px-2 overflow-x-auto relative">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40 md:hidden pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-5 w-full">
           {mobileTabs.map(tab => (
             <button
               key={tab.id}
@@ -55,23 +55,21 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
                   onTabChange(tab.id);
                 }
               }}
-              className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors flex-shrink-0 min-w-[60px] relative ${
+              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-1 transition-colors relative ${
                 activeTab === tab.id
                   ? 'text-blue-400 bg-blue-400/10'
                   : 'text-gray-500 hover:text-gray-400'
               }`}
             >
-              <tab.icon size={18} />
-              <span className="text-xs">{tab.label}</span>
+              <tab.icon size={20} />
+              <span className="text-[10px] leading-tight">{tab.label}</span>
               {tab.id === 'dashboard' && unacknowledged > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                <span className="absolute top-0.5 right-1/4 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                   {unacknowledged}
                 </span>
               )}
             </button>
           ))}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-gray-900 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-gray-900 to-transparent pointer-events-none" />
         </div>
       </div>
 

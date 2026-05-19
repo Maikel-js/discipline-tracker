@@ -25,6 +25,7 @@ import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Tar
 import Goals from '@/components/Goals';
 import NotesProtocols from '@/components/NotesProtocols';
 import StatsDashboard from '@/components/StatsDashboard';
+import PhysicalCalendar from '@/components/PhysicalCalendar';
 
 function MainApp() {
   const { isAuthenticated } = useAuth();
@@ -180,7 +181,8 @@ function MainApp() {
         )}
 
         {activeTab === 'schedule' && (
-          <div className="space-y-4">
+          <div className="space-y-6">
+            <PhysicalCalendar />
             <AutoScheduler />
           </div>
         )}

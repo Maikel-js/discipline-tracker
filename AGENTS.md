@@ -55,10 +55,21 @@ Single test: `npm test -- -t "test name"` or `npm test -- tests/unit/specific.te
 - **Electron**: `electron/main.js` is plain JS (not TypeScript)
 - **Capacitor**: wraps static export; always `npm run build` before `npx cap sync`
 - **No CI/CD**: manual builds only. No `.github/workflows/`.
-- **No external services**: no `fetch()` calls, no env vars.
+- **Backend**: Express server in `backend/` deployed on Render
+- **Build order**: web (Vercel) + desktop (electron:build) + backend (Render)
+
+## Backend (`backend/`)
+- **Render URL**: `https://discipline-tracker-api-hq4m.onrender.com` (health: `/api/health`)
+- **Service ID**: `srv-d864t6gjo89c7386c6gg`
+- **Important**: `npm install` must use `--include=dev` because `typescript` is a devDependency and `NODE_ENV=production` causes npm to skip devDeps otherwise.
+- **Build command**: `cd backend && npm install --no-audit --no-fund --include=dev && npm run build`
+- **Start command**: `cd backend && npm start`
+- **No `rootDir` in Render config** (Blueprint limitation; `cd backend` in commands instead).
 
 ## Deploy
 
-- **Web (Vercel)**: `npm run build` -> push (`https://discipline-tracker-rho.vercel.app`)
+- **Web (Vercel)**: push to `main` — auto-deploys via Vercel git integration
 - **Android**: `npm run build` first, then `cd android && ./gradlew assembleRelease`. See `BUILD.md`. No iOS support.
 - **Desktop (Electron)**: `npm run electron:build` -> `release/` (Windows + Linux only, no macOS)
+- **Backend (Render)**: push to `main` — auto-deploys via git integration. Manual deploy: `scripts/deploy-all.mjs backend`
+- **All at once**: `node scripts/deploy-all.mjs all`
