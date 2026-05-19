@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true
-  },
-  onDemandEntries: {
-    maxPages: 10
   }
 };
 

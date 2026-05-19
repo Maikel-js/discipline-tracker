@@ -45,18 +45,7 @@ function MainApp() {
   useEffect(() => {
     setMounted(true);
     checkAndResetDaily();
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center" suppressHydrationWarning>
-        <div className="text-center">
-          <Zap className="w-12 h-12 text-yellow-400 mx-auto animate-pulse" />
-          <p className="text-gray-500 mt-4">Cargando aplicacion...</p>
-        </div>
-      </div>
-    );
-  }
+  }, [checkAndResetDaily]);
 
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
@@ -83,13 +72,24 @@ function MainApp() {
         }
       }
     });
-  }, [currentTime]);
+  }, [currentTime, habits, notifications, settings.extremeMode, addDisciplineScore]);
 
   const pendingHabits = habits.filter(h => h.status === 'pending');
   const todaysHabits = habits.filter(h => h.frequency === 'daily' || h.frequency === 'weekly');
   const todoTasks = tasks.filter(t => t.status === 'todo');
   const doingTasks = tasks.filter(t => t.status === 'doing');
   const doneTasks = tasks.filter(t => t.status === 'done');
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center" suppressHydrationWarning>
+        <div className="text-center">
+          <Zap className="w-12 h-12 text-yellow-400 mx-auto animate-pulse" />
+          <p className="text-gray-500 mt-4">Cargando aplicacion...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <LoginScreen />;

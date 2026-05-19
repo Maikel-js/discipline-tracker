@@ -1,5 +1,15 @@
 # AGENTS.md - Discipline Tracker
 
+## Reglas de Operación
+
+1. **Enfocarse en el proceso**: Completar la tarea sin interrumpirla hasta finalizarla
+2. **Explicaciones simples**: Usar lenguaje claro sin tecnicismos
+3. **Claridad**: Explicar de forma limpia y directa
+4. **Ejecución automática**: Proceder con los comandos sin pedir confirmación
+5. **Análisis previo**: Analizar cada archivo antes de ejecutar código
+6. **Planificación**: Comparar y analizar soluciones antes de implementar
+7. **Información precisa**: No inventar ni devolver datos erróneos
+
 ## Commands
 
 ```
