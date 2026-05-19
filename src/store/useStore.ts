@@ -25,7 +25,8 @@ import type {
   Plugin,
   Experiment,
   Protocol,
-  Note
+  Note,
+  CalendarEvent
 
 } from '@/types';
 
@@ -52,6 +53,7 @@ interface StoreState {
   experiments: Experiment[];
   protocols: Protocol[];
   notes: Note[];
+  events: CalendarEvent[];
   lastResetDate: string;
 
 
@@ -128,6 +130,10 @@ interface StoreState {
   unlinkHabitFromProtocol: (protocolId: string, habitId: string) => void;
   unlinkTaskFromProtocol: (protocolId: string, taskId: string) => void;
   checkAndResetDaily: () => void;
+
+  addEvent: (event: Omit<CalendarEvent, 'id' | 'createdAt'>) => void;
+  updateEvent: (id: string, updates: Partial<CalendarEvent>) => void;
+  deleteEvent: (id: string) => void;
 
   addNote: (note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateNote: (id: string, updates: Partial<Note>) => void;
@@ -268,6 +274,7 @@ export const useStore = create<StoreState>()(
         }
       ],
       notes: [],
+      events: [],
 
 
       lastResetDate: new Date().toISOString().split('T')[0],
@@ -1205,6 +1212,27 @@ export const useStore = create<StoreState>()(
           })
         }));
         get().recalculateProtocolProgress();
+      },
+
+      addEvent: (eventData) => {
+        const newEvent: CalendarEvent = {
+          ...eventData,
+          id: generateId(),
+          createdAt: new Date().toISOString()
+        };
+        set(state => ({ events: [...state.events, newEvent] }));
+      },
+
+      updateEvent: (id, updates) => {
+        set(state => ({
+          events: state.events.map(e => e.id === id ? { ...e, ...updates } : e)
+        }));
+      },
+
+      deleteEvent: (id) => {
+        set(state => ({
+          events: state.events.filter(e => e.id !== id)
+        }));
       },
 
       addNote: (noteData) => {
