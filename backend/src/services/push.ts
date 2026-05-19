@@ -1,4 +1,4 @@
-import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk';
+import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 
 const expo = new Expo();
 
@@ -24,8 +24,12 @@ export async function sendPushNotification(
   };
 
   try {
-    const ticket: ExpoPushTicket = await expo.sendPushNotificationsAsync([message]);
-    return { success: true, ticket: JSON.stringify(ticket) };
+    const tickets = await expo.sendPushNotificationsAsync([message]);
+    const ticket = tickets[0];
+    if (ticket.status === 'error') {
+      return { success: false, error: ticket.message || 'Push failed' };
+    }
+    return { success: true };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return { success: false, error: errorMessage };
