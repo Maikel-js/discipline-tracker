@@ -440,3 +440,13 @@ export interface EmailExperiment {
   sentAt: string;
   opened: boolean;
 }
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string;
+  time?: string;
+  description?: string;
+  color: string;
+  createdAt: string;
+}
