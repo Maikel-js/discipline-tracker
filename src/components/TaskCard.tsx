@@ -10,7 +10,10 @@ import { CSS } from '@dnd-kit/utilities';
 interface Props {
   task: Task;
   onEdit?: (task: Task) => void;
-  isDragOverlay?: boolean;
+}
+
+interface DragOverlayProps {
+  task: Task;
 }
 
 const priorityColors: Record<Priority, string> = {
@@ -20,14 +23,36 @@ const priorityColors: Record<Priority, string> = {
   urgent: 'border-l-red-500'
 };
 
-export default function TaskCard({ task, onEdit, isDragOverlay }: Props) {
+export function DragOverlayCard({ task }: DragOverlayProps) {
+  return (
+    <div className={`bg-gray-800 border-2 border-blue-500 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} shadow-2xl shadow-blue-500/30 rotate-3 scale-105`}>
+      <div className="flex items-start gap-2">
+        <GripVertical size={16} className="mt-1 text-blue-400" />
+        <div className="flex-1">
+          <h4 className="font-medium text-white">{task.title}</h4>
+          {task.description && (
+            <p className="text-sm text-gray-400 mt-1">{task.description}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function TaskCard({ task, onEdit }: Props) {
   const { updateTask, deleteTask } = useStore();
   const [showMenu, setShowMenu] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
     id: task.id,
-    data: { type: 'task', task },
-    disabled: isDragOverlay
+    data: { type: 'task', task }
   });
 
   const style = {
@@ -60,10 +85,18 @@ export default function TaskCard({ task, onEdit, isDragOverlay }: Props) {
   const buttonConfig = getButtonConfig();
   const isDone = task.status === 'done' && !task.allowReset;
 
-  const cardContent = (
-    <div className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} ${isDragging ? 'shadow-xl shadow-blue-500/20' : ''}`}>
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} ${isDragging ? 'shadow-xl shadow-blue-500/20' : ''}`}
+    >
       <div className="flex items-start gap-2">
-        <button {...attributes} {...listeners} className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing hover:text-blue-400 transition-colors">
+        <button
+          {...attributes}
+          {...listeners}
+          className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing hover:text-blue-400 transition-colors"
+        >
           <GripVertical size={16} />
         </button>
         <div className="flex-1">
@@ -137,28 +170,6 @@ export default function TaskCard({ task, onEdit, isDragOverlay }: Props) {
           </button>
         </div>
       </div>
-    </div>
-  );
-
-  if (isDragOverlay) {
-    return (
-      <div className={`bg-gray-800 border-2 border-blue-500 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} shadow-2xl shadow-blue-500/30 rotate-3 scale-105`}>
-        <div className="flex items-start gap-2">
-          <GripVertical size={16} className="mt-1 text-blue-400" />
-          <div className="flex-1">
-            <h4 className="font-medium text-white">{task.title}</h4>
-            {task.description && (
-              <p className="text-sm text-gray-400 mt-1">{task.description}</p>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      {cardContent}
     </div>
   );
 }

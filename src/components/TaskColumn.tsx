@@ -4,6 +4,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Task, TaskStatus } from '@/types';
 import TaskCard from './TaskCard';
+import { useCallback } from 'react';
 
 interface Props {
   title: string;
@@ -14,8 +15,12 @@ interface Props {
 }
 
 export default function TaskColumn({ title, status, tasks, isOver, onEditTask }: Props) {
-  const { setNodeRef } = useDroppable({ id: `column-${status}` });
+  const { setNodeRef, isOver: isOverDnd } = useDroppable({ id: `column-${status}` });
   const filteredTasks = tasks.filter(t => t.status === status);
+
+  const handleEdit = useCallback((task: Task) => {
+    onEditTask(task);
+  }, [onEditTask]);
 
   return (
     <div
@@ -36,7 +41,7 @@ export default function TaskColumn({ title, status, tasks, isOver, onEditTask }:
       <SortableContext items={filteredTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-2 min-h-[100px]">
           {filteredTasks.map(task => (
-            <TaskCard key={task.id} task={task} onEdit={onEditTask} />
+            <TaskCard key={task.id} task={task} onEdit={handleEdit} />
           ))}
         </div>
       </SortableContext>

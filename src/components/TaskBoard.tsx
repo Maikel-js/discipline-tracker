@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import TaskColumn from './TaskColumn';
-import TaskCard from './TaskCard';
+import TaskCard, { DragOverlayCard } from './TaskCard';
 import TaskFormModal from './TaskFormModal';
 
 const columns: { title: string; status: TaskStatus }[] = [
@@ -132,7 +132,7 @@ export default function TaskBoard() {
         </div>
 
         <DragOverlay>
-          {activeTask ? <TaskCard task={activeTask} isDragOverlay /> : null}
+          {activeTask ? <DragOverlayCard task={activeTask} /> : null}
         </DragOverlay>
       </DndContext>
 
