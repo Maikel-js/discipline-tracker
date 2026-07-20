@@ -14,7 +14,7 @@ import TabBar from '@/components/TabBar';
 import UserProfile from '@/components/UserProfile';
 import AICoach from '@/components/AICoach';
 import { requestPermissions as requestNativePermissions } from '@/services/localNotifications';
-import VoiceCommands from '@/components/VoiceCommands';
+
 import RewardsPanel from '@/components/RewardsSystem';
 import AutoScheduler from '@/components/AutoScheduler';
 import LifeOSHub from '@/components/LifeOSHub';
@@ -233,7 +233,6 @@ function MainApp() {
 
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <AICoach />
-      <VoiceCommands />
 
       <HabitFormModal isOpen={showHabitModal} onClose={() => setShowHabitModal(false)} />
       <TaskFormModal isOpen={showTaskModal} onClose={() => setShowTaskModal(false)} />
