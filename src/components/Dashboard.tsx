@@ -1,7 +1,7 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
-import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle, Download } from 'lucide-react';
+import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useEffect, useState } from 'react';
 import { format, subDays } from 'date-fns';
@@ -78,16 +78,6 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
             }`}
           >
             {settings.extremeMode ? '🔥 EXTREMO' : 'Modo Disciplina'}
-          </button>
-          <button
-            type="button"
-            onClick={() => onTabChange('download')}
-            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-blue-900/20"
-          >
-            <Download size={16} />
-            {platform === 'windows' ? 'Descargar para Windows' : 
-             platform === 'android' ? 'Instalar App Android' : 
-             platform === 'linux' ? 'Descargar para Linux' : 'Descargar App'}
           </button>
           <button
             type="button"

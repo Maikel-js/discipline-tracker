@@ -202,15 +202,13 @@ export default function StatsDashboard() {
         <div className="bg-gray-800 p-4 rounded-xl">
           <h3 className="text-white font-bold mb-4">Distribución de Hábitos</h3>
           <div className="flex justify-center">
-            <ResponsiveContainer width="100%" height={280}>
+            <ResponsiveContainer width="100%" height={260}>
               <PieChart>
                 <Pie
                   data={completionData}
                   cx="50%"
-                  cy="45%"
-                  labelLine={false}
-                  label={({ name, percent }: any) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
-                  outerRadius={70}
+                  cy="50%"
+                  outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -228,15 +226,13 @@ export default function StatsDashboard() {
         <div className="bg-gray-800 p-4 rounded-xl">
           <h3 className="text-white font-bold mb-4">Estado de Tareas</h3>
           <div className="flex justify-center">
-            <ResponsiveContainer width="100%" height={280}>
+            <ResponsiveContainer width="100%" height={260}>
               <PieChart>
                 <Pie
                   data={taskStatusData}
                   cx="50%"
-                  cy="45%"
-                  labelLine={false}
-                  label={({ name, percent }: any) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
-                  outerRadius={70}
+                  cy="50%"
+                  outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
                 >

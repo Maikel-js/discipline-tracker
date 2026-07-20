@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, Flame, ListTodo, Download, Settings, Layers, Brain, LineChart, Target, ClipboardList, Calendar, Zap } from 'lucide-react';
+import { Home, Flame, ListTodo, Settings, Layers, Brain, LineChart, Target, ClipboardList, Calendar, Zap } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
 interface Props {
@@ -19,7 +19,6 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'dashboard', icon: Home, label: 'Inicio' },
     { id: 'habits', icon: Flame, label: 'Hábitos' },
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
-    { id: 'download', icon: Download, label: 'Descargar' },
     { id: 'more', icon: Settings, label: 'Más' },
   ];
 
@@ -28,12 +27,11 @@ export default function TabBar({ activeTab, onTabChange }: Props) {
     { id: 'dashboard', icon: Home, label: 'Inicio' },
     { id: 'habits', icon: Flame, label: 'Hábitos' },
     { id: 'tasks', icon: ListTodo, label: 'Tareas' },
-    { id: 'download', icon: Download, label: 'Descargar' },
     { id: 'goals', icon: Target, label: 'Metas' },
     { id: 'notes', icon: ClipboardList, label: 'Protocolos' },
     { id: 'schedule', icon: Calendar, label: 'Día' },
     { id: 'life-os', icon: Layers, label: 'Life OS' },
-    { id: 'ai', icon: Brain, label: 'AI' },
+    { id: 'ai', icon: Brain, label: 'Predicciones' },
     { id: 'stats', icon: LineChart, label: 'Analytics' }
   ];
 
