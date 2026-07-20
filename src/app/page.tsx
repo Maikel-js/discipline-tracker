@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useStore } from '@/store/useStore';
+import type { TaskStatus } from '@/types';
 import { AuthProvider, useAuth } from '@/components/AuthProvider';
 import LoginScreen from '@/components/LoginScreen';
 import Dashboard from '@/components/Dashboard';
@@ -78,6 +79,11 @@ function MainApp() {
   const todoTasks = tasks.filter(t => t.status === 'todo');
   const doingTasks = tasks.filter(t => t.status === 'doing');
   const doneTasks = tasks.filter(t => t.status === 'done');
+
+  const handleTaskDragEnd = useCallback((taskId: string, newStatus: TaskStatus) => {
+    const { updateTask } = useStore.getState();
+    updateTask(taskId, { status: newStatus });
+  }, []);
 
   if (!mounted) {
     return (
@@ -179,9 +185,9 @@ function MainApp() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <TaskColumn title="Por Hacer" status="todo" tasks={tasks} />
-              <TaskColumn title="En Progreso" status="doing" tasks={tasks} />
-              <TaskColumn title="Completado" status="done" tasks={tasks} />
+              <TaskColumn title="Por Hacer" status="todo" tasks={tasks} onDragEnd={handleTaskDragEnd} />
+              <TaskColumn title="En Progreso" status="doing" tasks={tasks} onDragEnd={handleTaskDragEnd} />
+              <TaskColumn title="Completado" status="done" tasks={tasks} onDragEnd={handleTaskDragEnd} />
             </div>
           </div>
         )}

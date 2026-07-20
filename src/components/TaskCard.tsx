@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useStore } from '@/store/useStore';
 import { Check, MoreVertical, Trash2, GripVertical } from 'lucide-react';
 import type { Task, Priority, TaskStatus } from '@/types';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -16,6 +16,7 @@ interface TaskColumnProps {
   title: string;
   status: TaskStatus;
   tasks: Task[];
+  onDragEnd: (taskId: string, newStatus: TaskStatus) => void;
 }
 
 const priorityColors: Record<Priority, string> = {
@@ -26,14 +27,15 @@ const priorityColors: Record<Priority, string> = {
 };
 
 function SortableTask({ task }: Props) {
-  const { updateTask, deleteTask, advanceTask } = useStore();
+  const { updateTask, deleteTask } = useStore();
   const [showMenu, setShowMenu] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition
+    transition,
+    opacity: isDragging ? 0.5 : 1
   };
 
   const toggleSubtask = (subtaskId: string) => {
@@ -66,7 +68,7 @@ function SortableTask({ task }: Props) {
       className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]}`}
     >
       <div className="flex items-start gap-2">
-        <button {...attributes} {...listeners} className="mt-1 text-gray-500 cursor-grab">
+        <button {...attributes} {...listeners} className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing">
           <GripVertical size={16} />
         </button>
         <div className="flex-1">
@@ -124,7 +126,7 @@ function SortableTask({ task }: Props) {
           )}
 
           <button
-            onClick={() => !isDone && advanceTask(task.id)}
+            onClick={() => !isDone && useStore.getState().advanceTask(task.id)}
             disabled={isDone}
             className={`w-full mt-3 py-2 rounded-lg text-white text-sm font-medium transition-colors ${buttonConfig.color}`}
           >
@@ -136,14 +138,39 @@ function SortableTask({ task }: Props) {
   );
 }
 
-export default function TaskColumn({ title, status, tasks }: TaskColumnProps) {
-  const { moveTask } = useStore();
+function DragOverlayTask({ task }: Props) {
+  const priorityColors: Record<Priority, string> = {
+    low: 'border-l-green-500',
+    medium: 'border-l-yellow-500',
+    high: 'border-l-orange-500',
+    urgent: 'border-l-red-500'
+  };
+
+  return (
+    <div className={`bg-gray-800 border border-blue-500 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} shadow-2xl shadow-blue-500/20 rotate-2`}>
+      <div className="flex items-start gap-2">
+        <GripVertical size={16} className="mt-1 text-blue-400" />
+        <div className="flex-1">
+          <h4 className="font-medium text-white">{task.title}</h4>
+          {task.description && (
+            <p className="text-sm text-gray-400 mt-1">{task.description}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function TaskColumn({ title, status, tasks, onDragEnd }: TaskColumnProps) {
+  const [activeId, setActiveId] = useState<string | null>(null);
   const filteredTasks = tasks.filter(t => t.status === status);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  const activeTask = activeId ? tasks.find(t => t.id === activeId) : null;
 
   return (
     <div className="bg-gray-900/50 rounded-xl p-4 min-h-[400px]">
@@ -155,20 +182,38 @@ export default function TaskColumn({ title, status, tasks }: TaskColumnProps) {
       <DndContext 
         sensors={sensors}
         collisionDetection={closestCenter}
+        onDragStart={(event) => {
+          setActiveId(event.active.id as string);
+        }}
         onDragEnd={(event) => {
           const { active, over } = event;
-          if (over && active.id !== over.id) {
-            moveTask(active.id as string, status);
+          setActiveId(null);
+          
+          if (!over) return;
+          
+          const taskId = active.id as string;
+          
+          if (over.id === `column-${status}`) {
+            onDragEnd(taskId, status);
+          } else {
+            onDragEnd(taskId, status);
           }
         }}
       >
         <SortableContext items={filteredTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-2">
+          <div 
+            className="space-y-2 min-h-[100px] p-2 rounded-lg border-2 border-dashed border-transparent hover:border-gray-700 transition-colors"
+            data-column={status}
+          >
             {filteredTasks.map(task => (
               <SortableTask key={task.id} task={task} />
             ))}
           </div>
         </SortableContext>
+        
+        <DragOverlay>
+          {activeTask ? <DragOverlayTask task={activeTask} /> : null}
+        </DragOverlay>
       </DndContext>
 
       {filteredTasks.length === 0 && (
