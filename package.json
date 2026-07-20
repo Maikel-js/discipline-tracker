@@ -2,7 +2,10 @@
   "name": "discipline-tracker",
   "version": "0.1.0",
   "description": "Discipline Tracker - Habit and Task Management App",
-  "author": "Maikel-js",
+  "author": {
+    "name": "Maikel-js",
+    "email": "maikel@example.com"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

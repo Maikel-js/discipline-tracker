@@ -14,8 +14,10 @@ import { R2_WINDOWS_EXE } from '@/lib/r2';
 
 type Platform = 'android' | 'windows' | 'linux' | 'ios' | 'web';
 
-const GITHUB_BASE = 'https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0';
-const APK_URL = `${GITHUB_BASE}/Discipline-Tracker-v0.1.0.apk`;
+const GITHUB = 'https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0';
+const APK_URL = `${GITHUB}/Discipline-Tracker-v0.1.0.apk`;
+const LINUX_APPIMAGE = `${GITHUB}/Discipline-Tracker-0.1.0-Linux.AppImage`;
+const LINUX_DEB = `${GITHUB}/Discipline-Tracker-0.1.0-Linux-amd64.deb`;
 
 export default function DownloadPortal() {
   const { user } = useAuth();
@@ -43,36 +45,6 @@ export default function DownloadPortal() {
     e.stopPropagation();
     triggerSafeDownload(url, filename);
   };
-
-  const linuxCommands = [
-    {
-      id: 'appimage',
-      name: 'AppImage',
-      icon: '🐧',
-      color: 'orange',
-      desc: 'Universal - Cualquier distro',
-      build: 'npm run electron:build:linux:appimage',
-      install: 'chmod +x dist/Discipline-Tracker-*.AppImage && ./dist/Discipline-Tracker-*.AppImage'
-    },
-    {
-      id: 'deb',
-      name: 'DEB',
-      icon: '📦',
-      color: 'blue',
-      desc: 'Ubuntu / Debian',
-      build: 'npm run electron:build:linux:deb',
-      install: 'sudo dpkg -i dist/Discipline-Tracker-*.deb && sudo apt-get install -f'
-    },
-    {
-      id: 'rpm',
-      name: 'RPM',
-      icon: '📦',
-      color: 'red',
-      desc: 'Fedora / RHEL',
-      build: 'npm run electron:build:linux:rpm',
-      install: 'sudo dnf install dist/Discipline-Tracker-*.rpm'
-    }
-  ];
 
   return (
     <div className="space-y-4">
@@ -118,43 +90,19 @@ export default function DownloadPortal() {
               <Smartphone className="w-5 h-5 text-green-400" />
               📱 Celular
             </h3>
-
-            <div className="grid md:grid-cols-2 gap-3">
-              <div className="p-3 bg-green-900/10 border border-green-500/20 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      🤖 Android (APK)
-                    </div>
-                    <div className="text-xs text-gray-400">Instalador directo sin Play Store</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => handleDownload(APK_URL, 'Discipline-Tracker-v0.1.0.apk', e)}
-                    className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors"
-                  >
-                    Descargar
-                  </button>
+            <div className="p-3 bg-green-900/10 border border-green-500/20 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">🤖 Android (APK)</div>
+                  <div className="text-xs text-gray-400">Instalador directo sin Play Store</div>
                 </div>
-              </div>
-
-              <div className="p-3 bg-gray-700/30 border border-gray-600/30 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium flex items-center gap-2 text-purple-300">
-                      🌐 PWA Web
-                    </div>
-                    <div className="text-xs text-gray-400">Instalar desde el navegador</div>
-                  </div>
-                  <a
-                    href={appUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-bold transition-colors"
-                  >
-                    Abrir
-                  </a>
-                </div>
+                <button
+                  type="button"
+                  onClick={(e) => handleDownload(APK_URL, 'Discipline-Tracker-v0.1.0.apk', e)}
+                  className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-bold transition-colors"
+                >
+                  Descargar APK
+                </button>
               </div>
             </div>
           </div>
@@ -165,13 +113,10 @@ export default function DownloadPortal() {
               <Monitor className="w-5 h-5 text-blue-400" />
               💻 Windows
             </h3>
-
             <div className="p-3 bg-blue-900/10 border border-blue-500/20 rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium flex items-center gap-2">
-                    🪟 Windows (EXE)
-                  </div>
+                  <div className="font-medium">🪟 Windows (EXE)</div>
                   <div className="text-xs text-gray-400">Instalador portable - Ejecutar y listo</div>
                 </div>
                 <button
@@ -179,7 +124,7 @@ export default function DownloadPortal() {
                   onClick={(e) => handleDownload(R2_WINDOWS_EXE, 'Discipline-Tracker-Setup.exe', e)}
                   className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
                 >
-                  Descargar
+                  Descargar EXE
                 </button>
               </div>
             </div>
@@ -191,52 +136,89 @@ export default function DownloadPortal() {
               <Terminal className="w-5 h-5 text-orange-400" />
               🐧 Linux
             </h3>
-            <p className="text-xs text-gray-400 mb-3">Compila desde el código fuente</p>
 
             <div className="space-y-3">
-              {linuxCommands.map((item) => (
-                <div key={item.id} className={`p-3 bg-${item.color}-900/10 border border-${item.color}-500/20 rounded-lg`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="font-medium flex items-center gap-2">
-                      {item.icon} {item.name}
-                    </div>
-                    <span className="text-xs text-gray-400">{item.desc}</span>
+              {/* AppImage */}
+              <div className="p-3 bg-orange-900/10 border border-orange-500/20 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-medium">🐧 AppImage (Universal)</div>
+                    <div className="text-xs text-gray-400">Funciona en cualquier distro Linux</div>
                   </div>
-                  <div className="bg-gray-900 rounded-lg p-2 font-mono text-xs space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500"># Build</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className={`text-${item.color}-400`}>$ {item.build}</span>
-                      <button
-                        type="button"
-                        onClick={() => copyCommand(item.build)}
-                        className="text-gray-500 hover:text-white transition-colors"
-                      >
-                        {copiedCmd === item.build ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500"># Instalar</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-green-400">$ {item.install}</span>
-                      <button
-                        type="button"
-                        onClick={() => copyCommand(item.install)}
-                        className="text-gray-500 hover:text-white transition-colors"
-                      >
-                        {copiedCmd === item.install ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                    </div>
+                  <button
+                    type="button"
+                    onClick={(e) => handleDownload(LINUX_APPIMAGE, 'Discipline-Tracker-0.1.0-Linux.AppImage', e)}
+                    className="px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded-lg text-sm font-bold transition-colors"
+                  >
+                    Descargar
+                  </button>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2 font-mono text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400">$ chmod +x Discipline-Tracker-*.AppImage && ./Discipline-Tracker-*.AppImage</span>
+                    <button
+                      type="button"
+                      onClick={() => copyCommand('chmod +x Discipline-Tracker-*.AppImage && ./Discipline-Tracker-*.AppImage')}
+                      className="text-gray-500 hover:text-white transition-colors"
+                    >
+                      {copiedCmd === 'appimage' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-3 bg-gray-900 rounded-lg p-2 font-mono text-xs">
-              <div className="text-gray-500 mb-1"># Requisitos previos</div>
-              <div className="text-gray-400">sudo apt install nodejs npm git gcc make libsecret-1-dev</div>
+              {/* DEB */}
+              <div className="p-3 bg-blue-900/10 border border-blue-500/20 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-medium">📦 DEB (Ubuntu / Debian)</div>
+                    <div className="text-xs text-gray-400">Para Ubuntu, Debian, Linux Mint</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => handleDownload(LINUX_DEB, 'Discipline-Tracker-0.1.0-Linux-amd64.deb', e)}
+                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
+                  >
+                    Descargar
+                  </button>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2 font-mono text-xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-blue-400">$ sudo apt install ./Discipline-Tracker-*.deb</span>
+                    <button
+                      type="button"
+                      onClick={() => copyCommand('sudo apt install ./Discipline-Tracker-*.deb')}
+                      className="text-gray-500 hover:text-white transition-colors"
+                    >
+                      {copiedCmd === 'apt' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <div className="text-gray-500 text-[10px]">O manualmente: sudo dpkg -i archivo.deb && sudo apt-get install -f</div>
+                </div>
+              </div>
+
+              {/* RPM */}
+              <div className="p-3 bg-red-900/10 border border-red-500/20 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-medium">📦 RPM (Fedora / RHEL)</div>
+                    <div className="text-xs text-gray-400">Para Fedora, CentOS, RHEL</div>
+                  </div>
+                  <div className="text-xs text-yellow-500">Próximamente</div>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2 font-mono text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-red-400">$ sudo dnf install ./Discipline-Tracker-*.rpm</span>
+                    <button
+                      type="button"
+                      onClick={() => copyCommand('sudo dnf install ./Discipline-Tracker-*.rpm')}
+                      className="text-gray-500 hover:text-white transition-colors"
+                    >
+                      {copiedCmd === 'dnf' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
