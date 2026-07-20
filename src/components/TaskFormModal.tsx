@@ -1,19 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
 import { X, Plus, Trash2, ListTodo, AlertTriangle, Calendar, Link, CheckSquare } from 'lucide-react';
-import type { Priority, TaskStatus, Subtask } from '@/types';
+import type { Priority, TaskStatus, Subtask, Task } from '@/types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  task?: Task;
 }
 
 const priorityLabels: Record<Priority, string> = { low: 'Baja', medium: 'Media', high: 'Alta', urgent: 'Urgente' };
+const statusLabels: Record<TaskStatus, string> = { todo: 'Por Hacer', doing: 'En Progreso', done: 'Completado' };
 
-export default function TaskFormModal({ isOpen, onClose }: Props) {
-  const { addTask, tasks } = useStore();
+export default function TaskFormModal({ isOpen, onClose, task }: Props) {
+  const { addTask, updateTask, tasks } = useStore();
+  const isEditing = !!task;
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -29,6 +33,30 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
   const [newSubtask, setNewSubtask] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [activeSection, setActiveSection] = useState<'details' | 'subtasks' | 'links'>('details');
+
+  useEffect(() => {
+    if (task) {
+      setFormData({
+        title: task.title,
+        description: task.description || '',
+        priority: task.priority,
+        dueDate: task.dueDate || '',
+        status: task.status,
+        allowReset: task.allowReset,
+        subtasks: task.subtasks,
+        dependencies: task.dependencies,
+        reminders: task.reminders,
+        prerequisites: task.prerequisites
+      });
+    } else {
+      setFormData({
+        title: '', description: '', priority: 'medium', dueDate: '', status: 'todo',
+        allowReset: false, subtasks: [], dependencies: [], reminders: [], prerequisites: []
+      });
+    }
+    setErrors({});
+    setActiveSection('details');
+  }, [task, isOpen]);
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -58,7 +86,13 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    addTask(formData);
+
+    if (isEditing) {
+      updateTask(task.id, formData);
+    } else {
+      addTask(formData);
+    }
+
     setFormData({
       title: '', description: '', priority: 'medium', dueDate: '', status: 'todo',
       allowReset: false, subtasks: [], dependencies: [], reminders: [], prerequisites: []
@@ -79,8 +113,8 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
               <ListTodo className="text-orange-400" size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Nueva Tarea</h2>
-              <p className="text-xs text-gray-500">Define una nueva tarea</p>
+              <h2 className="text-lg font-bold text-white">{isEditing ? 'Editar Tarea' : 'Nueva Tarea'}</h2>
+              <p className="text-xs text-gray-500">{isEditing ? 'Modifica los detalles de la tarea' : 'Define una nueva tarea'}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition">
@@ -149,6 +183,19 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm text-gray-400 flex items-center gap-1.5">
+                  <ListTodo size={14} /> Estado
+                </label>
+                <select value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as TaskStatus })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-blue-500 focus:outline-none transition">
+                  {Object.entries(statusLabels).map(([k, v]) => (
+                    <option key={k} value={k}>{v}</option>
+                  ))}
+                </select>
+              </div>
+
               <label className="flex items-center gap-3 p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700/50 transition">
                 <input type="checkbox" checked={formData.allowReset}
                   onChange={(e) => setFormData({ ...formData, allowReset: e.target.checked })}
@@ -206,7 +253,7 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
                   <Link size={14} /> Dependencias
                 </label>
                 <div className="max-h-32 overflow-y-auto space-y-1 p-2 bg-gray-800 rounded-xl border border-gray-700">
-                  {tasks.filter(t => !formData.dependencies.includes(t.id)).map(t => (
+                  {tasks.filter(t => t.id !== task?.id).map(t => (
                     <label key={t.id} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-700/50 cursor-pointer">
                       <input type="checkbox" checked={formData.dependencies.includes(t.id)}
                         onChange={(e) => setFormData({
@@ -227,7 +274,7 @@ export default function TaskFormModal({ isOpen, onClose }: Props) {
           <button type="submit"
             className="w-full py-3.5 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2">
             <ListTodo size={18} />
-            Crear Tarea
+            {isEditing ? 'Guardar Cambios' : 'Crear Tarea'}
           </button>
         </form>
       </div>

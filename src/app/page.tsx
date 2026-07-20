@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
-import type { TaskStatus } from '@/types';
 import { AuthProvider, useAuth } from '@/components/AuthProvider';
 import LoginScreen from '@/components/LoginScreen';
 import Dashboard from '@/components/Dashboard';
 import HabitCard from '@/components/HabitCard';
 import HabitFormModal from '@/components/HabitFormModal';
-import TaskFormModal from '@/components/TaskFormModal';
-import TaskColumn from '@/components/TaskCard';
+import TaskBoard from '@/components/TaskBoard';
 import NotificationSystem from '@/components/NotificationSystem';
 import TabBar from '@/components/TabBar';
 import UserProfile from '@/components/UserProfile';
@@ -21,7 +19,7 @@ import AutoScheduler from '@/components/AutoScheduler';
 import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
 import AnalyticsHub from '@/components/AnalyticsHub';
-import { Plus, Flame, ListTodo, Bell, Zap, Settings, User, Trophy, Calendar, Target, ClipboardList, AlertCircle } from 'lucide-react';
+import { Flame, Bell, Zap, Settings, AlertCircle } from 'lucide-react';
 import Goals from '@/components/Goals';
 import NotesProtocols from '@/components/NotesProtocols';
 import StatsDashboard from '@/components/StatsDashboard';
@@ -38,7 +36,6 @@ function MainApp() {
     return 'dashboard';
   });
   const [showHabitModal, setShowHabitModal] = useState(false);
-  const [showTaskModal, setShowTaskModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -76,14 +73,6 @@ function MainApp() {
 
   const pendingHabits = habits.filter(h => h.status === 'pending');
   const todaysHabits = habits.filter(h => h.frequency === 'daily' || h.frequency === 'weekly');
-  const todoTasks = tasks.filter(t => t.status === 'todo');
-  const doingTasks = tasks.filter(t => t.status === 'doing');
-  const doneTasks = tasks.filter(t => t.status === 'done');
-
-  const handleTaskDragEnd = useCallback((taskId: string, newStatus: TaskStatus) => {
-    const { updateTask } = useStore.getState();
-    updateTask(taskId, { status: newStatus });
-  }, []);
 
   if (!mounted) {
     return (
@@ -171,26 +160,7 @@ function MainApp() {
           </div>
         )}
 
-        {activeTab === 'tasks' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">Tareas</h2>
-              <button
-                onClick={() => setShowTaskModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl transition-colors"
-              >
-                <Plus size={18} />
-                <span className="text-sm">Nueva</span>
-              </button>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              <TaskColumn title="Por Hacer" status="todo" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
-              <TaskColumn title="En Progreso" status="doing" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
-              <TaskColumn title="Completado" status="done" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
-            </div>
-          </div>
-        )}
+        {activeTab === 'tasks' && <TaskBoard />}
 
         {activeTab === 'stats' && (
           <div className="space-y-6">
@@ -234,7 +204,6 @@ function MainApp() {
       <AICoach />
 
       <HabitFormModal isOpen={showHabitModal} onClose={() => setShowHabitModal(false)} />
-      <TaskFormModal isOpen={showTaskModal} onClose={() => setShowTaskModal(false)} />
 
       {showSettings && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
