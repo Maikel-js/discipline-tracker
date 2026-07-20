@@ -20,6 +20,8 @@ type ApkInfo = {
   buildDate: string;
 };
 
+const GITHUB_BASE = 'https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0';
+
 export default function DownloadPortal() {
   const { user } = useAuth();
   const { settings, updateSettings, addDisciplineScore } = useStore();
@@ -37,7 +39,7 @@ export default function DownloadPortal() {
   }, []);
 
   const appUrl = 'https://discipline-tracker-rho.vercel.app';
-  const APK_RELEASE_URL = 'https://github.com/Maikel-js/discipline-tracker/releases/download/v0.1.0/Discipline-Tracker-v0.1.0.apk';
+  const APK_RELEASE_URL = `${GITHUB_BASE}/Discipline-Tracker-v0.1.0.apk`;
 
   useEffect(() => {
     setPlatform(getOS());
@@ -70,8 +72,8 @@ export default function DownloadPortal() {
           icon: '🐧',
           title: 'Linux',
           action: 'Descargar AppImage',
-          filename: 'Discipline-Tracker.AppImage',
-          url: '/downloads/Discipline-Tracker.AppImage'
+          filename: 'Discipline-Tracker-0.1.0-Linux-x86_64.AppImage',
+          url: `${GITHUB_BASE}/Discipline-Tracker-0.1.0-Linux-x86_64.AppImage`
         };
       default:
         return {
@@ -237,12 +239,48 @@ export default function DownloadPortal() {
                       <div className="font-medium flex items-center gap-2 text-orange-400">
                         🐧 Linux (AppImage)
                       </div>
-                      <div className="text-xs text-gray-400">Binario ejecutable para Linux</div>
+                      <div className="text-xs text-gray-400">Binario ejecutable universal</div>
                     </div>
                     <button
                       type="button"
-                      onClick={(e) => handleDownload('/downloads/Discipline-Tracker.AppImage', 'Discipline-Tracker.AppImage', e)}
+                      onClick={(e) => handleDownload(`${GITHUB_BASE}/Discipline-Tracker-0.1.0-Linux-x86_64.AppImage`, 'Discipline-Tracker-0.1.0-Linux-x86_64.AppImage', e)}
                       className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm font-bold transition-colors"
+                    >
+                      Descargar
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-gray-700/30 border border-gray-600/30 rounded-lg group hover:border-gray-500/40 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium flex items-center gap-2 text-blue-400">
+                        📦 Linux (DEB)
+                      </div>
+                      <div className="text-xs text-gray-400">Ubuntu / Debian</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => handleDownload(`${GITHUB_BASE}/Discipline-Tracker-0.1.0-Linux-amd64.deb`, 'Discipline-Tracker-0.1.0-Linux-amd64.deb', e)}
+                      className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold transition-colors"
+                    >
+                      Descargar
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-gray-700/30 border border-gray-600/30 rounded-lg group hover:border-gray-500/40 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium flex items-center gap-2 text-red-400">
+                        📦 Linux (RPM)
+                      </div>
+                      <div className="text-xs text-gray-400">Fedora / RHEL</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => handleDownload(`${GITHUB_BASE}/Discipline-Tracker-0.1.0-Linux-x86_64.rpm`, 'Discipline-Tracker-0.1.0-Linux-x86_64.rpm', e)}
+                      className="px-3 py-1 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-bold transition-colors"
                     >
                       Descargar
                     </button>
