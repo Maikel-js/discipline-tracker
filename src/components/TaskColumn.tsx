@@ -45,12 +45,6 @@ export default function TaskColumn({ title, status, tasks, isOver, onEditTask }:
           ))}
         </div>
       </SortableContext>
-
-      {filteredTasks.length === 0 && (
-        <div className="text-center text-gray-500 py-8 border-2 border-dashed border-gray-700 rounded-lg">
-          Arrastra tareas aqui
-        </div>
-      )}
     </div>
   );
 }
