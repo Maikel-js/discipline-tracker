@@ -62,11 +62,34 @@ export default function TaskCard({ task, onEdit }: Props) {
     zIndex: isDragging ? 50 : ('auto' as const)
   };
 
-  const toggleSubtask = (subtaskId: string) => {
+  const toggleSubtask = (subtaskId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     const subtasks = task.subtasks.map(s =>
       s.id === subtaskId ? { ...s, completed: !s.completed } : s
     );
     updateTask(task.id, { subtasks });
+  };
+
+  const handleAdvance = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    useStore.getState().advanceTask(task.id);
+  };
+
+  const handleMenuToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) onEdit(task);
+    setShowMenu(false);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    deleteTask(task.id);
+    setShowMenu(false);
   };
 
   const getButtonConfig = () => {
@@ -89,16 +112,14 @@ export default function TaskCard({ task, onEdit }: Props) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} ${isDragging ? 'shadow-xl shadow-blue-500/20' : ''}`}
+      {...attributes}
+      {...listeners}
+      className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} cursor-grab active:cursor-grabbing select-none ${isDragging ? 'shadow-xl shadow-blue-500/20' : ''}`}
     >
       <div className="flex items-start gap-2">
-        <button
-          {...attributes}
-          {...listeners}
-          className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing hover:text-blue-400 transition-colors"
-        >
+        <div className="mt-1 text-gray-500">
           <GripVertical size={16} />
-        </button>
+        </div>
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <h4 className={`font-medium ${task.status === 'done' ? 'line-through text-gray-500' : 'text-white'}`}>
@@ -106,7 +127,8 @@ export default function TaskCard({ task, onEdit }: Props) {
             </h4>
             <div className="relative">
               <button
-                onClick={() => setShowMenu(!showMenu)}
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={handleMenuToggle}
                 className="p-1 hover:bg-gray-700 rounded"
               >
                 <MoreVertical size={14} className="text-gray-400" />
@@ -115,14 +137,16 @@ export default function TaskCard({ task, onEdit }: Props) {
                 <div className="absolute right-0 top-6 bg-gray-700 rounded shadow-lg py-1 z-10 min-w-[120px]">
                   {onEdit && (
                     <button
-                      onClick={() => { onEdit(task); setShowMenu(false); }}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={handleEdit}
                       className="flex items-center gap-2 px-3 py-1.5 text-blue-400 hover:bg-gray-600 w-full text-sm"
                     >
                       <Edit2 size={14} /> Editar
                     </button>
                   )}
                   <button
-                    onClick={() => { deleteTask(task.id); setShowMenu(false); }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={handleDelete}
                     className="flex items-center gap-2 px-3 py-1.5 text-red-400 hover:bg-gray-600 w-full text-sm"
                   >
                     <Trash2 size={14} /> Eliminar
@@ -141,7 +165,8 @@ export default function TaskCard({ task, onEdit }: Props) {
               {task.subtasks.map(subtask => (
                 <button
                   key={subtask.id}
-                  onClick={() => toggleSubtask(subtask.id)}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => toggleSubtask(subtask.id, e)}
                   className="flex items-center gap-2 text-sm text-gray-400 hover:text-white"
                 >
                   <div className={`w-4 h-4 rounded border ${
@@ -162,7 +187,8 @@ export default function TaskCard({ task, onEdit }: Props) {
           )}
 
           <button
-            onClick={() => !isDone && useStore.getState().advanceTask(task.id)}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={handleAdvance}
             disabled={isDone}
             className={`w-full mt-3 py-2 rounded-lg text-white text-sm font-medium transition-colors ${buttonConfig.color}`}
           >
