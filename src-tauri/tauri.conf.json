@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "discipline-tracker",
+  "productName": "Discipline Tracker",
   "version": "0.1.0",
   "identifier": "com.discipline.tracker",
   "build": {
@@ -13,8 +13,10 @@
     "windows": [
       {
         "title": "Discipline Tracker",
-        "width": 800,
-        "height": 600,
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 600,
         "resizable": true,
         "fullscreen": false
       }
@@ -33,6 +35,39 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "linux": {
+      "deb": {
+        "depends": [
+          "libgtk-3-0",
+          "libnotify4",
+          "libnss3",
+          "libxss1",
+          "libxtst6",
+          "xdg-utils",
+          "libatspi2.0-0",
+          "libuuid1",
+          "libsecret-1-0"
+        ],
+        "maintainer": "Maikel-js",
+        "vendor": "Discipline Tracker",
+        "description": "Sistema de seguimiento de hábitos y tareas con IA avanzada"
+      },
+      "rpm": {
+        "depends": [
+          "gtk3",
+          "libnotify",
+          "nss",
+          "libXScrnSaver",
+          "libXtst",
+          "xdg-utils",
+          "atspi2-core",
+          "libuuid",
+          "libsecret"
+        ],
+        "vendor": "Discipline Tracker",
+        "description": "Sistema de seguimiento de hábitos y tareas con IA avanzada"
+      }
+    },
     "android": {
       "debugApplicationIdSuffix": ".debug"
     }

@@ -22,6 +22,15 @@ npm run test:coverage  # Jest with coverage
 npm run test:e2e       # Playwright E2E (tests/e2e/)
 npm run electron       # Run Electron app
 npm run electron:build # Windows + Linux installers in release/ (no macOS)
+npm run electron:build:linux      # Linux: AppImage + DEB + RPM
+npm run electron:build:linux:appimage  # Linux: AppImage only
+npm run electron:build:linux:deb  # Linux: .deb only (Ubuntu/Debian)
+npm run electron:build:linux:rpm  # Linux: .rpm only (Fedora/RHEL)
+npm run build:linux    # Build completo Linux (todos los formatos)
+npm run tauri:build:linux        # Tauri Linux build
+npm run tauri:build:linux:deb    # Tauri .deb
+npm run tauri:build:linux:rpm    # Tauri .rpm
+npm run tauri:build:linux:appimage  # Tauri AppImage
 ```
 
 **Verification order**: `lint` -> `build` -> `test` -> `test:e2e`

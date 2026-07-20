@@ -16,7 +16,15 @@
     "electron": "electron .",
     "electron:build": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --win --publish never",
     "electron:build:win": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --win --publish never",
-    "electron:build:linux": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux AppImage --publish never",
+    "electron:build:linux": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux --publish never",
+    "electron:build:linux:appimage": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux AppImage --publish never",
+    "electron:build:linux:deb": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux deb --publish never",
+    "electron:build:linux:rpm": "node scripts/enable-symlinks.mjs && set CSC_IDENTITY_AUTO_DISCOVERY=false&& set DO_NOT_SIGN=true&& npx electron-builder --linux rpm --publish never",
+    "tauri:build:linux": "npx tauri build --target universal-unknown-linux-gnu",
+    "tauri:build:linux:deb": "npx tauri build --target x86_64-unknown-linux-gnu --bundles deb",
+    "tauri:build:linux:rpm": "npx tauri build --target x86_64-unknown-linux-gnu --bundles rpm",
+    "tauri:build:linux:appimage": "npx tauri build --target x86_64-unknown-linux-gnu --bundles appimage",
+    "build:linux": "bash scripts/build-linux.sh",
     "upload": "node scripts/upload-exe.mjs",
     "release": "npm run electron:build && npm run upload",
     "deploy": "npm run build && npm run release",
@@ -61,10 +69,43 @@
     "linux": {
       "target": [
         "AppImage",
+        "deb",
+        "rpm",
         "tar.gz"
       ],
       "category": "Utility",
-      "artifactName": "Discipline-Tracker-${version}-Linux.${ext}"
+      "artifactName": "Discipline-Tracker-${version}-Linux.${ext}",
+      "deb": {
+        "depends": [
+          "libgtk-3-0",
+          "libnotify4",
+          "libnss3",
+          "libxss1",
+          "libxtst6",
+          "xdg-utils",
+          "libatspi2.0-0",
+          "libuuid1",
+          "libsecret-1-0"
+        ],
+        "maintainer": "Maikel-js",
+        "vendor": "Discipline Tracker",
+        "description": "Sistema de seguimiento de hábitos y tareas con IA avanzada"
+      },
+      "rpm": {
+        "depends": [
+          "gtk3",
+          "libnotify",
+          "nss",
+          "libXScrnSaver",
+          "libXtst",
+          "xdg-utils",
+          "atspi2-core",
+          "libuuid",
+          "libsecret"
+        ],
+        "vendor": "Discipline Tracker",
+        "description": "Sistema de seguimiento de hábitos y tareas con IA avanzada"
+      }
     },
     "portable": {
       "artifactName": "Discipline-Tracker-Setup.exe"
