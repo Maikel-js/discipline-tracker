@@ -7,3 +7,7 @@ presentacion.html
 coverage/
 tests/
 electron/
+dist/
+node_modules/
+.next/
+out/
