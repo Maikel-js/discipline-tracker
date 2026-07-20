@@ -185,9 +185,9 @@ function MainApp() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <TaskColumn title="Por Hacer" status="todo" tasks={tasks} onDragEnd={handleTaskDragEnd} />
-              <TaskColumn title="En Progreso" status="doing" tasks={tasks} onDragEnd={handleTaskDragEnd} />
-              <TaskColumn title="Completado" status="done" tasks={tasks} onDragEnd={handleTaskDragEnd} />
+              <TaskColumn title="Por Hacer" status="todo" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
+              <TaskColumn title="En Progreso" status="doing" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
+              <TaskColumn title="Completado" status="done" tasks={tasks} allTasks={tasks} onDragEnd={handleTaskDragEnd} />
             </div>
           </div>
         )}

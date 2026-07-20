@@ -4,8 +4,22 @@ import { useState } from 'react';
 import { useStore } from '@/store/useStore';
 import { Check, MoreVertical, Trash2, GripVertical } from 'lucide-react';
 import type { Task, Priority, TaskStatus } from '@/types';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors,
+  DragOverlay,
+  useDroppable
+} from '@dnd-kit/core';
+import { 
+  SortableContext, 
+  sortableKeyboardCoordinates, 
+  useSortable, 
+  verticalListSortingStrategy 
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 interface Props {
@@ -16,6 +30,7 @@ interface TaskColumnProps {
   title: string;
   status: TaskStatus;
   tasks: Task[];
+  allTasks: Task[];
   onDragEnd: (taskId: string, newStatus: TaskStatus) => void;
 }
 
@@ -30,12 +45,16 @@ function SortableTask({ task }: Props) {
   const { updateTask, deleteTask } = useStore();
   const [showMenu, setShowMenu] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
+    id: task.id,
+    data: { type: 'task', task }
+  });
   
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1
+    opacity: isDragging ? 0.4 : 1,
+    zIndex: isDragging ? 50 : 'auto' as const
   };
 
   const toggleSubtask = (subtaskId: string) => {
@@ -65,10 +84,10 @@ function SortableTask({ task }: Props) {
     <div 
       ref={setNodeRef} 
       style={style}
-      className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]}`}
+      className={`bg-gray-800/50 border border-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} ${isDragging ? 'shadow-xl shadow-blue-500/20' : ''}`}
     >
       <div className="flex items-start gap-2">
-        <button {...attributes} {...listeners} className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing">
+        <button {...attributes} {...listeners} className="mt-1 text-gray-500 cursor-grab active:cursor-grabbing hover:text-blue-400 transition-colors">
           <GripVertical size={16} />
         </button>
         <div className="flex-1">
@@ -139,15 +158,8 @@ function SortableTask({ task }: Props) {
 }
 
 function DragOverlayTask({ task }: Props) {
-  const priorityColors: Record<Priority, string> = {
-    low: 'border-l-green-500',
-    medium: 'border-l-yellow-500',
-    high: 'border-l-orange-500',
-    urgent: 'border-l-red-500'
-  };
-
   return (
-    <div className={`bg-gray-800 border border-blue-500 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} shadow-2xl shadow-blue-500/20 rotate-2`}>
+    <div className={`bg-gray-800 border-2 border-blue-500 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} shadow-2xl shadow-blue-500/30 rotate-3 scale-105`}>
       <div className="flex items-start gap-2">
         <GripVertical size={16} className="mt-1 text-blue-400" />
         <div className="flex-1">
@@ -161,50 +173,94 @@ function DragOverlayTask({ task }: Props) {
   );
 }
 
-export default function TaskColumn({ title, status, tasks, onDragEnd }: TaskColumnProps) {
+function DroppableColumn({ title, status, children, count, isOver }: { 
+  title: string; 
+  status: TaskStatus; 
+  children: React.ReactNode;
+  count: number;
+  isOver: boolean;
+}) {
+  const { setNodeRef } = useDroppable({ id: `column-${status}` });
+
+  return (
+    <div 
+      ref={setNodeRef}
+      className={`bg-gray-900/50 rounded-xl p-4 min-h-[400px] transition-all duration-200 ${
+        isOver ? 'bg-blue-900/30 ring-2 ring-blue-500/50 scale-[1.02]' : ''
+      }`}
+    >
+      <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+        {title}
+        <span className={`text-xs px-2 py-0.5 rounded-full ${
+          isOver ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-300'
+        }`}>
+          {count}
+        </span>
+      </h3>
+      {children}
+    </div>
+  );
+}
+
+export default function TaskColumn({ title, status, tasks, allTasks, onDragEnd }: TaskColumnProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const filteredTasks = tasks.filter(t => t.status === status);
+  const [overColumn, setOverColumn] = useState<TaskStatus | null>(null);
+  const filteredTasks = allTasks.filter(t => t.status === status);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const activeTask = activeId ? tasks.find(t => t.id === activeId) : null;
+  const activeTask = activeId ? allTasks.find(t => t.id === activeId) : null;
 
   return (
-    <div className="bg-gray-900/50 rounded-xl p-4 min-h-[400px]">
-      <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-        {title}
-        <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">{filteredTasks.length}</span>
-      </h3>
-      
+    <DroppableColumn title={title} status={status} count={filteredTasks.length} isOver={overColumn === status}>
       <DndContext 
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={(event) => {
           setActiveId(event.active.id as string);
         }}
+        onDragOver={(event) => {
+          const { over } = event;
+          if (over) {
+            const overData = over.data.current;
+            if (overData?.type === 'column') {
+              setOverColumn(overData.status);
+            } else if (overData?.type === 'task') {
+              setOverColumn(overData.task.status);
+            } else {
+              setOverColumn(status);
+            }
+          } else {
+            setOverColumn(null);
+          }
+        }}
         onDragEnd={(event) => {
           const { active, over } = event;
           setActiveId(null);
+          setOverColumn(null);
           
           if (!over) return;
           
           const taskId = active.id as string;
+          const overData = over.data.current;
           
-          if (over.id === `column-${status}`) {
-            onDragEnd(taskId, status);
-          } else {
-            onDragEnd(taskId, status);
+          let targetStatus = status;
+          if (overData?.type === 'column') {
+            targetStatus = overData.status;
+          } else if (overData?.type === 'task') {
+            targetStatus = overData.task.status;
+          }
+          
+          if (taskId && targetStatus) {
+            onDragEnd(taskId, targetStatus);
           }
         }}
       >
         <SortableContext items={filteredTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          <div 
-            className="space-y-2 min-h-[100px] p-2 rounded-lg border-2 border-dashed border-transparent hover:border-gray-700 transition-colors"
-            data-column={status}
-          >
+          <div className="space-y-2 min-h-[100px]">
             {filteredTasks.map(task => (
               <SortableTask key={task.id} task={task} />
             ))}
@@ -216,11 +272,11 @@ export default function TaskColumn({ title, status, tasks, onDragEnd }: TaskColu
         </DragOverlay>
       </DndContext>
 
-      {filteredTasks.length === 0 && (
-        <div className="text-center text-gray-500 py-8">
-          No hay tareas
+      {filteredTasks.length === 0 && !activeId && (
+        <div className="text-center text-gray-500 py-8 border-2 border-dashed border-gray-700 rounded-lg">
+          Arrastra tareas aqui
         </div>
       )}
-    </div>
+    </DroppableColumn>
   );
 }
