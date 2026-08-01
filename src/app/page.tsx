@@ -19,7 +19,7 @@ import AutoScheduler from '@/components/AutoScheduler';
 import LifeOSHub from '@/components/LifeOSHub';
 import AdvancedAIHub from '@/components/AdvancedAIHub';
 import AnalyticsHub from '@/components/AnalyticsHub';
-import { Flame, Bell, Zap, Settings, AlertCircle } from 'lucide-react';
+import { Flame, Bell, Zap, Settings, AlertCircle, Plus } from 'lucide-react';
 import Goals from '@/components/Goals';
 import NotesProtocols from '@/components/NotesProtocols';
 import StatsDashboard from '@/components/StatsDashboard';
