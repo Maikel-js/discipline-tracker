@@ -17,6 +17,7 @@ import AnalyticsHub from "./AnalyticsHub"
 import LifeGraph from "./LifeGraph"
 import AdvancedAIHub from "./AdvancedAIHub"
 import LifeOSHub from "./LifeOSHub"
+import PhysicalCalendar from "./PhysicalCalendar"
 
 type Section =
   | "goals"
@@ -33,6 +34,7 @@ type Section =
   | "lifegraph"
   | "ai"
   | "lifeos"
+  | "calendar"
 
 const sections: { key: Section; label: string; icon: string }[] = [
   { key: "goals", label: "Metas", icon: "🎯" },
@@ -40,6 +42,7 @@ const sections: { key: Section; label: string; icon: string }[] = [
   { key: "stats", label: "Stats", icon: "📊" },
   { key: "analytics", label: "Analytics", icon: "📈" },
   { key: "schedule", label: "Horario", icon: "⏰" },
+  { key: "calendar", label: "Calendario", icon: "📅" },
   { key: "lifegraph", label: "Life Graph", icon: "🕸️" },
   { key: "ai", label: "IA", icon: "🧠" },
   { key: "lifeos", label: "Life OS", icon: "🔄" },
@@ -66,6 +69,8 @@ export default function MoreScreen() {
         return <AnalyticsHub />
       case "schedule":
         return <AutoScheduler />
+      case "calendar":
+        return <PhysicalCalendar />
       case "lifegraph":
         return <LifeGraph />
       case "ai":

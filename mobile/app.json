@@ -14,7 +14,11 @@
       "backgroundColor": "#000000"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -44,8 +48,7 @@
       "expo-notifications",
       "expo-camera",
       "expo-av",
-      "expo-speech-recognition",
-      "expo-device"
+      "expo-speech-recognition"
     ],
     "experiments": {
       "typedRoutes": true
@@ -54,7 +57,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "964f9846-b728-4dba-ab7c-6e9ae4acf11f"
+        "projectId": "26cf00f1-d90b-4e2d-8a71-747ce3bdd511"
       }
     }
   }

@@ -24,9 +24,6 @@ export default function LifeGraph() {
   const [newGoalTitle, setNewGoalTitle] = useState("")
   const [selectedHabitIds, setSelectedHabitIds] = useState<string[]>([])
 
-  const svgW = Math.min(width - 32, 600)
-  const svgH = 350
-
   useEffect(() => { recalculateGoalProgress() }, [habits, goals.length])
 
   const filteredHabits = useMemo(

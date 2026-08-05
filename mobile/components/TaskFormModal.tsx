@@ -36,6 +36,7 @@ export default function TaskFormModal({
       subtasks: [],
       dependencies: [],
       reminders: [],
+      prerequisites: [],
     })
     setTitle("")
     setDescription("")
