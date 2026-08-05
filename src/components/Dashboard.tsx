@@ -1,7 +1,8 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
-import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Flame, TrendingUp, Trophy, CheckCircle, AlertTriangle, Download, Smartphone, Monitor } from 'lucide-react';
+import { ANDROID_APK_URL, WINDOWS_EXE_URL } from '@/lib/r2';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useEffect, useState } from 'react';
 import { format, subDays } from 'date-fns';
@@ -252,6 +253,39 @@ export default function Dashboard({ onTabChange }: { onTabChange: (tab: string) 
       </div>
 
       <DashboardCalendar />
+
+      <div className="bg-gray-800/30 border border-gray-700 rounded-xl p-4">
+        <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+          <Download size={16} />
+          Descargar App
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a
+            href={ANDROID_APK_URL}
+            download
+            className="flex items-center gap-3 p-3 bg-gray-800/60 border border-gray-700 rounded-lg hover:bg-gray-700/60 transition-colors"
+          >
+            <Smartphone className="text-green-400" size={24} />
+            <div className="flex-1">
+              <div className="font-medium text-white text-sm">Android (APK)</div>
+              <div className="text-xs text-gray-400">com.discipline.tracker</div>
+            </div>
+            <Download size={14} className="text-gray-400" />
+          </a>
+          <a
+            href={WINDOWS_EXE_URL}
+            download
+            className="flex items-center gap-3 p-3 bg-gray-800/60 border border-gray-700 rounded-lg hover:bg-gray-700/60 transition-colors"
+          >
+            <Monitor className="text-blue-400" size={24} />
+            <div className="flex-1">
+              <div className="font-medium text-white text-sm">Windows (.exe)</div>
+              <div className="text-xs text-gray-400">Discipline-Tracker-Setup</div>
+            </div>
+            <Download size={14} className="text-gray-400" />
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
