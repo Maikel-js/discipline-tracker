@@ -29,6 +29,7 @@
     "tauri:build:linux:appimage": "npx tauri build --target x86_64-unknown-linux-gnu --bundles appimage",
     "build:linux": "bash scripts/build-linux.sh",
     "upload": "node scripts/upload-exe.mjs",
+    "upload:apk": "node scripts/upload-apk.mjs",
     "release": "npm run electron:build && npm run upload",
     "deploy": "npm run build && npm run release",
     "deploy:all": "node scripts/deploy-all.mjs",
