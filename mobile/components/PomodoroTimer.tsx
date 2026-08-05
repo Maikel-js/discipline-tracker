@@ -14,7 +14,7 @@ export default function PomodoroTimer({ taskId, habitId, onComplete }: Props) {
   const endPomodoro = useStore((s) => s.endPomodoro)
   const [isRunning, setIsRunning] = useState(false)
   const [secondsLeft, setSecondsLeft] = useState(
-    (settings.pomodoroLength || 25) * 60
+    (settings.pomodoroLength || 50) * 60
   )
   const [sessionId, setSessionId] = useState<string | null>(null)
 
@@ -48,7 +48,7 @@ export default function PomodoroTimer({ taskId, habitId, onComplete }: Props) {
       endPomodoro(sessionId, false)
     }
     setIsRunning(false)
-    setSecondsLeft((settings.pomodoroLength || 25) * 60)
+    setSecondsLeft((settings.pomodoroLength || 50) * 60)
     setSessionId(null)
   }
 
@@ -60,7 +60,7 @@ export default function PomodoroTimer({ taskId, habitId, onComplete }: Props) {
       .padStart(2, "0")}`
   }
 
-  const pomodoroMinutes = settings.pomodoroLength || 25
+  const pomodoroMinutes = settings.pomodoroLength || 50
   const progress =
     ((pomodoroMinutes * 60 - secondsLeft) / (pomodoroMinutes * 60)) * 100
 
@@ -72,7 +72,7 @@ export default function PomodoroTimer({ taskId, habitId, onComplete }: Props) {
           <Text className="text-white font-medium">Pomodoro</Text>
         </View>
         <Text className="text-gray-400 text-xs">
-          {pomodoroMinutes} min trabajo / {settings.breakLength || 5} min
+          {pomodoroMinutes} min trabajo / {settings.breakLength || 15} min
           descanso
         </Text>
       </View>
